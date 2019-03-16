@@ -12,7 +12,6 @@ Vue.use(VueChatScroll);
 Vue.use(Notifications);
 Vue.use(videoPlayer);
 
-
 Vue.mixin({
   methods: {
       sendError(text) {

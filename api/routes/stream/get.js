@@ -7,7 +7,7 @@ module.exports = (room, socket) => {
 
         const currentRoom = roomService.getRoom(room);
         socket.join(currentRoom.getId());
-        socket.emit('get', currentRoom.getStream().streamLink);
+        socket.emit('get', currentRoom.toJson());
     } catch (err) {
         socket.emit('err', err.message);
         if (err instanceof NotFoundError) {

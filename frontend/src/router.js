@@ -12,6 +12,7 @@ export default new Router({
     {
       path: '/',
       name: 'index',
+      meta: {title: 'BakaTV'},
       component: Index
     },
     {

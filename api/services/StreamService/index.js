@@ -28,7 +28,7 @@ class StreamService {
     }
 
     stop() {
-        if (this.stream) {  
+        if (this.stream) {
             this.stream.kill();
         } else {
             new Error('Stream not started');
@@ -43,15 +43,16 @@ class StreamService {
 
     _preset() {
         return ffmpeg(this.url)
-            .inputOptions('-re')
+            .addInputOption('-headers', 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:65.0) Gecko/20100101 Firefox/65.0')
+            .addInputOption('-re')
             .toFormat('flv')
             .output('rtmp://localhost:1935/stream/' + this.streamLink)
             .on('start', () => start(this.room))
             .on('progress', (progress) => process(progress, this.room))
             .on('end', () => end(this.room))
-            .on('error', () => error(this.room));
+            .on('error', (err) => error(this.room, err));
     }
-    
+
 }
 
 module.exports = StreamService;

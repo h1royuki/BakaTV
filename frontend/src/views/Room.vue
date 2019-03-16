@@ -18,7 +18,11 @@ export default {
   data() {
     return {
       socket: io(process.env.VUE_APP_SOCKET_STREAM_URL),
-      room: this.$route.params.id,
+      room: {
+        id: this.$route.params.id,
+        props: null,
+        status: null
+      },
       player: {
         overNative: true,
         autoplay: true,
@@ -30,19 +34,23 @@ export default {
 
   methods: {
     stopStream() {
-      this.socket.emit("stop", this.room);
+      this.socket.emit("stop", this.room.id);
     }
   },
 
   mounted() {
-    this.socket.emit("get", this.room);
+    this.socket.emit("get", this.room.id);
 
-    this.socket.on("get", link => {
+    this.socket.on("get", room => {
       this.player.sources.push({
         withCredentials: false,
         type: "application/x-mpegURL",
-        src: process.env.VUE_APP_STREAM_URL + link + ".m3u8"
-      });
+        src: process.env.VUE_APP_STREAM_URL + room.stream + '.m3u8'
+      })
+
+      this.room.props = room.props;
+      document.title = room.props.name_rus;
+      this.room.status = room.status;
     });
 
     this.socket.on("404", () => {

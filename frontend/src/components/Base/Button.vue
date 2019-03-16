@@ -23,6 +23,10 @@ button {
 }
 
 button:hover {
+  cursor: pointer;
+}
+
+button:hover {
   background-color: #00798d;
   transition: 0.3s;
 }

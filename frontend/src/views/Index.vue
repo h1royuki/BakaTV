@@ -7,10 +7,18 @@
     </div>
     <div class="container index">
       <img class="logo" src="../assets/logo.svg" alt>
-      <url-input class="url-input" :type="`text`" :placeholder="`Enter URL to movie`" v-model="url"></url-input>
-      <start-button class="start-button" v-on:send="sendUrl">
-        <component :is="tvicon" :size="36"></component>
-      </start-button>
+      <div class="search-form">
+        <url-input
+          class="url-input"
+          :type="`text`"
+          :placeholder="`Search anything...`"
+          v-model="query"
+        ></url-input>
+        <start-button class="start-button" v-on:send="search">
+          <component :is="tvicon" :size="36"></component>
+        </start-button>
+      </div>
+      <search v-if="result" v-on:send="start($event)" :items="result"></search>
     </div>
   </div>
 </template>
@@ -21,12 +29,14 @@ import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 import Button from "../components/Base/Button.vue";
 import Input from "../components/Base/Input.vue";
+import Search from "../components/Index/Search";
 import TvIcon from "vue-material-design-icons/YoutubeTv.vue";
 
 export default {
   components: {
     UrlInput: Input,
     StartButton: Button,
+    Search: Search,
     TvIcon: TvIcon,
     Loading
   },
@@ -34,20 +44,34 @@ export default {
   data() {
     return {
       socket: io(process.env.VUE_APP_SOCKET_STREAM_URL),
-      url: "",
+      query: "",
+      result: null,
       tvicon: "tv-icon",
       isLoading: false
     };
   },
 
   methods: {
-    sendUrl() {
-      this.socket.emit("start", this.url);
+    start(film) {
+      this.socket.emit("start", film);
       this.isLoading = true;
+    },
+
+    search() {
+      this.socket.emit("search", this.query);
+      this.isLoading = true;
+      this.result = null;
     }
   },
 
   mounted() {
+    document.title = this.$route.meta.title;
+
+    this.socket.on("search", result => {
+      this.result = result;
+      this.isLoading = false;
+    });
+
     this.socket.on("start", room => {
       this.$router.push(`/room/${room}`);
     });
@@ -97,24 +121,35 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-width: 650px;
+  max-width: 100%;
   margin: 0 auto;
   z-index: 0;
 }
 
 .start-button {
-  text-transform: uppercase;
-  padding: 20px;
+  padding: 10px 40px;
   border-radius: 100px;
   font-size: 0;
-  margin-top: 40px;
 }
 
 .url-input {
-  margin: 20px;
+  margin: 0 10px;
   width: 95%;
+  max-width: 700px;
   font-size: 20px;
   text-align: center;
+}
+
+.search-form {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: nowrap;
+  align-items: center;
+  align-content: center;
+  width: 100%;
+max-width: 700px;
+margin-bottom: 50px;
 }
 </style>
 

@@ -1,5 +1,1 @@
-const io = require('socket.io')();
-
-io.rooms = [];
-
-module.exports = io;
+module.exports = require('socket.io')();
