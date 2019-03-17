@@ -12,7 +12,6 @@ class Room {
 
     toJson() {
         return {
-            id: this._id,
             props: this._props,
             stream: this._stream.streamLink
         }
@@ -21,8 +20,9 @@ class Room {
     getId() {
         return this._id;
     }
+
     getOwner() {
-        return this.owner;
+        return this._owner;
     }
 
     getStatus() {
@@ -37,6 +37,10 @@ class Room {
         this._status = status;
 
         return this;
+    }
+
+    setOwner(id) {
+        this._owner = id;
     }
 
     addStream(stream) {

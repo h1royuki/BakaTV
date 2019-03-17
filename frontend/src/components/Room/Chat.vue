@@ -1,8 +1,8 @@
 <template>
   <div class="chat-window">
     <div class="messages" v-chat-scroll>
-      <div v-for="message in messages" :key="message.user">
-        <message :message="message" :user="user"></message>
+      <div v-for="(message, index) in messages" :key="index">
+        <message :message="message" :id="id"></message>
       </div>
     </div>
     <div class="send-form">
@@ -11,7 +11,7 @@
         v-model="message"
         :rows="3"
         :placeholder="`Enter message`"
-        v-on:send="sendMessage"
+        v-on:enter="sendMessage()"
       ></message-input>
       <div class="control-buttons">
         <send-button class="chat-button" v-on:send="sendMessage" :text="`Send`"></send-button>
@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import io from "socket.io-client";
 import Message from "./Chat/Message";
 import Button from "../Base/Button";
 import Textarea from "../Base/Textarea";
@@ -40,33 +39,32 @@ export default {
 
   data() {
     return {
-      socket: io(process.env.VUE_APP_SOCKET_CHAT_URL),
       room: this.$route.params.id,
-      user: "",
+      id: "",
       message: "",
       messages: []
     };
   },
 
-  mounted() {
-    this.socket.emit("join", this.room);
+  sockets: {
+    chatJoin(id) {
+      this.id = id;
+    },
 
-    this.socket.on("join", user => {
-      this.user = user;
-    });
-
-    this.socket.on("message", message => {
+    chatMessage(message) {
+      console.log(message);
       this.messages.push(message);
-    });
+    }
+  },
 
-    this.socket.on("event", event => {
-      this.messages.push(event);
-    });
+  mounted() {
+    this.$socket.emit("chatJoin", this.room);
   },
 
   methods: {
     sendMessage() {
-      this.socket.emit("message", this.message);
+      this.$socket.emit("chatMessage", this.message);
+      this.message = "";
     }
   }
 };

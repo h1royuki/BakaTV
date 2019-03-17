@@ -8,16 +8,14 @@
 </template>
 
 <script>
-import io from "socket.io-client";
 import Chat from "../components/Room/Chat";
 
 export default {
   components: {
-    Chat: Chat
+    Chat
   },
   data() {
     return {
-      socket: io(process.env.VUE_APP_SOCKET_STREAM_URL),
       room: {
         id: this.$route.params.id,
         props: null,
@@ -31,39 +29,29 @@ export default {
       }
     };
   },
-
+  sockets: {
+    getRoomInfo(room) {
+      this.player.sources.push({
+        withCredentials: false,
+        type: "application/x-mpegURL",
+        src: process.env.VUE_APP_STREAM_URL + room.stream + ".m3u8"
+      });
+      this.room.props = room.props;
+      document.title = room.props.name_rus;
+      this.room.status = room.status;
+    },
+    streamStop() {
+      this.$router.push("/");
+    }
+  },
   methods: {
     stopStream() {
-      this.socket.emit("stop", this.room.id);
+      this.$socket.emit("streamStop", this.room.id);
     }
   },
 
   mounted() {
-    this.socket.emit("get", this.room.id);
-
-    this.socket.on("get", room => {
-      this.player.sources.push({
-        withCredentials: false,
-        type: "application/x-mpegURL",
-        src: process.env.VUE_APP_STREAM_URL + room.stream + '.m3u8'
-      })
-
-      this.room.props = room.props;
-      document.title = room.props.name_rus;
-      this.room.status = room.status;
-    });
-
-    this.socket.on("404", () => {
-      this.$router.push("/");
-    });
-
-    this.socket.on("stop", () => {
-      this.$router.push("/");
-    });
-
-    this.socket.on("err", text => {
-      this.sendError(text);
-    });
+    this.$socket.emit("getRoomInfo", this.room.id);
   }
 };
 </script>
@@ -100,7 +88,7 @@ export default {
   max-width: 350px;
 }
 
-@media (max-width: 750px) {
+@media (max-width: 800px) {
   .video-player {
     min-width: 100%;
     min-height: 40%;

@@ -2,13 +2,13 @@
   <div
     v-if="message.type == 'service'"
     class="message service"
-  >{{ message.user == user ? 'You' : message.user }} {{message.message}}</div>
+  >{{ message.id == id ? `You (${message.name}) ` : message.name }} {{message.message}}</div>
   <div v-else>
     <div class="message">
       <div
         class="name"
         :style="{color : message.color}"
-      >{{ message.user == user ? 'You: ' : message.user + ':' }}</div>
+      >{{ message.id == id ? 'You: ' : message.name + ':' }}</div>
       {{message.message}}
     </div>
   </div>
@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  props: ["message", "user"]
+  props: ["message", "id"]
 };
 </script>
 

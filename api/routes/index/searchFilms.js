@@ -5,7 +5,7 @@ module.exports = (query, socket) => {
             KinotochkaParser
             .searchFilms(query)
             .then((items) => {
-                socket.emit('search', items);
+                socket.emit('searchFilms', items);
             });
         } catch (err) {
                 socket.emit('err', err.message);

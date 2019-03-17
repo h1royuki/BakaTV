@@ -1,24 +1,20 @@
 require('dotenv').config();
 const io = require('./socket');
-const { join, message, disconnect } = require('./routes/chat');
-const {get, search, start, stop} = require('./routes/stream');
-
-const chat = io.of('/chat');
-
-
-chat.on('connection', (socket) => {
-    socket.on('join', (room) => join(room, socket));
-    socket.on('message', (msg) => message(msg, socket));
-    socket.on('disconnect', () => disconnect(socket));
-});
+const { searchFilms, streamStart } = require('./routes/index');
+const { chatJoin, chatMessage, chatDisconnect } = require('./routes/chat');
+const {getRoomInfo, streamStop} = require('./routes/room');
 
 io.on('connection', (socket) => {
-    socket.on('get', (room) => get(room, socket));
-    socket.on('search', (query) => search(query, socket));
-    socket.on('start', (url) => start(url, socket));
-    socket.on('stop', (room) => stop(socket, room));
+    socket.emit('customEmi', '1123');
+    socket.on('searchFilms', (query) => searchFilms(query, socket));
+    socket.on('streamStart', (url) => streamStart(url, socket));
     
-});
+    socket.on('getRoomInfo', (room) => getRoomInfo(room, socket));
+    socket.on('streamStop', (room) => streamStop(socket, room));
 
+    socket.on('chatJoin', (room) => chatJoin(room, socket));
+    socket.on('chatMessage', (msg) => chatMessage(msg, socket));
+    socket.on('disconnect', () => chatDisconnect(socket));
+});
 
 module.exports = io;

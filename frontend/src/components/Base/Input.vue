@@ -3,7 +3,8 @@
     :value="value"
     :type="type ? type : 'text'"
     :placeholder="placeholder ? placeholder : 'Placeholder'"
-    v-on:input="$emit('input', $event.target.value)"
+    @input="$emit('input', $event.target.value)"
+    v-on:keydown.enter="$emit('enter')"
   >
 </template>
 

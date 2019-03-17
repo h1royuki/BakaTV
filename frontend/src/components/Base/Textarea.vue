@@ -3,7 +3,7 @@
     :value="value"
     :placeholder="placeholder ? placeholder : 'Placeholder'"
     :rows="rows ? rows : 1"
-    v-on:keyup.ctrl.enter="$emit('send')"
+    v-on:keyup.ctrl.enter="$emit('enter')"
     v-on:input="$emit('input', $event.target.value)"
   />
 </template>

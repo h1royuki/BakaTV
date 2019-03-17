@@ -1,6 +1,9 @@
 <template>
-  <div class="film" @click="$emit('send', film)">
+  <div v-if="film" class="film" @click="$emit('send', film)">
     <img class="film-poster" :src="film.cover">
+    <div class="film-overlay">
+      <search-icon :size="128"/>
+    </div>
     <div class="film-props">
       <div class="film-name">{{film.name_rus}}</div>
     </div>
@@ -8,8 +11,12 @@
 </template>
 
 <script>
+import SearchIcon from "vue-material-design-icons/Play.vue";
 export default {
-  props: ["film"]
+  props: ["film"],
+  components: {
+    SearchIcon
+  }
 };
 </script>
 
@@ -21,12 +28,37 @@ export default {
   margin: 10px 10px;
   max-width: 240px;
   position: relative;
-  box-shadow: 0 -10px 20px 1px #0000004d;
+  box-shadow:  0 -10px 30px 1px #0003;
   border-radius: 10px;
 }
 
 .film:hover {
   cursor: pointer;
+}
+
+.film-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: black;
+  z-index: 10;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #000000b3;
+  z-index: 10;
+  border-radius: 9px;
+  opacity: 0;
+  color: white;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  transition: 0.3s;
+}
+
+.film-overlay:hover {
+  opacity: 1;
+  transition: 0.3s;
 }
 
 .film-poster {
@@ -41,7 +73,7 @@ export default {
   bottom: 0;
   background-color: #000c;
   border-bottom-left-radius: 9px;
-  border-bottom-right-radius: 11px;
+  border-bottom-right-radius: 9px;
 }
 
 .film-name {

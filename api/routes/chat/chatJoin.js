@@ -6,13 +6,13 @@ module.exports = (room, socket) => {
 
     console.log(`Socket ${socket.id} connected to ${room}`);
 
-    socket.room = room;
     socket.name = userNameGenerator();
     socket.color = colorGenerator();
+    socket.room = room;
 
     socket.join(room);
 
-    socket.emit('join', socket.name);
+    socket.emit('chatJoin', socket.id);
 
-    io.of('/chat').to(socket.room).emit('message', { type: 'service', user: socket.name, message: 'joined' });
+    io.to(room).emit('chatMessage', { type: 'service', id: socket.id, name: socket.name, message: 'joined' });
 };

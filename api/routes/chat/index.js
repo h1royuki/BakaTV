@@ -1,5 +1,5 @@
 module.exports = {
-    join: require('./join'),
-    message: require('./message'),
-    disconnect: require('./disconnect')
+    chatJoin: require('./chatJoin'),
+    chatMessage: require('./chatMessage'),
+    chatDisconnect: require('./chatDisconnect')
 }

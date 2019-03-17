@@ -6,11 +6,9 @@ const KinotochkaParser = require('../../parsers/KinotochkaParser');
 module.exports = (film, socket) => {
         try {
                 KinotochkaParser.getFilmURL(film.name_id).then((url) => {
-
-                        const room = new Room(socket.id, film);
+                        const room = new Room(socket, film);
                         const streamService = new StreamService(url, room.getId());
 
-                        socket.join(room.getId());
                         room.addStream(streamService.start());
                         roomService.addRoom(room);
                 })

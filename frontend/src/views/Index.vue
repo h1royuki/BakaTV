@@ -6,16 +6,17 @@
       <img class="background" src="../assets/background.png">
     </div>
     <div class="container index">
-      <img class="logo" src="../assets/logo.svg" alt>
+      <img class="logo" src="../assets/logo.svg">
       <div class="search-form">
         <url-input
           class="url-input"
           :type="`text`"
           :placeholder="`Search anything...`"
           v-model="query"
-        ></url-input>
-        <start-button class="start-button" v-on:send="search">
-          <component :is="tvicon" :size="36"></component>
+          v-on:enter="search()"
+        />
+        <start-button class="start-button" v-on:send="search()">
+          <search-icon :size="30"/>
         </start-button>
       </div>
       <search v-if="result" v-on:send="start($event)" :items="result"></search>
@@ -24,64 +25,60 @@
 </template>
 
 <script>
-import io from "socket.io-client";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 import Button from "../components/Base/Button.vue";
 import Input from "../components/Base/Input.vue";
 import Search from "../components/Index/Search";
-import TvIcon from "vue-material-design-icons/YoutubeTv.vue";
+import SearchIcon from "vue-material-design-icons/Magnify.vue";
 
 export default {
   components: {
     UrlInput: Input,
     StartButton: Button,
-    Search: Search,
-    TvIcon: TvIcon,
+    Search,
+    SearchIcon,
     Loading
   },
 
   data() {
     return {
-      socket: io(process.env.VUE_APP_SOCKET_STREAM_URL),
       query: "",
       result: null,
-      tvicon: "tv-icon",
       isLoading: false
     };
   },
-
-  methods: {
-    start(film) {
-      this.socket.emit("start", film);
-      this.isLoading = true;
-    },
-
-    search() {
-      this.socket.emit("search", this.query);
-      this.isLoading = true;
-      this.result = null;
-    }
-  },
-
-  mounted() {
-    document.title = this.$route.meta.title;
-
-    this.socket.on("search", result => {
+  sockets: {
+    searchFilms(result) {
       this.result = result;
       this.isLoading = false;
-    });
+    },
 
-    this.socket.on("start", room => {
+    streamStart(room) {
       this.$router.push(`/room/${room}`);
-    });
+    },
 
-    this.socket.on("err", text => {
+    err(text) {
       this.isLoading = false;
-      this.sendError(text);
-    });
+    }
+  },
+    methods: {
+      start(film) {
+        this.$socket.emit("streamStart", film);
+        this.isLoading = true;
+      },
+
+      search() {
+        this.$socket.emit("searchFilms", this.query);
+        this.isLoading = true;
+        this.result = null;
+      }
+    },
+
+    mounted() {
+      document.title = this.$route.meta.title;
+    }
   }
-};
 </script>
 
 <style>
@@ -127,9 +124,19 @@ export default {
 }
 
 .start-button {
-  padding: 10px 40px;
-  border-radius: 100px;
+  padding: 10px 15px;
   font-size: 0;
+  position: absolute;
+  right: 15px;
+  background-color: transparent;
+  border: 0;
+  color: #dbdbdb;
+}
+
+.start-button:hover {
+  background-color: transparent;
+  color: #fff;
+  transform: scale(1.05);
 }
 
 .url-input {
@@ -148,8 +155,9 @@ export default {
   align-items: center;
   align-content: center;
   width: 100%;
-max-width: 700px;
-margin-bottom: 50px;
+  max-width: 700px;
+  margin-bottom: 50px;
+  position: relative;
 }
 </style>
 
