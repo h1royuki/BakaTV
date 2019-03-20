@@ -1,10 +1,15 @@
+const container = require('../modules/Container')
 const NotFoundError = require('../errors/NotFoundError')
 
 
-class RoomService {
+class RoomsRepository {
 
     constructor() {
         this._rooms = [];
+    }
+
+    getCurrentRoom() {
+        return this.getRoom(container.get('room'));
     }
 
     addRoom(room) {
@@ -40,4 +45,4 @@ class RoomService {
 
 }
 
-module.exports = new RoomService();
+module.exports = new RoomsRepository();

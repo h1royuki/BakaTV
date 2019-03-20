@@ -2,23 +2,33 @@
 const roomGenerator = require('../helpers/generators/randomString');
 
 class Room {
-    constructor(owner, props) {
+    constructor(owner, props, torrent) {
         this._owner = owner;
         this._props = props;
+        this._torrent = torrent;
+        this._streamId;
+        this._stream;
         this._id = roomGenerator();
         this._status = 'start';
-        this._stream;
     }
 
     toJson() {
         return {
             props: this._props,
-            stream: this._stream.streamLink
+            streamId: this._streamId
         }
     }
 
     getId() {
         return this._id;
+    }
+
+    getTorrent() {
+        return this._torrent;
+    }
+    
+    getStreamId() {
+        return this._streamId;
     }
 
     getOwner() {
@@ -35,7 +45,6 @@ class Room {
 
     setStatus(status) {
         this._status = status;
-
         return this;
     }
 
@@ -43,8 +52,12 @@ class Room {
         this._owner = id;
     }
 
-    addStream(stream) {
+    setStream(stream) {
         this._stream = stream;
+    }
+
+    setStreamId(streamId) {
+        this._streamId = streamId;
     }
 }
 

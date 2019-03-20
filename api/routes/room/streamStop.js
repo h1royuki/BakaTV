@@ -1,9 +1,9 @@
-const roomService = require('../../services/RoomService');
+const roomsRepository = require('../../repository/RoomRepository');
 
-module.exports = (socket, room) => {
+module.exports = (room, socket) => {
     try {
-        const stream = roomService.getRoom(room).getStream();
-        stream.stop();
+        const stream = roomsRepository.getRoom(room).getStream();
+        stream.kill();
     } catch (err) {
         socket.emit('err', err.message);
     }

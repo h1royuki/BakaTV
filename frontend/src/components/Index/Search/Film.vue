@@ -5,7 +5,7 @@
       <search-icon :size="128"/>
     </div>
     <div class="film-props">
-      <div class="film-name">{{film.name_rus}}</div>
+      <div class="film-name">{{film.title}}</div>
     </div>
   </div>
 </template>
@@ -27,9 +27,12 @@ export default {
   flex-wrap: wrap;
   margin: 10px 10px;
   max-width: 240px;
+  width: 170px;
+  height: 260px;
   position: relative;
-  box-shadow:  0 -10px 30px 1px #0003;
+  box-shadow: 0 -10px 30px 1px #0003;
   border-radius: 10px;
+  overflow: hidden;
 }
 
 .film:hover {
@@ -62,9 +65,10 @@ export default {
 }
 
 .film-poster {
-  width: 170px;
-  height: 260px;
   border-radius: 10px;
+  width: 237px;
+  height: 350px;
+  margin: -29px 0 0 -35px;
 }
 
 .film-props {

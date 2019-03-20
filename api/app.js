@@ -1,20 +1,16 @@
 require('dotenv').config();
-const io = require('./socket');
-const { searchFilms, streamStart } = require('./routes/index');
-const { chatJoin, chatMessage, chatDisconnect } = require('./routes/chat');
-const {getRoomInfo, streamStop} = require('./routes/room');
+const io = require('socket.io')();
+const container = require('./modules/Container');
+const routes = require('./routes');
+
+container.set('io', io);
 
 io.on('connection', (socket) => {
-    socket.emit('customEmi', '1123');
-    socket.on('searchFilms', (query) => searchFilms(query, socket));
-    socket.on('streamStart', (url) => streamStart(url, socket));
-    
-    socket.on('getRoomInfo', (room) => getRoomInfo(room, socket));
-    socket.on('streamStop', (room) => streamStop(socket, room));
 
-    socket.on('chatJoin', (room) => chatJoin(room, socket));
-    socket.on('chatMessage', (msg) => chatMessage(msg, socket));
-    socket.on('disconnect', () => chatDisconnect(socket));
+    if (socket.room) {
+        container.set('room', socket.room);
+    }
+    routes(socket);
 });
 
 module.exports = io;

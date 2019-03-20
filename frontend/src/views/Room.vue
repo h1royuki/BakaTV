@@ -34,7 +34,7 @@ export default {
       this.player.sources.push({
         withCredentials: false,
         type: "application/x-mpegURL",
-        src: process.env.VUE_APP_STREAM_URL + room.stream + ".m3u8"
+        src: process.env.VUE_APP_STREAM_URL + room.streamId + ".m3u8"
       });
       this.room.props = room.props;
       document.title = room.props.name_rus;
