@@ -1,9 +1,9 @@
 const roomsRepository = require('../repository/RoomRepository');
 const NotFoundError = require('../errors/NotFoundError');
 
-module.exports = (socket) => {
+module.exports = (room, socket) => {
     try {
-        const currentRoom = roomsRepository.getCurrentRoom();
+        const currentRoom = roomsRepository.getRoom(room);
 
         socket.room = currentRoom.id;
         socket.join(currentRoom.id);

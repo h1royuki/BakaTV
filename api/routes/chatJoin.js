@@ -3,7 +3,7 @@ const userNameGenerator = require('../helpers/generators/userName');
 const colorGenerator = require('../helpers/generators/color');
 const Message = require('../models/Message');
 
-module.exports = (room, socket) => {
+module.exports = (socket) => {
 
     const io = container.get('io');
 
@@ -12,7 +12,6 @@ module.exports = (room, socket) => {
     socket.name = userNameGenerator();
     socket.color = colorGenerator();
 
-    socket.join(room);
     socket.emit('chatJoin', socket.id);
     io.to(room).emit('chatMessage', new Message('service', socket.id, socket.name, 'joined').toJson());
 };
