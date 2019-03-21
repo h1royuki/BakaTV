@@ -2,7 +2,7 @@
   <div class="room" v-if="player.sources[0]">
     <div class="container room">
       <video-player :options="player" class="player"></video-player>
-      <chat class="chat" v-on:stop="stopStream"></chat>
+      <chat class="chat" v-bind:isOwner="room.isOwner" v-on:stop="stopStream"></chat>
     </div>
   </div>
 </template>
@@ -19,7 +19,8 @@ export default {
       room: {
         id: this.$route.params.id,
         props: null,
-        status: null
+        status: null,
+        isOwner: false
       },
       player: {
         overNative: true,
@@ -37,9 +38,16 @@ export default {
         src: process.env.VUE_APP_STREAM_URL + room.streamId + ".m3u8"
       });
       this.room.props = room.props;
-      document.title = room.props.name_rus;
+      document.title = room.props.name;
       this.room.status = room.status;
+      this.room.isOwner = room.owner;
     },
+
+    setOwner() {
+      console.log('dfds')
+      this.room.isOwner = true;
+    },
+
     streamStop() {
       this.$router.push("/");
     }
@@ -91,11 +99,11 @@ export default {
 @media (max-width: 800px) {
   .video-player {
     min-width: 100%;
-    min-height: 40%;
+    min-height: 35%;
   }
   .chat {
     min-width: 100%;
-    max-height: 60%;
+    max-height: 65%;
   }
 }
 </style>

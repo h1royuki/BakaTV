@@ -6,7 +6,7 @@ const KinogoParser = require('../../parsers/KinogoParser')
 
 module.exports = (film, socket) => {
         KinogoParser.getMovieURL(film.url).then((url) => {
-                const room = new Room(socket, film);
+                const room = new Room(socket.id, film);
                 container.set('room', room.id);
 
                 const streamService = new StreamService(url);

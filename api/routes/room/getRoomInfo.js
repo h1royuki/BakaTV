@@ -7,8 +7,7 @@ module.exports = (room, socket) => {
 
         socket.room = currentRoom.id;
         socket.join(currentRoom.id);
-
-        socket.emit('getRoomInfo', currentRoom.toJson());
+        socket.emit('getRoomInfo', currentRoom.toJson(socket.id));
     } catch (err) {
         socket.emit('err', err.message);
         if (err instanceof NotFoundError) {

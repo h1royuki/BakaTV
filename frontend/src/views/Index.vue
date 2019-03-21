@@ -62,23 +62,22 @@ export default {
       this.isLoading = false;
     }
   },
-    methods: {
-      start(film) {
-        this.$socket.emit("streamStart", film);
-        this.isLoading = true;
-      },
-
-      search() {
-        this.$socket.emit("searchFilms", this.query);
-        this.isLoading = true;
-        this.result = null;
-      }
+  methods: {
+    start(film) {
+      this.$socket.emit("streamStart", film);
+      this.isLoading = true;
     },
 
-    mounted() {
-      document.title = this.$route.meta.title;
+    search() {
+      this.$socket.emit("searchFilms", this.query);
+      this.isLoading = true;
+      this.result = null;
     }
+  },
+
+  mounted() {
   }
+};
 </script>
 
 <style>
@@ -124,10 +123,11 @@ export default {
 }
 
 .start-button {
-  padding: 10px 15px;
+  padding: 0;
   font-size: 0;
   position: absolute;
-  right: 15px;
+  right: 26px;
+  top: 1px;
   background-color: transparent;
   border: 0;
   color: #dbdbdb;

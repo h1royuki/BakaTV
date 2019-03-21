@@ -15,7 +15,7 @@
       ></message-input>
       <div class="control-buttons">
         <send-button class="chat-button" v-on:send="sendMessage" :text="`Send`"></send-button>
-        <button v-on:click="$emit('stop')" class="stop-button">
+        <button v-if="isOwner" v-on:click="$emit('stop')" class="stop-button">
           <stop-icon/>
         </button>
       </div>
@@ -30,6 +30,9 @@ import Textarea from "../Base/Textarea";
 import StopIcon from "vue-material-design-icons/Stop.vue";
 
 export default {
+
+  props: ['isOwner'],
+
   components: {
     message: Message,
     MessageInput: Textarea,

@@ -14,6 +14,13 @@ Vue.use(VueChatScroll);
 Vue.use(Notifications);
 Vue.use(videoPlayer);
 
+
+router.afterEach((to, from) => {
+  Vue.nextTick( () => {
+    document.title = to.meta.title;
+  });
+});
+
 new Vue({
   router,
   created() {

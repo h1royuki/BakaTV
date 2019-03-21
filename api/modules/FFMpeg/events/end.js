@@ -9,7 +9,7 @@ module.exports = (error) => {
     roomsRepository.removeRoom(room.id);
 
     if(room.status == 'start') {
-        room.owner.emit('err', 'Stream crashed: ' + error);
+        io.to(room.ownerId).emit('err', 'Stream crashed: ' + error);
         console.log(`Stream on ${room.id} crashed: ` + error);
     } else {
         console.log(`Stream on ${room.id} ended`);
