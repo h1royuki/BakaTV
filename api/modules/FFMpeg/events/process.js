@@ -12,7 +12,7 @@ module.exports = (progress) => {
         currentRoom.status = 'process';
         roomsRepository.updateRoom(currentRoom);
 
-        console.log(`Change stream ${room} status to 'process'`);
+        console.log(`Change stream ${currentRoom.id} status to 'process'`);
 
     }
 }
