@@ -5,7 +5,7 @@
       <search-icon :size="128"/>
     </div>
     <div class="film-props">
-      <div class="film-name">{{film.title}}</div>
+      <div class="film-name">{{film.name}}</div>
     </div>
   </div>
 </template>
@@ -62,13 +62,6 @@ export default {
 .film-overlay:hover {
   opacity: 1;
   transition: 0.3s;
-}
-
-.film-poster {
-  border-radius: 10px;
-  width: 237px;
-  height: 350px;
-  margin: -29px 0 0 -35px;
 }
 
 .film-props {

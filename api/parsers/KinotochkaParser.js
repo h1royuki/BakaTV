@@ -60,7 +60,7 @@ class KinotochkaParser {
         })
     }
 
-    getFilmURL(id) {
+    getMovieURL(id) {
         const options = {
             method: 'GET',
             uri: baseURL + '/embed/' + id,

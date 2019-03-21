@@ -1,12 +1,11 @@
 const ffmpeg = require('fluent-ffmpeg');
-const { start, process, end, error } = require('./events');
+const { start, process, end } = require('./events');
 
 class FFMpeg {
 
     start(url, id) {
         const stream = ffmpeg(url)
-            .addOption('-c:v', 'h264') 
-            .addOption('-profile:v', 'main')
+            .videoCodec('copy')
             .audioCodec('copy')
             .output('rtmp://localhost:1935/stream/' + id)
             .preset(this._preset);

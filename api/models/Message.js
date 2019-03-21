@@ -1,9 +1,19 @@
 
 class Message {  
-    constructor(type, user, message) {
+    constructor(type, id, name, message) {
         this.type = type;
-        this.user = user;
+        this.id = id,
+        this.name = name;
         this.message = message;
+    }
+
+    toJson() {
+        return {
+            type : this.type,
+            id : this.id,
+            name: this.name,
+            message: this.message
+        }
     }
 }
 

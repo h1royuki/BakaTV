@@ -11,6 +11,7 @@
     "debug": "~2.6.9",
     "dotenv": "^6.2.0",
     "fluent-ffmpeg": "^2.1.2",
+    "iconv-lite": "^0.4.24",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
     "rimraf": "^2.6.3",

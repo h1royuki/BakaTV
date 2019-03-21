@@ -1,11 +1,10 @@
-const RutrackerParser = require('../../parsers/RutrackerParser');
+const KinogoParser = require('../../parsers/KinogoParser')
 
 module.exports = (query, socket) => {
-    try {
-        RutrackerParser.searchFilms(query).then((items) => {
-            socket.emit('searchFilms', items);
-        });
-    } catch (err) {
+    KinogoParser.searchFilms(query).then((items) => {
+        socket.emit('searchFilms', items);
+    }).catch((err) => {
         socket.emit('err', err.message);
-    }
+
+    })
 };

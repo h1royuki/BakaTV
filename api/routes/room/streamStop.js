@@ -2,7 +2,7 @@ const roomsRepository = require('../../repository/RoomRepository');
 
 module.exports = (room, socket) => {
     try {
-        const stream = roomsRepository.getRoom(room).getStream();
+        const stream = roomsRepository.getRoom(room).stream;
         stream.kill();
     } catch (err) {
         socket.emit('err', err.message);

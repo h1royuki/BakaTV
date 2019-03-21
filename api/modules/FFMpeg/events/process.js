@@ -6,11 +6,11 @@ module.exports = (progress) => {
     const room = container.get('room');
     const currentRoom = roomsRepository.getRoom(room);
 
-    if (progress.frames > 300 && currentRoom.getStatus() != 'process') {
+    if (progress.frames > 300 && currentRoom.status != 'process') {
 
-        currentRoom.getOwner().emit('streamStart', currentRoom.getId());
+        currentRoom.owner.emit('streamStart', currentRoom.id);
 
-        currentRoom.setStatus('process');
+        currentRoom.status = 'process';
         roomsRepository.updateRoom(currentRoom);
 
         console.log(`Change stream ${room} status to 'process'`);

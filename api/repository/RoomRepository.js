@@ -13,8 +13,8 @@ class RoomsRepository {
     }
 
     addRoom(room) {
-        if (!(room.getId() in this._rooms)) {
-            this._rooms[room.getId()] = room;
+        if (!(room.id in this._rooms)) {
+            this._rooms[room.id] = room;
         } else {
             throw new Error('Room already created');
         }
@@ -36,8 +36,8 @@ class RoomsRepository {
     }
 
     updateRoom(room) {
-        if (room.getId() in this._rooms) {
-            this._rooms[room.getId()] = room;
+        if (room.id in this._rooms) {
+            this._rooms[room.id] = room;
         } else {
             throw new NotFoundError('Room not found');
         }

@@ -1,4 +1,3 @@
-const io = require('../../modules/Container').get('io')
 const roomsRepository = require('../../repository/RoomRepository');
 const NotFoundError = require('../../errors/NotFoundError');
 
@@ -6,8 +5,8 @@ module.exports = (room, socket) => {
     try {
         const currentRoom = roomsRepository.getRoom(room);
 
-        socket.room = currentRoom.getId();
-        socket.join(currentRoom.getId());
+        socket.room = currentRoom.id;
+        socket.join(currentRoom.id);
 
         socket.emit('getRoomInfo', currentRoom.toJson());
     } catch (err) {
