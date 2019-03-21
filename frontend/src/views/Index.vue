@@ -3,7 +3,7 @@
     <loading :active.sync="isLoading" :can-cancel="true" :is-full-page="true"></loading>
     <div class="overlay">
       <div class="filter"></div>
-      <img class="background" src="../assets/background.png">
+      <img class="background" src="../assets/background.jpg">
     </div>
     <div class="container index">
       <img class="logo" src="../assets/logo.svg">

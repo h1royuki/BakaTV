@@ -7,11 +7,14 @@
 </template>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
 body {
-  font-family: Google Sans;
+  font-family: 'Roboto', sans-serif;
   margin: 0;
 }
 .notifications {
+  font-family: 'Roboto', sans-serif !important;
   top: 40px !important;
   right: 40px !important;
 }

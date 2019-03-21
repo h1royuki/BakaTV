@@ -26,7 +26,7 @@ textarea {
   border: 1px solid transparent;
   overflow: auto;
   padding: 10px;
-  font-family: Google Sans;
+  font-family: 'Roboto', sans-serif;
   transition: 0.2s;
 }
 
