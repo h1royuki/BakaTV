@@ -1,5 +1,5 @@
 const ffmpeg = require('fluent-ffmpeg');
-const { start, process, end } = require('./events');
+const { start, progress, end } = require('./events');
 
 class FFMpeg {
 
@@ -7,7 +7,7 @@ class FFMpeg {
         const stream = ffmpeg(url)
             .videoCodec('copy')
             .audioCodec('copy')
-            .output('rtmp://localhost:1935/stream/' + id)
+            .output(process.env.RTMP_URL + id)
             .preset(this._preset);
 
         stream.run();
@@ -19,7 +19,7 @@ class FFMpeg {
             .addInputOption('-re')
             .toFormat('flv')
             .on('start', () => start())
-            .on('progress', (progress) => process(progress))
+            .on('progress', (percents) => progress(percents))
             .on('end', () => end())
             .on('error', (error) => end(error));
     }

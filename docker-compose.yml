@@ -3,10 +3,12 @@ version: '3.3'
 services:
 
   rtmp-server:
-    image: alfg/nginx-rtmp:latest
+    build:
+      context: ./docker
+      dockerfile: nginx-rtmp.docker
     ports:
     - "1935:1935"
-    - "1337:80"
+    - "8273:80"
 
   api:
     image: node:latest

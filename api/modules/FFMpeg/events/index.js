@@ -1,5 +1,5 @@
 module.exports = {
     start: require('./start'),
-    process: require('./process'),
+    progress: require('./process'),
     end: require('./end')
 }
