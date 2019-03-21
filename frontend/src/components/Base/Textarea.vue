@@ -17,17 +17,24 @@ export default {
 <style>
 textarea {
   background-color: #232933 !important;
-  border-color: #2f333c !important;
   color: white !important;
   margin: 1px;
   resize: none;
   border-radius: 5px;
   box-shadow: none;
   outline: none;
-  border: none;
+  border: 1px solid transparent;
   overflow: auto;
   padding: 10px;
   font-family: Google Sans;
+  transition: 0.2s;
+}
+
+textarea:focus {
+  background-color: #232933 !important;
+  border-color: #241a1a !important;
+  border: 1px solid;
+  transition: 0.2s;
 }
 </style>
 

@@ -1,9 +1,9 @@
-const roomsRepository = require('../../repository/RoomRepository');
+const roomsRepository = require('../repository/RoomRepository');
 
-module.exports = (room, socket) => {
+module.exports = (socket) => {
     try {
 
-        const currentRoom = roomsRepository.getRoom(room);
+        const currentRoom = roomsRepository.getCurrentRoom();
 
         if (currentRoom.ownerId == socket.id) {
             currentRoom.stream.kill();

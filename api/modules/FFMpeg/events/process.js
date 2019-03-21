@@ -3,8 +3,7 @@ const container = require('../../../modules/Container');
 
 module.exports = (progress) => {
     const io = container.get('io');
-    const room = container.get('room');
-    const currentRoom = roomsRepository.getRoom(room);
+    const currentRoom = roomsRepository.getCurrentRoom();
 
     if (progress.frames > 300 && currentRoom.status != 'process') {
 

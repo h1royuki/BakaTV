@@ -1,4 +1,4 @@
-const KinogoParser = require('../../parsers/KinogoParser')
+const KinogoParser = require('../parsers/KinogoParser')
 
 module.exports = (query, socket) => {
     KinogoParser.searchFilms(query).then((items) => {

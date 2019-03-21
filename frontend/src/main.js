@@ -15,7 +15,7 @@ Vue.use(Notifications);
 Vue.use(videoPlayer);
 
 
-router.afterEach((to, from) => {
+router.afterEach((to) => {
   Vue.nextTick( () => {
     document.title = to.meta.title;
   });
@@ -30,6 +30,15 @@ new Vue({
         type: 'error',
         duration: 3000,
         title: 'Error',
+        text: text,
+      });
+    },
+    this.$options.sockets.notify = (text) => {
+      this.$notify({
+        group: 'notify',
+        type: 'notify',
+        duration: 3000,
+        title: 'Notification',
         text: text,
       });
     },

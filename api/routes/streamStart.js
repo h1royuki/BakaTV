@@ -1,8 +1,8 @@
-const container = require('../../modules/Container');
-const Room = require('../../models/Room')
-const StreamService = require('../../services/StreamService');
-const roomsRepository = require('../../repository/RoomRepository');
-const KinogoParser = require('../../parsers/KinogoParser')
+const container = require('../modules/Container');
+const Room = require('../models/Room')
+const StreamService = require('../services/StreamService');
+const roomsRepository = require('../repository/RoomRepository');
+const KinogoParser = require('../parsers/KinogoParser')
 
 module.exports = (film, socket) => {
         KinogoParser.getMovieURL(film.url).then((url) => {

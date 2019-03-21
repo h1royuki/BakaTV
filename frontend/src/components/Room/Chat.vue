@@ -14,10 +14,10 @@
         v-on:enter="sendMessage()"
       ></message-input>
       <div class="control-buttons">
-        <send-button class="chat-button" v-on:send="sendMessage" :text="`Send`"></send-button>
-        <button v-if="isOwner" v-on:click="$emit('stop')" class="stop-button">
+        <send-button class="chat-button" :title="`Send message`" v-on:send="sendMessage" :text="`Send`"></send-button>
+        <stop-button class="stop-button" :title="`Stop stream`" v-if="isOwner" v-on:send="$emit('stop')">
           <stop-icon/>
-        </button>
+        </stop-button>
       </div>
     </div>
   </div>
@@ -37,6 +37,7 @@ export default {
     message: Message,
     MessageInput: Textarea,
     SendButton: Button,
+    StopButton : Button,
     StopIcon: StopIcon
   },
 
@@ -104,6 +105,10 @@ export default {
   background-color: #ff6c6c1c;
   border: none;
   color: #ff6565;
+}
+
+.stop-button:hover {
+  background-color: #c06a6a1a;
 }
 
 .chat-button {

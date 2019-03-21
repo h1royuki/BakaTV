@@ -1,6 +1,6 @@
-const RoomRepository = require('../../repository/RoomRepository')
-const container = require('../../modules/Container');
-const Message = require('../../models/Message');
+const RoomRepository = require('../repository/RoomRepository')
+const container = require('../modules/Container');
+const Message = require('../models/Message');
 
 module.exports = (socket) => {
 
@@ -15,6 +15,7 @@ module.exports = (socket) => {
                 room.ownerId = Object.keys(clients.sockets)[0];
                 RoomRepository.updateRoom(room);
                 io.to(room.ownerId).emit('setOwner');
+                io.to(room.ownerId).emit('notify', 'Now you owner');
                 console.log(`Owner change on ${room.id}`);
             } else {
                 room.stream.kill();

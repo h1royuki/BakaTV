@@ -1,17 +1,15 @@
 
 class Container {
-    
+
     constructor() {
         this._items = [];
     }
 
     get(name) {
-            return this._items[name];
-        /* throw new Error(`Item ${item} not found in container`); */
+        return this._items[name];
     }
 
     set(name, value) {
-        console.log(name);
         this._items[name] = value;
     }
 }

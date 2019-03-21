@@ -14,6 +14,6 @@ module.exports = (error) => {
     } else {
         console.log(`Stream on ${room.id} ended`);
         io.to(room.id).emit('streamStop');
-        io.to(room.id).emit('err', 'Stream stopped');
+        io.to(room.id).emit('notify', 'Stream ended');
     }
 }

@@ -15,7 +15,7 @@
           v-model="query"
           v-on:enter="search()"
         />
-        <start-button class="start-button" v-on:send="search()">
+        <start-button class="start-button" :title="`Search films`" v-on:send="search()">
           <search-icon :size="30"/>
         </start-button>
       </div>
@@ -58,7 +58,7 @@ export default {
       this.$router.push(`/room/${room}`);
     },
 
-    err(text) {
+    err() {
       this.isLoading = false;
     }
   },

@@ -1,7 +1,7 @@
-const container = require('../../modules/Container');
-const userNameGenerator = require('../../helpers/generators/userName');
-const colorGenerator = require('../../helpers/generators/color');
-const Message = require('../../models/Message');
+const container = require('../modules/Container');
+const userNameGenerator = require('../helpers/generators/userName');
+const colorGenerator = require('../helpers/generators/color');
+const Message = require('../models/Message');
 
 module.exports = (room, socket) => {
 

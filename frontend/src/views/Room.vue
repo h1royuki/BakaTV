@@ -6,7 +6,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import Chat from "../components/Room/Chat";
 
@@ -44,7 +43,6 @@ export default {
     },
 
     setOwner() {
-      console.log('dfds')
       this.room.isOwner = true;
     },
 

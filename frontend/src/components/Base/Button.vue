@@ -1,5 +1,5 @@
 <template>
-  <button v-on:click="$emit('send')">
+  <button :title="title" v-on:click="$emit('send')">
     <slot></slot>
     {{text}}
   </button>
@@ -7,7 +7,7 @@
   
 <script>
 export default {
-  props: ["text"]
+  props: ["text", "title"]
 };
 </script>
 
