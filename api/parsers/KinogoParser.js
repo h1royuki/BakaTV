@@ -51,13 +51,19 @@ class KinogoParser {
         const options = {
             method: 'GET',
             uri: url,
+            transform: function (body) {
+                body = new Buffer.from(body, 'binary');
+                body = iconv.decode(body, 'win1251');
+                return cheerio.load(body);
+            }
         };
 
         return rp(options)
-            .then((body) => {
-                return body.match(/\[720p\](.*720\.mp4)/)[1];
+            .then(($) => {
+                return $('#video-inner-save-timeline-temp').parent().next().children().last().attr('href');
             })
             .catch((err) => {
+                console.log()
                 throw new Error('Error get movie URL');
             });
     }

@@ -60,7 +60,7 @@ export default {
 .container.room {
   display: flex;
   flex-direction: row;
-  justify-content: start;
+  justify-content: flex-start;
   flex-wrap: wrap;
   align-items: stretch;
   max-width: 100%;

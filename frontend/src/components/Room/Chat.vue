@@ -52,7 +52,6 @@ export default {
     },
 
     chatMessage(message) {
-      console.log(message);
       this.messages.push(message);
     }
   },
