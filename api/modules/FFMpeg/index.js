@@ -3,25 +3,20 @@ const { start, progress, end } = require('./events');
 
 class FFMpeg {
 
-    start(url, id) {
+    start(url, id, room) {
         const stream = ffmpeg(url)
             .videoCodec('copy')
             .audioCodec('copy')
             .output(process.env.RTMP_URL + id)
-            .preset(this._preset);
-
-        stream.run();
-        return stream;
-    }
-
-    _preset(command) {
-        command
             .addInputOption('-re')
             .toFormat('flv')
             .on('start', () => start())
-            .on('progress', (percents) => progress(percents))
-            .on('end', () => end())
-            .on('error', (error) => end(error));
+            .on('progress', (percents) => progress(room, percents))
+            .on('end', () => end(room))
+            .on('error', (error) => end(room, error));
+
+        stream.run();
+        return stream;
     }
 
 }

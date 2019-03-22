@@ -11,7 +11,7 @@ module.exports = (film, socket) => {
 
                 const streamService = new StreamService(url);
 
-                room.stream = streamService.start();
+                room.stream = streamService.start(room.id);
                 room.streamId = streamService.getStreamId();
 
                 roomsRepository.addRoom(room);

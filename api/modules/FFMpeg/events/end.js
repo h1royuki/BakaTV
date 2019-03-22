@@ -1,10 +1,10 @@
 const container = require('../../Container');
 const roomsRepository = require('../../../repository/RoomRepository');
 
-module.exports = (error) => {
+module.exports = (room, error) => {
 
     const io = container.get('io');
-    const room = roomsRepository.getCurrentRoom();
+    const room = roomsRepository.getRoom(room);
   
     roomsRepository.removeRoom(room.id);
 

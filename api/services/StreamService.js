@@ -9,8 +9,8 @@ class StreamService {
         this._streamId = stringGenerator();
     }
 
-    start() {
-        return FFMpeg.start(this._path, this._streamId);
+    start(room) {
+        return FFMpeg.start(this._path, this._streamId, room);
     }
 
     stop(stream) {
