@@ -1,12 +1,12 @@
 <template>
+<transition name="fade">
     <div v-if="items.length > 0" class="search-result">
         <div v-for="(film, index ) in items" :key="index">
             <film v-on:send="$emit('send', $event)" :film="film"></film>
         </div>
       </div>
-      <div v-else class="search-empty"> 
-          
-      </div>
+      <div v-else class="search-empty"></div>
+</transition>
 </template>
 <script>
 import Film from './Search/Film';

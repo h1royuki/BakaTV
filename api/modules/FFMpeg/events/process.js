@@ -5,7 +5,7 @@ module.exports = (room, progress) => {
     const io = container.get('io');
     const currentRoom = roomsRepository.getRoom(room);
 
-    if (progress.frames > 300 && currentRoom.status != 'process') {
+    if (progress.frames > 400 && currentRoom.status != 'process') {
 
         io.to(currentRoom.ownerId).emit('streamStart', currentRoom.id);
 

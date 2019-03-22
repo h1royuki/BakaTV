@@ -1,9 +1,11 @@
 <template>
+<transition name="fade">
   <div
     v-if="message.type == 'service'"
     class="message service"
   >{{ message.id == id ? `You (${message.name}) ` : message.name }} {{message.message}}</div>
   <div v-else>
+
     <div class="message">
       <div
         class="name"
@@ -12,6 +14,7 @@
       {{message.message}}
     </div>
   </div>
+  </transition>
 </template>
 
 <script>

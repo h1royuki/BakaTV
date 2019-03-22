@@ -1,6 +1,12 @@
 <template>
   <div class="index">
-    <loading :active.sync="isLoading" :can-cancel="true" :is-full-page="true"></loading>
+    <loading 
+    :active.sync="isLoading" 
+    :can-cancel="false" 
+    :is-full-page="true"
+    :color="`#fff`"
+    :background-color="`#000`"
+    ></loading>
     <div class="overlay">
       <div class="filter"></div>
       <img class="background" src="../assets/background.jpg">

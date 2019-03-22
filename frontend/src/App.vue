@@ -2,7 +2,9 @@
   <div id="app">
     <notifications group="errors"></notifications>
     <notifications group="notify"></notifications>
+    <transition name="fade">
     <router-view/>
+    </transition>
   </div>
 </template>
 
@@ -12,15 +14,16 @@
 body {
   font-family: 'Roboto', sans-serif;
   margin: 0;
+  background-color: #232935;
 }
 .notifications {
-  font-family: 'Roboto', sans-serif !important;
   top: 40px !important;
   right: 40px !important;
 }
 
 .vue-notification {
-  font-size: 15px;
+  font-family: 'Roboto', sans-serif !important;
+  font-size: 15px !important;
   border-radius: 15px;
   padding: 20px;
   margin: 0 !important;
@@ -35,6 +38,13 @@ body {
 .notify {
   background: #0083b7;
   border: 1px solid #55cdeb !important;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s;
+}
+.fade-enter, .fade-leave-to  {
+  opacity: 0;
 }
 
 @media (max-width: 800px) {
