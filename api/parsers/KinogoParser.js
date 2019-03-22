@@ -32,9 +32,14 @@ class KinogoParser {
 
                 $('.shortstory').map(function (i, el) {
                     const item = {};
+                    const type = $(this).children('.shortimg').children().next().text();
+                    item.name = $(this).find('.zagolovki').text();
+
+                    if (!item.name.match(/.*\(\d*\)/) || type.match(/(С|с)ериалы/gmu)) {
+                        return;
+                    };
 
                     item.url = $(this).find('.zagolovki').children().last().attr('href');
-                    item.name = $(this).find('.zagolovki').text();
                     item.cover = 'https://kinogo.by' + $(this).find('.shortimg').find('img').attr('src');
 
                     items.push(item);
@@ -60,10 +65,14 @@ class KinogoParser {
 
         return rp(options)
             .then(($) => {
-                return $('#video-inner-save-timeline-temp').parent().next().children().last().attr('href');
+                const url = $('#video-inner-save-timeline-temp').parent().next().children().last().attr('href');
+                if(url.match(/https\:\/\/.*\.mp4/)) {
+                    return url;
+                } else {
+                    throw new Error('URL not found');
+                }
             })
             .catch((err) => {
-                console.log()
                 throw new Error('Error get movie URL');
             });
     }
