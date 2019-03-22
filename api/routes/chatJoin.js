@@ -7,11 +7,11 @@ module.exports = (socket) => {
 
     const io = container.get('io');
 
-    console.log(`Socket ${socket.id} connected to ${room}`);
+    console.log(`Socket ${socket.id} connected to ${socket.room}`);
 
     socket.name = userNameGenerator();
     socket.color = colorGenerator();
 
     socket.emit('chatJoin', socket.id);
-    io.to(room).emit('chatMessage', new Message('service', socket.id, socket.name, 'joined').toJson());
+    io.to(socket.room).emit('chatMessage', new Message('service', socket.id, socket.name, 'joined').toJson());
 };
