@@ -10,7 +10,7 @@ class FFMpeg {
             .output(process.env.RTMP_URL + id)
             .addInputOption('-re')
             .toFormat('flv')
-            .on('start', () => start())
+            .on('start', () => start(room))
             .on('progress', (percents) => progress(room, percents))
             .on('end', () => end(room))
             .on('error', (error) => end(room, error));

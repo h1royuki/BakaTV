@@ -7,7 +7,7 @@ module.exports = (socket) => {
     const io = container.get('io');
     try {
         if (socket.room) {
-            const room = RoomRepository.getCurrentRoom();
+            const room = RoomRepository.getRoom(socket.room);
             if (socket.id == room.ownerId) {
                 const clients = io.sockets.adapter.rooms[room.id];
 

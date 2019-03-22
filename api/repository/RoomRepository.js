@@ -8,10 +8,6 @@ class RoomsRepository {
         this._rooms = [];
     }
 
-    getCurrentRoom() {
-        return this.getRoom(container.get('room'));
-    }
-
     addRoom(room) {
         if (!(room.id in this._rooms)) {
             this._rooms[room.id] = room;
