@@ -1,6 +1,6 @@
 <template>
   <div v-if="film" class="film" @click="$emit('send', film)">
-    <img class="film-poster" :src="film.cover">
+    <img class="film-poster" :src="film.cover" @error="replace">
     <div class="film-overlay">
       <search-icon :size="128"/>
     </div>
@@ -12,10 +12,16 @@
 
 <script>
 import SearchIcon from "vue-material-design-icons/Play.vue";
+import noImg from "../../../assets/no_img.svg";
 export default {
   props: ["film"],
   components: {
     SearchIcon
+  },
+  methods: {
+    replace(e) {
+      e.target.src = noImg;
+    }
   }
 };
 </script>
@@ -37,6 +43,11 @@ export default {
 
 .film:hover {
   cursor: pointer;
+}
+
+.film-poster {
+  width: 170px;
+  height: 260px;
 }
 
 .film-overlay {

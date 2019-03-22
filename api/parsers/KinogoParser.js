@@ -32,10 +32,10 @@ class KinogoParser {
 
                 $('.shortstory').map(function (i, el) {
                     const item = {};
-                    const type = $(this).children('.shortimg').children().next().text();
+                    const type = $(this).text();
                     item.name = $(this).find('.zagolovki').text();
 
-                    if (!item.name.match(/.*\(\d*\)/) || type.match(/(С|с)ериалы/gmu)) {
+                    if (!item.name.match(/.*\(\d*\)/) || type.match(/(С|с)ериал/gmu)) {
                         return;
                     };
 

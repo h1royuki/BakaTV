@@ -22,6 +22,7 @@ input {
   color: #fff;
   border-radius: 50px;
   transition: 0.3s;
+  outline: none;
 }
 
 input::placeholder {

@@ -5,6 +5,11 @@ module.exports = (room, socket) => {
     try {
         const currentRoom = roomsRepository.getRoom(room);
 
+        if(!currentRoom.ownerId) {
+            currentRoom.ownerId = socket.id;
+            roomsRepository.updateRoom(currentRoom);
+        }
+
         socket.room = currentRoom.id;
         socket.join(currentRoom.id);
         socket.emit('getRoomInfo', currentRoom.toJson(socket.id));
@@ -14,4 +19,4 @@ module.exports = (room, socket) => {
             socket.emit('notFound');
         }
     }
-};  
+};      

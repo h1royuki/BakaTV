@@ -1,18 +1,18 @@
 <template>
   <div class="index">
-    <loading 
-    :active.sync="isLoading" 
-    :can-cancel="false" 
-    :is-full-page="true"
-    :color="`#fff`"
-    :background-color="`#000`"
+    <loading
+      :active.sync="isLoading"
+      :can-cancel="false"
+      :is-full-page="true"
+      :color="`#fff`"
+      :background-color="`#000`"
     ></loading>
     <div class="overlay">
       <div class="filter"></div>
       <img class="background" src="../assets/background.jpg">
     </div>
     <div class="container index">
-      <img class="logo" src="../assets/logo.svg">
+      <div class="logo"></div>
       <div class="search-form">
         <url-input
           class="url-input"
@@ -81,8 +81,7 @@ export default {
     }
   },
 
-  mounted() {
-  }
+  mounted() {}
 };
 </script>
 
@@ -114,8 +113,12 @@ export default {
 
 .logo {
   width: 70%;
+  min-height: 450px;
   margin: 20px;
-  max-width: 450px;
+  background-image: url(/img/logo.72d4bab5.svg);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .container.index {
@@ -164,6 +167,14 @@ export default {
   max-width: 700px;
   margin-bottom: 50px;
   position: relative;
+}
+
+@media (max-width: 800px) {
+  .logo {
+    width: 70%;
+    height: 100%;
+    min-height: 300px;
+  }
 }
 </style>
 

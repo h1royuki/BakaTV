@@ -26,7 +26,7 @@ body {
   font-size: 15px !important;
   border-radius: 15px;
   padding: 20px;
-  margin: 0 !important;
+  margin: 20px !important;
   padding: 20px !important;
 }
 
