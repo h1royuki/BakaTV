@@ -56,6 +56,7 @@ body {
   .vue-notification {
     font-size: 15px;
     border-radius: 0;
+    margin: 0 !important;
   }
 }
 </style>
