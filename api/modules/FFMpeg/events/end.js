@@ -8,9 +8,12 @@ module.exports = (roomId, error) => {
     const currentRoom = RoomRepository.getRoom(roomId);
 
     if (currentRoom.status == 'start' || currentRoom.status == 'work') {
+        
+        RoomRepository.removeRoom(roomId);
 
-        io.to(roomId).emit('err', `Stream crashed: ${error}`);
-
+        io.to(currentRoom.id).emit('roomDestroy');
+        io.to(currentRoom.ownerId).emit('err', `Stream crashed: ${error}`);
+        
         console.log(`Stream on ${roomId} crashed: ${error}`);
 
     } else if (currentRoom.status == 'destroy') {

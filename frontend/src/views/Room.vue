@@ -2,7 +2,6 @@
   <div class="room">
     <div class="container room">
       <div class="stream">
-        <transition name="fade">
           <video-player v-if="room.status == 'work'" class="player" :options="player"></video-player>
           <div class="status" v-if="room.status == 'start'">
             <p>Stream init</p>
@@ -13,7 +12,6 @@
           <div class="status" v-if="room.status == 'stop'">
             <p>Stream stopped</p>
           </div>
-        </transition>
       </div>
       <chat class="chat"></chat>
     </div>
