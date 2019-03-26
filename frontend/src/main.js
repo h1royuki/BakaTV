@@ -3,16 +3,22 @@ import VueSocketio from 'vue-socket.io-extended';
 import io from 'socket.io-client';
 import Notifications from 'vue-notification'
 import VueChatScroll from 'vue-chat-scroll'
+import Popover  from 'vue-js-popover'
+import videoPlayer from 'vue-video-player';
+
 import App from './App';
 import router from './router';
-import videoPlayer from 'vue-video-player';
+import store from './store'
+
 import 'videojs-contrib-hls.js/src/videojs.hlsjs'
 import 'video.js/dist/video-js.css';
+
 Vue.config.productionTip = false;
-Vue.use(VueSocketio, io(process.env.VUE_APP_SOCKET_URL));
+Vue.use(VueSocketio, io(process.env.VUE_APP_SOCKET_URL), {store: store});
 Vue.use(VueChatScroll);
 Vue.use(Notifications);
-Vue.use(videoPlayer);
+Vue.use(videoPlayer); 
+Vue.use(Popover)
 
 
 router.afterEach((to) => {
@@ -23,6 +29,7 @@ router.afterEach((to) => {
 
 new Vue({
   router,
+  store,
   created() {
     this.$options.sockets.err = (text) => {
       this.$notify({
@@ -43,7 +50,7 @@ new Vue({
       });
     },
     this.$options.sockets.notFound = () => {
-      this.$router.push("/");
+     this.$router.push("/");                                 
     }
   },
   render: h => h(App)

@@ -13,19 +13,7 @@
     </div>
     <div class="container index">
       <div class="logo"></div>
-      <div class="search-form">
-        <url-input
-          class="url-input"
-          :type="`text`"
-          :placeholder="`Search anything...`"
-          v-model="query"
-          v-on:enter="search()"
-        />
-        <start-button class="start-button" :title="`Search films`" v-on:send="search()">
-          <search-icon :size="30"/>
-        </start-button>
-      </div>
-      <search v-if="result" v-on:send="start($event)" :items="result"></search>
+    <search></search>
     </div>
   </div>
 </template>
@@ -33,55 +21,19 @@
 <script>
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
-import Button from "../components/Base/Button.vue";
-import Input from "../components/Base/Input.vue";
-import Search from "../components/Index/Search";
-import SearchIcon from "vue-material-design-icons/Magnify.vue";
+import Search from "../components/Search";
 
 export default {
   components: {
-    UrlInput: Input,
-    StartButton: Button,
     Search,
-    SearchIcon,
     Loading
   },
 
-  data() {
-    return {
-      query: "",
-      result: null,
-      isLoading: false
-    };
-  },
-  sockets: {
-    searchFilms(result) {
-      this.result = result;
-      this.isLoading = false;
-    },
-
-    streamStart(room) {
-      this.$router.push(`/room/${room}`);
-    },
-
-    err() {
-      this.isLoading = false;
+  computed: {
+    isLoading() {
+      return this.$store.getters.isLoading;
     }
-  },
-  methods: {
-    start(film) {
-      this.$socket.emit("streamStart", film);
-      this.isLoading = true;
-    },
-
-    search() {
-      this.$socket.emit("searchFilms", this.query);
-      this.isLoading = true;
-      this.result = null;
-    }
-  },
-
-  mounted() {}
+  }
 };
 </script>
 
@@ -115,7 +67,7 @@ export default {
   width: 70%;
   min-height: 450px;
   margin: 20px;
-  background-image: url(/img/logo.72d4bab5.svg);
+  background-image: url("../assets/logo.svg");
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -129,44 +81,6 @@ export default {
   max-width: 100%;
   margin: 0 auto;
   z-index: 0;
-}
-
-.start-button {
-  padding: 0;
-  font-size: 0;
-  position: absolute;
-  right: 26px;
-  top: 1px;
-  background-color: transparent;
-  border: 0;
-  color: #dbdbdb;
-}
-
-.start-button:hover {
-  background-color: transparent;
-  color: #fff;
-  transform: scale(1.05);
-}
-
-.url-input {
-  margin: 0 10px;
-  width: 95%;
-  max-width: 700px;
-  font-size: 20px;
-  text-align: center;
-}
-
-.search-form {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: nowrap;
-  align-items: center;
-  align-content: center;
-  width: 100%;
-  max-width: 700px;
-  margin-bottom: 50px;
-  position: relative;
 }
 
 @media (max-width: 800px) {

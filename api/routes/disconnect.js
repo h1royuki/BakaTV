@@ -1,41 +1,44 @@
-const RoomRepository = require('../repository/RoomRepository')
+const RoomService = require('../services/RoomService');
 const container = require('../modules/Container');
 const Message = require('../models/Message');
 
 module.exports = (socket) => {
 
     const io = container.get('io');
+
     try {
 
         console.log(`Socket ${socket.id} disconnected`);
 
         if (socket.room) {
-            const room = RoomRepository.getRoom(socket.room);
-            const clients = io.sockets.adapter.rooms[room.id];
 
-            if (clients) {
-                if (socket.id == room.ownerId) {
-                    room.ownerId = Object.keys(clients.sockets)[0];
-                    RoomRepository.updateRoom(room);
+            const roomClients = io.sockets.adapter.rooms[socket.id];
 
-                    io.to(room.ownerId).emit('setOwner');
-                    io.to(room.ownerId).emit('notify', 'Now you owner');
+            if (roomClients) {
+                if (RoomService.isRoomOwner(socket.id, socket.room)) {
 
-                    console.log(`Owner change on ${room.id}`);
+                    const newOwner = Object.keys(roomClients.sockets)[0];
+
+                    RoomService.setRoomOwner(newOwner, socket.room);
+
+                    io.to(newOwner).emit('setOwner');
+                    io.to(newOwner).emit('notify', 'Now you owner');
+
+                    console.log(`Owner change on ${socket.room}`);
                 }
             } else {
-                console.log(`Room ${room.id} empty, wait 30 seconds to delete`);
+                console.log(`Room ${socket.room} empty, wait 30 seconds to delete`);
 
-                room.ownerId = null;
-                RoomRepository.updateRoom(room);
+                RoomService.setRoomOwner(null, socket.room);
 
                 setTimeout(() => {
-                    if (!io.sockets.adapter.rooms[room.id]) {
-                        room.stream.kill();
 
-                        console.log(`Timer: room ${room.id} deleted`);
+                    if (roomClients) {
+                        RoomService.setStreamStatus(socket.room, 'stop');
+
+                        console.log(`Timer: room ${socket.room} deleted`);
                     } else {
-                        console.log(`Timer: room ${room.id} not empty, stream not deleted`);
+                        console.log(`Timer: room ${socket.room} not empty, stream not deleted`);
                     }
                 }, 30000);
             }

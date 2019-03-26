@@ -1,22 +1,15 @@
-const container = require('../modules/Container');
 const Room = require('../models/Room')
-const StreamService = require('../services/StreamService');
-const roomsRepository = require('../repository/RoomRepository');
-const KinogoParser = require('../parsers/KinogoParser')
+const RoomService = require('../services/RoomService');
 
 module.exports = (film, socket) => {
-        KinogoParser.getMovieURL(film.url).then((url) => {
-                const room = new Room(socket.id, film);
-                container.set('room', room.id);
+        try {
+                const room = new Room(socket.id, film.name);
 
-                const streamService = new StreamService(url);
+                RoomService.startStream(room, film.url).then(() => {
+                        socket.emit('roomCreated', room.id);
+                });
 
-                room.stream = streamService.start(room.id);
-                room.streamId = streamService.getStreamId();
-
-                roomsRepository.addRoom(room);
-        }).catch((err) => {
+        } catch (err) {
                 socket.emit('err', err.message);
-        })
-
+        }
 };

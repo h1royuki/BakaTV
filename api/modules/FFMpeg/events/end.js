@@ -1,19 +1,32 @@
 const container = require('../../Container');
-const roomsRepository = require('../../../repository/RoomRepository');
+const TimeConverter = require('../../../helpers/TimeConverter')
+const RoomRepository = require('../../../repository/RoomRepository');
 
-module.exports = (room, error) => {
+module.exports = (roomId, error) => {
 
     const io = container.get('io');
-    const currentRoom = roomsRepository.getRoom(room);
-  
-    roomsRepository.removeRoom(currentRoom.id);
+    const currentRoom = RoomRepository.getRoom(roomId);
 
-    if(room.status == 'start') {
-        io.to(currentRoom.ownerId).emit('err', 'Stream crashed: ' + error);
-        console.log(`Stream on ${currentRoom.id} crashed: ` + error);
+    if (currentRoom.status == 'start' || currentRoom.status == 'work') {
+
+        io.to(roomId).emit('err', `Stream crashed: ${error}`);
+
+        console.log(`Stream on ${roomId} crashed: ${error}`);
+
+    } else if (currentRoom.status == 'destroy') {
+        RoomRepository.removeRoom(roomId);
+        console.log(`Stream on ${roomId} destroyed`);
     } else {
-        console.log(`Stream on ${currentRoom.id} ended`);
-        io.to(currentRoom.id).emit('streamStop');
-        io.to(currentRoom.id).emit('notify', 'Stream ended');
+        const progressTime = TimeConverter.TimeToDigit(currentRoom.stream.progressTime);
+        const pauseTime = TimeConverter.TimeToDigit(currentRoom.stream.pauseTime);
+
+        if (pauseTime > 0) {
+            currentRoom.stream.pauseTime = TimeConverter.digitToTime(pauseTime + progressTime - 15); // 15s = 300 frames
+        } else {
+            currentRoom.stream.pauseTime = currentRoom.stream.progressTime;
+        }
+
+        RoomRepository.updateRoom(currentRoom);
     }
+
 }

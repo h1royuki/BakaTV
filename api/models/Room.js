@@ -1,21 +1,21 @@
 
-const roomGenerator = require('../helpers/generators/randomString');
+const roomIdGenerator = require('../helpers/generators/randomString');
 
 class Room {
-    constructor(ownerId, props) {
-        this.id = roomGenerator();
+    constructor(ownerId, filmName) {
+        this.id = roomIdGenerator();
         this.ownerId = ownerId;
-        this.props = props;
-        this.streamId;
+        this.filmName = filmName;
         this.stream;
         this.status = 'start';
     }
 
     toJson(id) {
         return {
-            props: this.props,
-            streamId: this.streamId,
-            owner: this.ownerId == id ? true : false
+            filmName: this.filmName,
+            streamId: this.stream.id,
+            status: this.status,
+            isOwner: this.ownerId == id ? true : false
         }
     }
 }

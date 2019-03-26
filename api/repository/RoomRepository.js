@@ -2,7 +2,7 @@ const container = require('../modules/Container')
 const NotFoundError = require('../errors/NotFoundError')
 
 
-class RoomsRepository {
+class RoomRepository {
 
     constructor() {
         this._rooms = [];
@@ -41,4 +41,4 @@ class RoomsRepository {
 
 }
 
-module.exports = new RoomsRepository();
+module.exports = new RoomRepository();

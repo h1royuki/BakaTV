@@ -12,7 +12,7 @@
 
 <script>
 import SearchIcon from "vue-material-design-icons/Play.vue";
-import noImg from "../../../assets/no_img.svg";
+import noImg from "../../assets/no_img.svg";
 export default {
   props: ["film"],
   components: {

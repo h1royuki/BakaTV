@@ -1,63 +1,50 @@
 <template>
-  <div class="room" v-if="player.sources[0]">
+  <div class="room">
     <div class="container room">
-      <video-player :options="player" class="player"></video-player>
-      <chat class="chat" v-bind:isOwner="room.isOwner" v-on:stop="stopStream"></chat>
+      <div class="stream">
+        <transition name="fade">
+        <video-player v-if="room.status == 'work'" class="player" :options="player"></video-player>
+        <div v-else class="status">
+          <div v-if="room.status == 'start'">
+            <p>Stream init</p>
+            </div>
+          <div v-if="room.status == 'pause'">
+            <pause-icon :size="100"/>
+            <p>Stream paused</p>
+            </div>
+          <div v-if="room.status == 'stop'">
+            <p>Stream stopped</p>
+            </div>
+        </div>
+        </transition>
+      </div>
+      <chat class="chat"></chat>
     </div>
   </div>
 </template>
 <script>
-import Chat from "../components/Room/Chat";
+import PauseIcon from "vue-material-design-icons/Pause";
+import Chat from "../components/Chat";
 
 export default {
   components: {
-    Chat
+    Chat,
+    PauseIcon
   },
-  data() {
-    return {
-      room: {
-        id: this.$route.params.id,
-        props: null,
-        status: null,
-        isOwner: false
-      },
-      player: {
-        overNative: true,
-        autoplay: true,
-        controls: true,
-        sources: []
-      }
-    };
-  },
-  sockets: {
-    getRoomInfo(room) {
-      this.player.sources.push({
-        withCredentials: false,
-        type: "application/x-mpegURL",
-        src: process.env.VUE_APP_STREAM_URL + room.streamId + ".m3u8"
-      });
-      this.room.props = room.props;
-      document.title = room.props.name;
-      this.room.status = room.status;
-      this.room.isOwner = room.owner;
+
+  computed: {
+    
+    room() {
+      return this.$store.getters.room;
     },
 
-    setOwner() {
-      this.room.isOwner = true;
-    },
-
-    streamStop() {
-      this.$router.push("/");
-    }
-  },
-  methods: {
-    stopStream() {
-      this.$socket.emit("streamStop", this.room.id);
+    player() {
+      return this.$store.getters.player;
     }
   },
 
   mounted() {
-    this.$socket.emit("getRoomInfo", this.room.id);
+    this.$socket.emit("roomJoin", this.$route.params.id);
   }
 };
 </script>
@@ -66,25 +53,41 @@ export default {
 .container.room {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: center;
   flex-wrap: wrap;
   align-items: stretch;
-  max-width: 100%;
-  min-height: 100%;
   width: 100%;
   height: 100%;
   position: absolute;
 }
 
-.video-player {
+.stream {
+  background-color: black;
   width: 100%;
   min-width: 400px;
   max-width: calc(100% - 350px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.player {
+  width: 100%;
+  height: 100%;
 }
 
 .video-js {
   width: 100%;
   height: 100%;
+}
+
+.status {
+  color: white;
+  font-weight: 700;
+  font-size: 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .chat {
@@ -95,9 +98,9 @@ export default {
 }
 
 @media (max-width: 800px) {
-  .video-player {
+  .stream {
     min-width: 100%;
-    min-height: 35%;
+    min-height: 35%;  
   }
   .chat {
     min-width: 100%;

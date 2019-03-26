@@ -3,17 +3,18 @@ const { start, progress, end } = require('./events');
 
 class FFMpeg {
 
-    start(url, id, room) {
-        const stream = ffmpeg(url)
+    start(room) {
+        const stream = ffmpeg(room.stream.url)
+            .seekInput(room.stream.pauseTime)
             .videoCodec('copy')
             .audioCodec('copy')
-            .output(process.env.RTMP_URL + id)
+            .output(process.env.RTMP_URL + room.stream.id)
             .addInputOption('-re')
             .toFormat('flv')
-            .on('start', () => start(room))
-            .on('progress', (percents) => progress(room, percents))
-            .on('end', () => end(room))
-            .on('error', (error) => end(room, error));
+            .on('start', () => start(room.id))
+            .on('progress', (info) => progress(room.id, info))
+            .on('end', () => end(room.id))
+            .on('error', (error) => end(room.id, error));
 
         stream.run();
         return stream;
