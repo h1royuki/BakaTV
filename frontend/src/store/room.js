@@ -10,7 +10,7 @@ export default {
         player: {
             overNative: true,
             autoplay: true,
-            controls: false,
+            controls: true,
             sources: []
         }
     },

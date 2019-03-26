@@ -12,7 +12,7 @@ module.exports = (socket) => {
 
         if (socket.room) {
 
-            const roomClients = io.sockets.adapter.rooms[socket.id];
+            const roomClients = io.sockets.adapter.rooms[socket.room];
 
             if (roomClients) {
                 if (RoomService.isRoomOwner(socket.id, socket.room)) {
