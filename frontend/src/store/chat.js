@@ -6,11 +6,11 @@ export default {
         id: null,
       },
       mutations: {
-        SOCKET_CHATJOIN(state, id) {
+        SOCKET_JOINCHAT(state, id) {
           Vue.set(state, 'id', id);
         },
 
-        SOCKET_CHATMESSAGE(state, message) {
+        SOCKET_MESSAGECHAT(state, message) {
           state.messages.push(message);
         },
       },

@@ -2,67 +2,45 @@ import Vue from 'vue';
 
 export default {
     state: {
-        room: {
-            filmName: null,
-            status: null,
-            isOwner: false
-        },
-        player: {
-            overNative: true,
-            autoplay: true,
-            controls: true,
-            sources: []
-        }
+        filmName: null,
+        isOwner: false
     },
     mutations: {
-        SOCKET_ROOMJOIN(state, room) {
-            state.player.sources.push({
-                withCredentials: false,
-                type: "application/x-mpegURL",
-                src: process.env.VUE_APP_STREAM_URL + room.streamId + ".m3u8"
-            });
-            
-
-            Vue.set(state.room, 'filmName', room.filmName);
-            Vue.set(state.room, 'status', room.status);
-            Vue.set(state.room, 'isOwner', room.isOwner);
+        SOCKET_JOINROOM(state, room) {
+            Vue.set(state, 'filmName', room.filmName);
+            Vue.set(state, 'isOwner', room.isOwner);
         },
 
         SOCKET_SETOWNER(state) {
-            Vue.set(state.room, 'isOwner', true);
-        },  
+            Vue.set(state, 'isOwner', true);
+        },
 
-        SOCKET_STREAMCONTROL(state, status) {
-            Vue.set(state.room, 'status', status);
+        SOCKET_CONTROLSTREAM(state, status) {
+            Vue.set(state, 'status', status);
         }
     },
 
     actions: {
-        socket_roomJoin({ commit }, room) {
-            commit('SOCKET_ROOMJOIN', room);
+        socket_joinRoom({ commit }, room) {
+            commit('SOCKET_JOINROOM', room);
             document.title = `[${room.status}] ${room.filmName}`;
         },
 
-        socket_streamControl({ state, commit }, status) {
-            commit('SOCKET_STREAMCONTROL', status);
-            document.title = `[${status}] ${state.room.filmName}`;
+        socket_controlStream({ state, commit }, status) {
+            commit('SOCKET_CONTROLSTREAM', status);
+            document.title = `[${status}] ${state.filmName}`;
         }
     },
 
     getters: {
-
-        player: state => {
-            return state.player;
-        },
-
         room: state => {
-            return state.room;
+            return state;
         },
         status: state => {
-            return state.room.status;
+            return state.status;
         },
         isOwner: state => {
-            return state.room.isOwner;
+            return state.isOwner;
         }
     }
 }

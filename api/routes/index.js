@@ -1,19 +1,19 @@
-const chatJoin = require('./chatJoin');
-const chatMessage = require('./chatMessage');
+const joinChat = require('./joinChat');
+const messageChat = require('./messageChat');
 const disconnect = require('./disconnect');
 const searchFilms = require('./searchFilms');
-const roomJoin = require('./roomJoin');
-const roomDestroy = require('./roomDestroy')
-const streamStart = require('./streamStart');
-const streamControl = require('./streamControl');
+const joinRoom = require('./joinRoom');
+const destroyRoom = require('./destroyRoom')
+const createRoom = require('./createRoom');
+const getStreamState = require('./getStreamState');
 
 module.exports = (socket) => {
     socket.on('searchFilms', (query) => searchFilms(query, socket));
-    socket.on('streamStart', (url) => streamStart(url, socket));
-    socket.on('roomJoin', (room) => roomJoin(room, socket));
-    socket.on('roomDestroy', () => roomDestroy(socket));
-    socket.on('streamControl', (status) => streamControl(status, socket));
-    socket.on('chatJoin', (room) => chatJoin(room, socket));
-    socket.on('chatMessage', (msg) => chatMessage(msg, socket));
+    socket.on('createRoom', (url) => createRoom(url, socket));
+    socket.on('joinRoom', (room) => joinRoom(room, socket));
+    socket.on('destroyRoom', () => destroyRoom(socket));
+    socket.on('getStreamState', (stream) => getStreamState(stream, socket));
+    socket.on('joinChat', (room) => joinChat(room, socket));
+    socket.on('messageChat', (msg) => messageChat(msg, socket));
     socket.on('disconnect', () => disconnect(socket));
 }

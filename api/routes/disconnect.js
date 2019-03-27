@@ -22,15 +22,14 @@ module.exports = (socket) => {
                     RoomService.setRoomOwner(newOwner, socket.room);
 
                     io.to(newOwner).emit('setOwner');
+                    io.to(newOwner).emit('getStreamState');
                     io.to(newOwner).emit('notify', 'Now you owner');
 
                     console.log(`Owner change on ${socket.room}`);
                 }
             } else {
                 console.log(`Room ${socket.room} empty, wait 30 seconds to delete`);
-
                 RoomService.setRoomOwner(null, socket.room);
-
                 setTimeout(() => {
 
                     if (roomClients) {
@@ -44,7 +43,7 @@ module.exports = (socket) => {
             }
         }
 
-        io.to(socket.room).emit('chatMessage', new Message('service', socket.id, socket.name, 'leave').toJson());
+        io.to(socket.room).emit('messageChat', new Message('service', socket.id, socket.name, 'leave').toJson());
     } catch (err) {
         socket.emit(err.message);
     }

@@ -31,22 +31,6 @@
         </control-button>
         <transition name="fade">
          <popover name="control" class="modal">
-            <pause-button
-              v-on:send="streamControl('pause')"
-              v-if="status == 'work'"
-              class="control-button"
-              :title="`Pause`"
-            >
-              <pause-icon  title="" />
-            </pause-button>
-            <resume-button
-              v-on:send="streamControl('resume')"
-              v-if="status == 'pause'"
-              class="control-button"
-              :title="`Resume`"
-            >
-              <resume-icon title="" />
-            </resume-button>
             <destroy-button
               v-on:send="destroyRoom"
               class="control-button"
@@ -68,8 +52,6 @@ import Message from "./Chat/Message";
 import Button from "./Base/Button";
 import Textarea from "./Base/Textarea";
 import ControlIcon from "vue-material-design-icons/Tune";
-import PauseIcon from "vue-material-design-icons/Pause";
-import ResumeIcon from "vue-material-design-icons/Play";
 import DestroyIcon from "vue-material-design-icons/Delete";
 
 export default {
@@ -77,12 +59,8 @@ export default {
     MessageInput: Textarea,
     SendButton: Button,
     ControlButton: Button,
-    PauseButton: Button,
-    ResumeButton: Button,
     DestroyButton: Button,
     ControlIcon,
-    PauseIcon,
-    ResumeIcon,
     DestroyIcon,
     Message
   },
@@ -109,22 +87,17 @@ export default {
 
   mounted() {
     this.popupItem = this.$el;
-    this.$socket.emit("chatJoin", this.room);
+    this.$socket.emit("joinChat", this.room);
   },
 
   methods: {
+     sendMessage() {
+      this.$socket.emit("messageChat", this.message);
+      this.message = "";
+    },
 
     destroyRoom() {
-      this.$socket.emit("roomDestroy");
-    },
-
-    streamControl(status) {
-      this.$socket.emit("streamControl", status);
-    },
-
-    sendMessage() {
-      this.$socket.emit("chatMessage", this.message);
-      this.message = "";
+      this.$socket.emit("destroyRoom");
     },
 
     showControls() {

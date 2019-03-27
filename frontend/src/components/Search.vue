@@ -49,7 +49,7 @@ export default {
 
   methods: {
     start(film) {
-      this.$socket.emit("streamStart", film);
+      this.$socket.emit("createRoom", film);
       this.$store.commit("changeLoading");
     },
 

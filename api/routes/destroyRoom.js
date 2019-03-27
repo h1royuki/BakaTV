@@ -7,7 +7,7 @@ module.exports = (socket) => {
 
             const io = container.get('io');
 
-            io.to(socket.room).emit('roomDestroy');
+            io.to(socket.room).emit('destroyRoom');
             io.to(socket.room).emit('notify', `Stream destroyed by owner`);
 
             RoomService.destroyRoom(socket.room);

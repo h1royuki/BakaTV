@@ -2,16 +2,15 @@
   <div class="room">
     <div class="container room">
       <div class="stream">
-          <video-player v-if="room.status == 'work'" class="player" :options="player"></video-player>
-          <div class="status" v-if="room.status == 'start'">
-            <p>Stream init</p>
-          </div>
-          <div class="status" v-if="room.status == 'pause'">
-            <p>Stream paused</p>
-          </div>
-          <div class="status" v-if="room.status == 'stop'">
-            <p>Stream stopped</p>
-          </div>
+        <video-player
+          class="player"
+          ref="videoPlayer"
+          :options="playerOptions"
+          :controls="$store.getters.isOwner"
+          @play="onPlayerPlay($event)"
+          @pause="onPlayerPause($event)"
+          @timeupdate="onPlayerTimeupdate($event)"
+        ></video-player>
       </div>
       <chat class="chat"></chat>
     </div>
@@ -24,21 +23,81 @@ export default {
   components: {
     Chat
   },
+  data() {
+    return {
+      stream: {
+        status: null
+      },
+      playerOptions: {
+        overNative: true,
+        autoplay: true,
+        sources: []
+      }
+    };
+  },
 
-  computed: {
-    room() {
-      return this.$store.getters.room;
+  methods: {
+    onPlayerPlay() {
+      this.stream.status = "play";
+    },
+    onPlayerPause() {
+      this.stream.status = "pause";
+    },
+    onPlayerTimeupdate($event) {
+      this.stream.time = $event.currentTime();
+    }
+  },
+
+  sockets: {
+
+    joinRoom(room) {
+      this.playerOptions.sources.push({
+        withCredentials: false,
+        type: "video/mp4",
+        src: room.url
+      });
     },
 
+    getStreamState() {
+      this.$socket.emit("getStreamState", this.stream);
+    },
+
+    updateStreamState(stream) {
+      if(this.stream.time - stream.time >= 5 || this.stream.time - stream.time <= -5) {
+          this.player.currentTime(stream.time);
+      }
+
+      if (this.stream.status != stream.status) {
+
+        this.stream.status = stream.status;
+
+        if (stream.status == "play") {
+          this.player.play();
+        }
+        if (stream.status == "pause") {
+          this.player.pause();
+        }
+      }
+    }
+  },
+
+  computed: {
     player() {
-      return this.$store.getters.player;
+      return this.$refs.videoPlayer.player;
+    },
+    isOwner() {
+      return this.$store.getters.isOwner;
     }
   },
 
   mounted() {
-    this.$socket.emit("roomJoin", this.$route.params.id);
+    this.$socket.emit("joinRoom", this.$route.params.id);
+
+    setTimeout(() => {
+    }, 1000);
   }
 };
+
 </script>
 
 <style>

@@ -6,15 +6,13 @@ class Room {
         this.id = roomIdGenerator();
         this.ownerId = ownerId;
         this.filmName = filmName;
-        this.stream;
-        this.status = 'start';
+        this.url;
     }
 
     toJson(id) {
         return {
             filmName: this.filmName,
-            streamId: this.stream.id,
-            status: this.status,
+            url: this.url,
             isOwner: this.ownerId == id ? true : false
         }
     }

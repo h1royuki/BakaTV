@@ -13,6 +13,6 @@ module.exports = (room, socket) => {
     socket.color = colorGenerator();
     socket.join(room);
 
-    socket.emit('chatJoin', socket.id);
-    io.to(room).emit('chatMessage', new Message('service', socket.id, socket.name, 'joined').toJson());
+    socket.emit('joinChat', socket.id);
+    io.to(room).emit('messageChat', new Message('service', socket.id, socket.name, 'joined').toJson());
 };
