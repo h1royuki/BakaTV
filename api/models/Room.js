@@ -7,12 +7,16 @@ class Room {
         this.ownerId = ownerId;
         this.filmName = filmName;
         this.url;
+        this.time = 0;
+        this.status = 'play';
     }
 
     toJson(id) {
         return {
             filmName: this.filmName,
             url: this.url,
+            time: this.time,
+            status: this.status,
             isOwner: this.ownerId == id ? true : false
         }
     }

@@ -10,6 +10,7 @@
           @play="onPlayerPlay($event)"
           @pause="onPlayerPause($event)"
           @timeupdate="onPlayerTimeupdate($event)"
+          @canplay="onPlayerCanplay($event)"
         ></video-player>
       </div>
       <chat class="chat"></chat>
@@ -26,7 +27,8 @@ export default {
   data() {
     return {
       stream: {
-        status: null
+        status: null,
+        time: null
       },
       playerOptions: {
         overNative: true,
@@ -40,17 +42,48 @@ export default {
     onPlayerPlay() {
       this.stream.status = "play";
     },
+
     onPlayerPause() {
       this.stream.status = "pause";
     },
+
     onPlayerTimeupdate($event) {
       this.stream.time = $event.currentTime();
+    },
+
+    onPlayerCanplay($event) {
+      if (this.isOwner) {
+        this.$socket.emit("getStreamState");
+      }
+    },
+
+    updatePlayerTime(time) {
+      let diff = this.stream.time - time;
+
+      if (diff >= 5 || diff <= -5) {
+        this.player.currentTime(time);
+      }
+    },
+
+    changePlayerStatus(status) {
+      if (this.stream.status != status) {
+        this.stream.status = status;
+
+        if (status == "play") {
+          this.player.play();
+        }
+
+        if (status == "pause") {
+          this.player.pause();
+        }
+      }
     }
   },
 
   sockets: {
-
     joinRoom(room) {
+      document.title = room.filmName;
+
       this.playerOptions.sources.push({
         withCredentials: false,
         type: "video/mp4",
@@ -58,26 +91,13 @@ export default {
       });
     },
 
-    getStreamState() {
-      this.$socket.emit("getStreamState", this.stream);
+    updateStreamState() {
+      this.$socket.emit("updateStreamState", this.stream);
     },
 
-    updateStreamState(stream) {
-      if(this.stream.time - stream.time >= 5 || this.stream.time - stream.time <= -5) {
-          this.player.currentTime(stream.time);
-      }
-
-      if (this.stream.status != stream.status) {
-
-        this.stream.status = stream.status;
-
-        if (stream.status == "play") {
-          this.player.play();
-        }
-        if (stream.status == "pause") {
-          this.player.pause();
-        }
-      }
+    getStreamState(stream) {
+      this.updatePlayerTime(stream.time);
+      this.changePlayerStatus(stream.status);
     }
   },
 
@@ -92,12 +112,8 @@ export default {
 
   mounted() {
     this.$socket.emit("joinRoom", this.$route.params.id);
-
-    setTimeout(() => {
-    }, 1000);
   }
 };
-
 </script>
 
 <style>

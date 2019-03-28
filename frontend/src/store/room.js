@@ -13,25 +13,9 @@ export default {
 
         SOCKET_SETOWNER(state) {
             Vue.set(state, 'isOwner', true);
-        },
-
-        SOCKET_CONTROLSTREAM(state, status) {
-            Vue.set(state, 'status', status);
         }
     },
-
-    actions: {
-        socket_joinRoom({ commit }, room) {
-            commit('SOCKET_JOINROOM', room);
-            document.title = `[${room.status}] ${room.filmName}`;
-        },
-
-        socket_controlStream({ state, commit }, status) {
-            commit('SOCKET_CONTROLSTREAM', status);
-            document.title = `[${status}] ${state.filmName}`;
-        }
-    },
-
+    
     getters: {
         room: state => {
             return state;

@@ -10,7 +10,6 @@ import App from './App';
 import router from './router';
 import store from './store'
 
-import 'videojs-contrib-hls.js/src/videojs.hlsjs'
 import 'video.js/dist/video-js.css';
 
 Vue.config.productionTip = false;

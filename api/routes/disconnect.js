@@ -7,9 +7,7 @@ module.exports = (socket) => {
     const io = container.get('io');
 
     try {
-
-        console.log(`Socket ${socket.id} disconnected`);
-
+        
         if (socket.room) {
 
             const roomClients = io.sockets.adapter.rooms[socket.room];
@@ -22,7 +20,7 @@ module.exports = (socket) => {
                     RoomService.setRoomOwner(newOwner, socket.room);
 
                     io.to(newOwner).emit('setOwner');
-                    io.to(newOwner).emit('getStreamState');
+                    io.to(newOwner).emit('updateStreamState');
                     io.to(newOwner).emit('notify', 'Now you owner');
 
                     console.log(`Owner change on ${socket.room}`);
@@ -30,14 +28,13 @@ module.exports = (socket) => {
             } else {
                 console.log(`Room ${socket.room} empty, wait 30 seconds to delete`);
                 RoomService.setRoomOwner(null, socket.room);
+
                 setTimeout(() => {
-
-                    if (roomClients) {
-                        RoomService.setStreamStatus(socket.room, 'stop');
-
-                        console.log(`Timer: room ${socket.room} deleted`);
-                    } else {
+                    if (io.sockets.adapter.rooms[socket.room]) {
                         console.log(`Timer: room ${socket.room} not empty, stream not deleted`);
+                    } else {
+                        RoomService.destroyRoom(socket.room);
+                        console.log(`Timer: room ${socket.room} deleted`);
                     }
                 }, 30000);
             }

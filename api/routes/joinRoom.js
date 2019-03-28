@@ -1,26 +1,18 @@
-const container = require('../modules/Container');
-const RoomRepository = require('../repository/RoomRepository');
+const RoomService = require('../services/RoomService');
 const NotFoundError = require('../errors/NotFoundError');
 
 module.exports = (room, socket) => {
     try {
 
-        const io = container.get('io');
-        const currentRoom = RoomRepository.getRoom(room);
-
-        if (!currentRoom.ownerId) {
-            currentRoom.ownerId = socket.id;
-            socket.emit('getStreamState');
-            RoomRepository.updateRoom(currentRoom);
-        }
-
-        if (currentRoom.ownerId == socket.id) {;
-            socket.emit('getStreamState');
-        }
-
         socket.room = room;
         socket.join(room);
-        socket.emit('joinRoom', currentRoom.toJson(socket.id));
+
+        if (!RoomService.getOwner(room)) {
+            RoomService.setRoomOwner(socket.id, room);
+        }
+
+        socket.emit('joinRoom', RoomService.getRoomState(socket.id, room));
+
     } catch (err) {
         socket.emit('err', err.message);
         if (err instanceof NotFoundError) {

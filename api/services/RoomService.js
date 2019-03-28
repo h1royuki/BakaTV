@@ -12,6 +12,37 @@ class RoomService {
         })
     }
 
+    getRoomState(socketId, roomId) {
+        return roomRepository
+            .getRoom(roomId)
+            .toJson(socketId);
+    }
+
+    getStreamState(roomId) {
+        const room = roomRepository.getRoom(roomId);
+        const state = {};
+
+        state.status = room.status;
+        state.time = room.time;
+
+        return state;
+    }
+
+    updateStreamState(roomId, stream) {
+        const room = roomRepository.getRoom(roomId);
+
+        room.status = stream.status;
+        room.time = stream.time;
+
+        roomRepository.updateRoom(room);
+    }
+
+    getOwner(roomId) {
+        return roomRepository
+            .getRoom(roomId)
+            .ownerId;
+    }
+
     isRoomOwner(socketId, roomId) {
         const room = roomRepository.getRoom(roomId);
 
@@ -25,7 +56,7 @@ class RoomService {
     }
 
     destroyRoom(roomId) {
-            roomRepository.removeRoom(roomId);
+        roomRepository.removeRoom(roomId);
     }
 }
 
