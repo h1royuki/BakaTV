@@ -1,16 +1,15 @@
 <template>
   <div class="room">
     <div class="container room">
-      <div class="stream">
+      <div class="player">
         <video-player
-          class="player"
+          class="vjs-player"
           ref="videoPlayer"
           :options="playerOptions"
-          :controls="$store.getters.isOwner"
           @play="onPlayerPlay($event)"
           @pause="onPlayerPause($event)"
           @timeupdate="onPlayerTimeupdate($event)"
-          @canplay="onPlayerCanplay($event)"
+          @ready="onPlayerReady($event)"
         ></video-player>
       </div>
       <chat class="chat"></chat>
@@ -26,9 +25,9 @@ export default {
   },
   data() {
     return {
-      stream: {
-        status: null,
-        time: null
+      playerState: {
+        lastTime: null,
+        lastStatus: null
       },
       playerOptions: {
         overNative: true,
@@ -37,49 +36,6 @@ export default {
       }
     };
   },
-
-  methods: {
-    onPlayerPlay() {
-      this.stream.status = "play";
-    },
-
-    onPlayerPause() {
-      this.stream.status = "pause";
-    },
-
-    onPlayerTimeupdate($event) {
-      this.stream.time = $event.currentTime();
-    },
-
-    onPlayerCanplay($event) {
-      if (this.isOwner) {
-        this.$socket.emit("getStreamState");
-      }
-    },
-
-    updatePlayerTime(time) {
-      let diff = this.stream.time - time;
-
-      if (diff >= 5 || diff <= -5) {
-        this.player.currentTime(time);
-      }
-    },
-
-    changePlayerStatus(status) {
-      if (this.stream.status != status) {
-        this.stream.status = status;
-
-        if (status == "play") {
-          this.player.play();
-        }
-
-        if (status == "pause") {
-          this.player.pause();
-        }
-      }
-    }
-  },
-
   sockets: {
     joinRoom(room) {
       document.title = room.filmName;
@@ -89,15 +45,76 @@ export default {
         type: "video/mp4",
         src: room.url
       });
+
+      this.playerState.lastTime = room.time;
+      this.playerState.lastStatus = room.status;
     },
 
-    updateStreamState() {
-      this.$socket.emit("updateStreamState", this.stream);
+    getPlayerTime(time) {
+      if (this.isNeedSetTime(this.player.currentTime(), time)) {
+        this.playerState.lastTime = time;
+        this.player.currentTime(time);
+      }
     },
 
-    getStreamState(stream) {
-      this.updatePlayerTime(stream.time);
-      this.changePlayerStatus(stream.status);
+    getPlayerStatus(status) {
+      this.setPlayerStatus(status);
+    },
+
+    setOwner() {
+      this.player.controls(true);
+    }
+  },
+
+  methods: {
+    onPlayerPlay() {
+      if (this.isOwner) {
+        this.$socket.emit("updatePlayerStatus", "play");
+      }
+    },
+
+    onPlayerPause() {
+      if (this.isOwner) {
+        this.$socket.emit("updatePlayerStatus", "pause");
+      }
+    },
+
+    onPlayerTimeupdate($event) {
+      if (this.isOwner) {
+        if (
+          this.isNeedSetTime($event.currentTime(), this.playerState.lastTime)
+        ) {
+          this.playerState.lastTime = $event.currentTime();
+          this.$socket.emit("updatePlayerTime", $event.currentTime());
+        }
+      }
+    },
+
+    onPlayerReady($event) {
+      $event.currentTime(this.playerState.lastTime);
+      this.setPlayerStatus(this.playerState.lastStatus);
+
+      if (this.isOwner) {
+        $event.controls(true);
+      } else {
+        $event.controls(false);
+      }
+    },
+
+    setPlayerStatus(status) {
+      this.playerState.lastStatus = status;
+
+      if (status == "play") {
+        this.player.play();
+      }
+      if (status == "pause") {
+        this.player.pause();
+      }
+    },
+
+    isNeedSetTime(time1, time2) {
+      let diff = time1 - time2;
+      return diff >= 5 || diff <= -5 ? true : false;
     }
   },
 
@@ -128,7 +145,7 @@ export default {
   position: absolute;
 }
 
-.stream {
+.player {
   background-color: black;
   width: 100%;
   max-width: calc(100% - 350px);
@@ -137,7 +154,7 @@ export default {
   align-items: center;
 }
 
-.player {
+.vjs-player {
   width: 100%;
   height: 100%;
 }
@@ -159,7 +176,7 @@ export default {
 }
 
 @media (max-width: 800px) {
-  .stream {
+  .player {
     min-width: 100%;
     height: 35%;
   }

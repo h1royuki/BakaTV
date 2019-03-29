@@ -1,14 +1,13 @@
+const io = require('../modules/io');
 const RoomService = require('../services/RoomService');
-const container = require('../modules/Container');
+
 
 module.exports = (socket) => {
     try {
         if (RoomService.isRoomOwner(socket.id, socket.room)) {
 
-            const io = container.get('io');
-
             io.to(socket.room).emit('destroyRoom');
-            io.to(socket.room).emit('notify', `Stream destroyed by owner`);
+            io.to(socket.room).emit('notify', `Room destroyed by owner`);
 
             RoomService.destroyRoom(socket.room);
 

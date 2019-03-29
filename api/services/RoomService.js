@@ -3,12 +3,12 @@ const KinogoParser = require('../parsers/KinogoParser');
 
 class RoomService {
 
-    startStream(room, filmURL) {
+    createRoom(room, filmURL) {
         return KinogoParser.getMovieURL(filmURL).then((url) => {
             room.url = url;
             roomRepository.addRoom(room);
         }).catch((err) => {
-            throw new Error('Error start stream');
+            throw new Error('Error create room');
         })
     }
 
@@ -18,7 +18,7 @@ class RoomService {
             .toJson(socketId);
     }
 
-    getStreamState(roomId) {
+    getPlayerState(roomId) {
         const room = roomRepository.getRoom(roomId);
         const state = {};
 
@@ -28,12 +28,15 @@ class RoomService {
         return state;
     }
 
-    updateStreamState(roomId, stream) {
+    updatePlayerStatus(roomId, status) {
         const room = roomRepository.getRoom(roomId);
+        room.status = status;
+        roomRepository.updateRoom(room);
+    }
 
-        room.status = stream.status;
-        room.time = stream.time;
-
+    updatePlayerTime(roomId, time) {
+        const room = roomRepository.getRoom(roomId);
+        room.time = time;
         roomRepository.updateRoom(room);
     }
 
@@ -57,6 +60,19 @@ class RoomService {
 
     destroyRoom(roomId) {
         roomRepository.removeRoom(roomId);
+    }
+
+    addRoomTimeout(roomId, type, timeout) {
+        const room = roomRepository.getRoom(roomId);
+        room.timeouts[type] = timeout;
+        roomRepository.updateRoom(room);
+    }
+
+    removeRoomTimeout(roomId, type) {
+        const room = roomRepository.getRoom(roomId);
+        clearTimeout(room.timeouts[type]);
+        delete room.timeouts[type];
+        roomRepository.updateRoom(room);
     }
 }
 

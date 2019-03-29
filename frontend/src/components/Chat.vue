@@ -24,7 +24,7 @@
          v-popover:control.top
           v-if="isOwner"
           class="control-button"
-          :title="`Stream settings`"
+          :title="`Room settings`"
           v-on:send="showControls"
         >
           <control-icon/>

@@ -1,13 +1,12 @@
 const RoomService = require('../services/RoomService');
 
-module.exports = (socket) => {
+module.exports = (time, socket) => {
     try {
         if (RoomService.isRoomOwner(socket.id, socket.room)) {
-            socket.emit('getStreamState', RoomService.getStreamState(socket.room));
+            
+            RoomService.updatePlayerTime(socket.room, time);
 
-            setTimeout(() => {
-                socket.emit('updateStreamState');
-            }, 2000);
+            socket.broadcast.to(socket.room).emit('getPlayerTime', time);
 
         } else {
             throw new Error('You not room owner');

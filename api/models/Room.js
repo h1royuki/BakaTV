@@ -9,6 +9,7 @@ class Room {
         this.url;
         this.time = 0;
         this.status = 'play';
+        this.timeouts = [];
     }
 
     toJson(id) {

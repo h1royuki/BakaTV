@@ -1,47 +1,43 @@
 const RoomService = require('../services/RoomService');
-const container = require('../modules/Container');
+const SocketIOService = require('../services/SocketIOService');
 const Message = require('../models/Message');
 
 module.exports = (socket) => {
-
-    const io = container.get('io');
-
     try {
-        
         if (socket.room) {
-
-            const roomClients = io.sockets.adapter.rooms[socket.room];
-
-            if (roomClients) {
+            SocketIOService.getRoomSockets(socket.room);
+            if (SocketIOService.getRoomSockets(socket.room)) {
                 if (RoomService.isRoomOwner(socket.id, socket.room)) {
-
-                    const newOwner = Object.keys(roomClients.sockets)[0];
-
+                    const newOwner = SocketIOService.getFirstSocketOfRoom(socket.room);
+                    
                     RoomService.setRoomOwner(newOwner, socket.room);
-
-                    io.to(newOwner).emit('setOwner');
-                    io.to(newOwner).emit('updateStreamState');
-                    io.to(newOwner).emit('notify', 'Now you owner');
+                    SocketIOService.emitId(newOwner, 'setOwner');
+                    SocketIOService.emitId(newOwner, 'notify', 'Now you owner');
 
                     console.log(`Owner change on ${socket.room}`);
                 }
-            } else {
-                console.log(`Room ${socket.room} empty, wait 30 seconds to delete`);
+            } else {    
                 RoomService.setRoomOwner(null, socket.room);
 
-                setTimeout(() => {
-                    if (io.sockets.adapter.rooms[socket.room]) {
-                        console.log(`Timer: room ${socket.room} not empty, stream not deleted`);
-                    } else {
+                console.log(`Room ${socket.room} empty, wait 30 seconds to delete`);
+
+                const timeout = setTimeout(() => {
+
+                    if (!SocketIOService.getRoomSockets(socket.room)) {
                         RoomService.destroyRoom(socket.room);
                         console.log(`Timer: room ${socket.room} deleted`);
                     }
                 }, 30000);
+
+                RoomService.addRoomTimeout(socket.room, 'destroy', timeout);
             }
         }
 
-        io.to(socket.room).emit('messageChat', new Message('service', socket.id, socket.name, 'leave').toJson());
+        const message = new Message('service', socket.id, socket.name, 'leave');
+
+        SocketIOService.emitId(socket.room, 'messageChat', message.toJson());
+
     } catch (err) {
-        socket.emit(err.message);
+        console.log(err.message);
     }
 };

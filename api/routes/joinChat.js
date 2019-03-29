@@ -1,11 +1,9 @@
-const container = require('../modules/Container');
 const userNameGenerator = require('../helpers/generators/userName');
 const colorGenerator = require('../helpers/generators/color');
 const Message = require('../models/Message');
+const io = require('../modules/io');
 
 module.exports = (room, socket) => {
-
-    const io = container.get('io');
 
     console.log(`Socket ${socket.id} connected to ${room}`);
 

@@ -9,6 +9,7 @@ module.exports = (room, socket) => {
 
         if (!RoomService.getOwner(room)) {
             RoomService.setRoomOwner(socket.id, room);
+            RoomService.removeRoomTimeout(room, 'destroy');
         }
 
         socket.emit('joinRoom', RoomService.getRoomState(socket.id, room));
