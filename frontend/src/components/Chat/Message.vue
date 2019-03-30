@@ -32,6 +32,7 @@ export default {
   padding: 5px 0px 5px 10px;
   margin: 5px;
   color: white;
+  word-break: break-all;
 }
 
 .message.service {

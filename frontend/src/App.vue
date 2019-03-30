@@ -11,10 +11,17 @@
 <style>
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
+
+::-webkit-scrollbar,
+::-webkit-scrollbar-thumb {
+  background-color: #232935 !important;
+}
+
 body {
   font-family: 'Roboto', sans-serif;
   margin: 0;
   background-color: #232935;
+  scrollbar-color: #29303c #232935 !important;
 }
 .notifications {
   top: 40px !important;

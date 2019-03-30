@@ -1,7 +1,8 @@
 const userNameGenerator = require('../helpers/generators/userName');
 const colorGenerator = require('../helpers/generators/color');
 const Message = require('../models/Message');
-const io = require('../modules/io');
+const SocketIOService = require('../services/SocketIOService');
+
 
 module.exports = (room, socket) => {
 
@@ -12,5 +13,8 @@ module.exports = (room, socket) => {
     socket.join(room);
 
     socket.emit('joinChat', socket.id);
-    io.to(room).emit('messageChat', new Message('service', socket.id, socket.name, 'joined').toJson());
+
+    const message = new Message('service', socket.id, socket.name, 'joined');
+
+    SocketIOService.emitId(room, 'messageChat', message.toJson());
 };

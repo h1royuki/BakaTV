@@ -13,6 +13,7 @@
         :placeholder="`Enter message`"
         v-on:enter="sendMessage()"
       ></message-input>
+
       <div class="control-buttons">
         <send-button
           class="chat-button"
@@ -20,25 +21,30 @@
           v-on:send="sendMessage"
           :text="`Send`"
         ></send-button>
+
+        <emoji-button v-on:send="showEmoji" class="control-button" :title="`Room settings`">
+          <emoji-icon/>
+        </emoji-button>
+
+        <div v-on-clickaway="hideEmoji" v-if="isShowEmoji" class="emoji-picker">
+          <VEmojiPicker :labelSearch="`Search...`" :showCategory="true" :pack="pack" @select="selectEmoji"/>
+        </div>
+
         <control-button
-         v-popover:control.top
-          v-if="isOwner"
+          v-popover:control.top
+          v-show="isOwner"
           class="control-button"
           :title="`Room settings`"
-          v-on:send="showControls"
         >
           <control-icon/>
         </control-button>
+
         <transition name="fade">
-         <popover name="control" class="modal">
-            <destroy-button
-              v-on:send="destroyRoom"
-              class="control-button"
-              :title="`Destroy room`"
-            >
-              <destroy-icon  title="" />
+          <popover name="control" class="modal">
+            <destroy-button v-on:send="destroyRoom" class="control-button" :title="`Destroy room`">
+              <destroy-icon title/>
             </destroy-button>
-         </popover>
+          </popover>
         </transition>
       </div>
     </div>
@@ -47,12 +53,15 @@
 
 
 <script>
-import ClickOutside from "vue-click-outside";
 import Message from "./Chat/Message";
 import Button from "./Base/Button";
 import Textarea from "./Base/Textarea";
 import ControlIcon from "vue-material-design-icons/Tune";
 import DestroyIcon from "vue-material-design-icons/Delete";
+import EmojiIcon from "vue-material-design-icons/EmoticonExcitedOutline";
+import VEmojiPicker from "v-emoji-picker";
+import packData from "v-emoji-picker/data/emojis.json";
+import { directive as onClickaway } from "vue-clickaway";
 
 export default {
   components: {
@@ -60,16 +69,20 @@ export default {
     SendButton: Button,
     ControlButton: Button,
     DestroyButton: Button,
+    EmojiButton: Button,
     ControlIcon,
+    EmojiIcon,
     DestroyIcon,
-    Message
+    Message,
+    VEmojiPicker
   },
 
   data() {
     return {
       room: this.$route.params.id,
       message: "",
-      isShow: false
+      isShowEmoji: false,
+      pack: packData
     };
   },
 
@@ -86,12 +99,11 @@ export default {
   },
 
   mounted() {
-    this.popupItem = this.$el;
     this.$socket.emit("joinChat", this.room);
   },
 
   methods: {
-     sendMessage() {
+    sendMessage() {
       this.$socket.emit("messageChat", this.message);
       this.message = "";
     },
@@ -100,24 +112,30 @@ export default {
       this.$socket.emit("destroyRoom");
     },
 
-    showControls() {
-      this.isShow = !this.isShow;
+    showEmoji() {
+      this.isShowEmoji = true;
+    },
+
+    hideEmoji() {
+      this.isShowEmoji = false;
+    },
+
+    selectEmoji(emoji) {
+      this.message += emoji.emoji;
     }
   },
   directives: {
-    ClickOutside
+    onClickaway: onClickaway
   }
 };
 </script>
 
 <style>
-
 .messages {
   height: calc(100% - 161px);
   background: #232935;
   overflow-y: scroll;
   border-left: 1px solid #1a1f27;
-  scrollbar-color: #29303c #232935;
 }
 
 .send-form {
@@ -158,24 +176,54 @@ export default {
   width: 100%;
 }
 
-.messages::-webkit-scrollbar,
-.messages::-webkit-scrollbar-thumb {
-  background-color: #232935;
-}
 
 div[data-popover="control"] {
-      width: 56px !important;
-      background-color: #1c2027;
+  width: 56px !important;
+  background-color: #1c2027;
 }
 
 div[data-popover="control"]::before {
-      border-top-color: #1c2027 !important;
+  border-top-color: #1c2027 !important;
 }
 
+.emoji-picker {
+  position: absolute;
+  bottom: 170px;
+  right: 10px;
+}
 
-@media (max-width: 750px) {
+.grid-emojis {
+  color: transparent !important;
+  text-shadow: 0 0 0 #b7b7b7 !important;
+}
+
+.container-search input {
+  background: #1c212a !important;
+  border: 1px solid #1c212a !important;
+}
+
+#Categories {
+  border-bottom-color: #1c212a !important;
+  background: #1c212a !important;
+  color: #fff !important;
+}
+
+#EmojiPicker {
+    background: #29303c !important;
+    border-color: #1c212a !important;
+}
+
+.category.active {
+    border-bottom-color: #0083b7 !important;
+}
+
+@media (max-width: 800px) {
   .chat-button {
     margin-left: 0;
+  }
+
+  .emoji-picker {
+    bottom: 60px;
   }
 }
 </style>

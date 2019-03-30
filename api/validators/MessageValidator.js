@@ -5,8 +5,8 @@ module.exports = (message) => {
         errors.push('Message empty');
     }
 
-    if (message.length > 100) {
-        errors.push('Message is log');
+    if (message.length > 200) {
+        errors.push('Message is long');
     }
     if (errors.length > 0) {
         errors.forEach((err) => {

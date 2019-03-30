@@ -172,6 +172,7 @@ export default {
 }
 
 .chat {
+  height: 100%;
   width: 350px;
 }
 
