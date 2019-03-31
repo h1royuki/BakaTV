@@ -14,6 +14,21 @@
         v-on:enter="sendMessage()"
       ></message-input>
 
+      <transition name="fade">
+        <div v-on-clickaway="hideEmoji" v-if="isShowEmoji" class="emoji-picker">
+          <VEmojiPicker
+            :labelSearch="`Search...`"
+            :showCategory="true"
+            :pack="pack"
+            @select="selectEmoji"
+          />
+        </div>
+      </transition>
+
+      <emoji-button v-on:send="showEmoji" class="emoji-button" :title="`Emoji`">
+        <emoji-icon/>
+      </emoji-button>
+
       <div class="control-buttons">
         <send-button
           class="chat-button"
@@ -21,14 +36,6 @@
           v-on:send="sendMessage"
           :text="`Send`"
         ></send-button>
-
-        <emoji-button v-on:send="showEmoji" class="control-button" :title="`Room settings`">
-          <emoji-icon/>
-        </emoji-button>
-
-        <div v-on-clickaway="hideEmoji" v-if="isShowEmoji" class="emoji-picker">
-          <VEmojiPicker :labelSearch="`Search...`" :showCategory="true" :pack="pack" @select="selectEmoji"/>
-        </div>
 
         <control-button
           v-popover:control.top
@@ -121,7 +128,7 @@ export default {
     },
 
     selectEmoji(emoji) {
-      this.message += emoji.emoji;
+      this.message +=  ` ${emoji.emoji}`;
     }
   },
   directives: {
@@ -152,6 +159,20 @@ export default {
   font-size: 16px;
 }
 
+.emoji-button {
+  position: absolute;
+  right: 11px;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  color: #969595;
+}
+
+.emoji-button:hover {
+  color: #fff;
+  background-color: transparent;
+}
+
 .control-buttons {
   display: flex;
 }
@@ -174,8 +195,9 @@ export default {
   padding: 7px 12px;
   font-size: 15px;
   width: 100%;
+  background-color: #2e5e89;
+  border: 1px solid #2e5e89;
 }
-
 
 div[data-popover="control"] {
   width: 56px !important;
@@ -188,13 +210,12 @@ div[data-popover="control"]::before {
 
 .emoji-picker {
   position: absolute;
-  bottom: 170px;
+  bottom: 150px;
   right: 10px;
 }
 
 .grid-emojis {
-  color: transparent !important;
-  text-shadow: 0 0 0 #b7b7b7 !important;
+  color: #b7b7b7 !important;
 }
 
 .container-search input {
@@ -209,21 +230,17 @@ div[data-popover="control"]::before {
 }
 
 #EmojiPicker {
-    background: #29303c !important;
-    border-color: #1c212a !important;
+  background: #29303c !important;
+  border-color: #1c212a !important;
 }
 
 .category.active {
-    border-bottom-color: #0083b7 !important;
+  border-bottom-color: #2e5e89 !important;
 }
 
 @media (max-width: 800px) {
   .chat-button {
     margin-left: 0;
-  }
-
-  .emoji-picker {
-    bottom: 60px;
   }
 }
 </style>

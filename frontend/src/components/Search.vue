@@ -73,28 +73,36 @@ export default {
 }
 
 .start-button {
-  padding: 0;
   font-size: 0;
   position: absolute;
   right: 26px;
-  top: 1px;
-  background-color: transparent;
-  border: 0;
   color: #dbdbdb;
+  padding: 5px 20px;
+  border-radius: 50px;
+  background-color: #2e5e89;
+  border: 1px solid #2e5e89;
+  margin: 3px;
 }
 
 .start-button:hover {
-  background-color: transparent;
-  color: #fff;
+  background-color: #2e5e89;
+  border: 1px solid #2e5e89;
   transform: scale(1.05);
 }
 
 .search-input {
-  margin: 0 10px;
   width: 95%;
   max-width: 700px;
-  font-size: 20px;
+  font-size: 25px;
   text-align: center;
+  background-color: rgba(72, 81, 99, 0.3);
+  border: 1px solid transparent;
+}
+
+.search-input:focus {
+  border-color: #696969;
+  transition: 0.3s;
+  background-color: rgba(72, 81, 99, 0.75);
 }
 
 .search-form {
@@ -106,8 +114,8 @@ export default {
   align-content: center;
   width: 100%;
   max-width: 700px;
-  margin-bottom: 50px;
   position: relative;
+  margin: 60px 0;
 }
 
 .search-result {

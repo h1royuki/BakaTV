@@ -23,6 +23,7 @@ input {
   border-radius: 50px;
   transition: 0.3s;
   outline: none;
+  font-family: 'Roboto Light', sans-serif;
 }
 
 input::placeholder {

@@ -9,19 +9,17 @@
 </template>
 
 <style>
-@import url('https://fonts.googleapis.com/css?family=Roboto');
-
 
 ::-webkit-scrollbar,
 ::-webkit-scrollbar-thumb {
-  background-color: #232935 !important;
+  background-color: #394353 !important;
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   margin: 0;
   background-color: #232935;
-  scrollbar-color: #29303c #232935 !important;
+  scrollbar-color: #394353 #232935 !important;
 }
 .notifications {
   top: 40px !important;

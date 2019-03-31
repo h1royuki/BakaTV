@@ -13,7 +13,7 @@
     </div>
     <div class="container index">
       <div class="logo"></div>
-    <search></search>
+      <search></search>
     </div>
   </div>
 </template>
@@ -51,8 +51,9 @@ export default {
   height: 100%;
   background: linear-gradient(
     to bottom,
-    rgba(56, 64, 81, 0.5) 0%,
-    rgb(35, 41, 53) 100%
+    rgba(36, 39, 47, 0.96) 0%,
+    rgba(36, 39, 47, 0.96) 65%,
+    rgba(36, 39, 47, 0.85) 100%
   );
 }
 
@@ -65,12 +66,13 @@ export default {
 
 .logo {
   width: 70%;
-  min-height: 450px;
-  margin: 20px;
+  min-height: 400px;
+  margin-top: 50px;
   background-image: url("../assets/logo.svg");
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
+  filter: brightness(0.7);
 }
 
 .container.index {

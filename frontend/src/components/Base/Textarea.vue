@@ -26,13 +26,13 @@ textarea {
   border: 1px solid transparent;
   overflow: auto;
   padding: 10px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   transition: 0.2s;
 }
 
 textarea:focus {
-  background-color: #232933 !important;
-  border-color: #241a1a !important;
+  background-color: #222730 !important;
+  border-color: #969595 !important;
   border: 1px solid;
   transition: 0.2s;
 }
