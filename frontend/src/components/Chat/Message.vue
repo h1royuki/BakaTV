@@ -19,10 +19,11 @@
 <script>
 export default {
   props: ["message"],
-  data() {
-    return {
-      id: this.$store.getters.id
-    };
+
+  computed: {
+    id() {
+      return this.$store.getters.id;
+    }
   }
 };
 </script>
@@ -33,11 +34,15 @@ export default {
   margin: 5px;
   color: white;
   word-break: break-all;
+  font-size: 17px;
 }
 
 .message.service {
-  color: #a4a4a4;
+  color: #e1e1e1;
   text-align: center;
+  background-color: #303848;
+  margin: 0;
+  border-left: 2px solid #6d85b4;
 }
 
 .name {

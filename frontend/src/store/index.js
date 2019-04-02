@@ -3,13 +3,15 @@ import Vuex from 'vuex';
 import router from '../router';
 import chat from './chat';
 import room from './room';
+import player from './player';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
     chat,
-    room
+    room,
+    player
   },
 
   state: {

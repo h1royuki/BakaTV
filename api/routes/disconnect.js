@@ -1,4 +1,5 @@
 const RoomService = require('../services/RoomService');
+const ChatService = require('../services/ChatService');
 const SocketIOService = require('../services/SocketIOService');
 const Message = require('../models/Message');
 
@@ -33,9 +34,13 @@ module.exports = (socket) => {
             }
         }
 
-        const message = new Message('service', socket.id, socket.name, 'leave');
-
+        const user = ChatService.getUserFromChat(socket.id, socket.room);
+        const message = new Message('service', user.id, user.name, 'leave');
         SocketIOService.emitId(socket.room, 'messageChat', message.toJson());
+        
+        ChatService.deleteUserFromChat(socket.id, socket.room);
+        const chatUsers = ChatService.getChatUsers(socket.room);
+        SocketIOService.emitId(socket.room, 'updateChatUsers', chatUsers);
 
     } catch (err) {
         console.log(err.message);

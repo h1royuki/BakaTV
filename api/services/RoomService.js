@@ -1,11 +1,13 @@
+const Player = require('../models/Player');
 const roomRepository = require('../repository/RoomRepository');
 const KinogoParser = require('../parsers/KinogoParser');
 
 class RoomService {
 
-    createRoom(room, filmURL) {
-        return KinogoParser.getMovieURL(filmURL).then((url) => {
-            room.url = url;
+    createRoom(room, film) {
+        return KinogoParser.getMovieURL(film.url).then((url) => {
+            room.player = new Player(url, film.name);
+            
             roomRepository.addRoom(room);
         }).catch((err) => {
             throw new Error('Error create room');
@@ -16,28 +18,6 @@ class RoomService {
         return roomRepository
             .getRoom(roomId)
             .toJson(socketId);
-    }
-
-    getPlayerState(roomId) {
-        const room = roomRepository.getRoom(roomId);
-        const state = {};
-
-        state.status = room.status;
-        state.time = room.time;
-
-        return state;
-    }
-
-    updatePlayerStatus(roomId, status) {
-        const room = roomRepository.getRoom(roomId);
-        room.status = status;
-        roomRepository.updateRoom(room);
-    }
-
-    updatePlayerTime(roomId, time) {
-        const room = roomRepository.getRoom(roomId);
-        room.time = time;
-        roomRepository.updateRoom(room);
     }
 
     getOwner(roomId) {

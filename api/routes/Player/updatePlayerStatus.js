@@ -1,10 +1,11 @@
-const RoomService = require('../services/RoomService');
+const RoomService = require('../../services/RoomService');
+const PlayerService = require('../../services/PlayerService');
 
 module.exports = (status, socket) => {
     try {
         if (RoomService.isRoomOwner(socket.id, socket.room)) {
 
-            RoomService.updatePlayerStatus(socket.room, status);
+            PlayerService.updatePlayerStatus(socket.room, status);
 
             socket.broadcast.to(socket.room).emit('getPlayerStatus', status);
             

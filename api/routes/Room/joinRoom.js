@@ -1,5 +1,5 @@
-const RoomService = require('../services/RoomService');
-const NotFoundError = require('../errors/NotFoundError');
+const RoomService = require('../../services/RoomService');
+const NotFoundError = require('../../errors/NotFoundError');
 
 module.exports = (room, socket) => {
     try {
@@ -11,7 +11,7 @@ module.exports = (room, socket) => {
             RoomService.setRoomOwner(socket.id, room);
             RoomService.removeRoomTimeout(room, 'destroy');
         }
-
+        
         socket.emit('joinRoom', RoomService.getRoomState(socket.id, room));
 
     } catch (err) {

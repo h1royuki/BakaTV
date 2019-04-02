@@ -1,10 +1,11 @@
-const RoomService = require('../services/RoomService');
+const RoomService = require('../../services/RoomService');
+const PlayerService = require('../../services/PlayerService');
 
 module.exports = (time, socket) => {
     try {
         if (RoomService.isRoomOwner(socket.id, socket.room)) {
             
-            RoomService.updatePlayerTime(socket.room, time);
+            PlayerService.updatePlayerTime(socket.room, time);
 
             socket.broadcast.to(socket.room).emit('getPlayerTime', time);
 

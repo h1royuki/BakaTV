@@ -23,7 +23,7 @@ textarea {
   border-radius: 5px;
   box-shadow: none;
   outline: none;
-  border: 1px solid transparent;
+  border: 1px solid #32354a;
   overflow: auto;
   padding: 10px;
   font-family: "Roboto", sans-serif;

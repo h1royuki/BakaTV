@@ -1,5 +1,5 @@
-const io = require('../modules/io');
-const RoomService = require('../services/RoomService');
+const io = require('../../modules/io');
+const RoomService = require('../../services/RoomService');
 
 
 module.exports = (socket) => {

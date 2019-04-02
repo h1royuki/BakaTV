@@ -2,13 +2,13 @@ import Vue from 'vue';
 
 export default {
     state: {
-        filmName: null,
-        isOwner: false
+        roomId: null,
+        isOwner: false,
     },
     mutations: {
         SOCKET_JOINROOM(state, room) {
-            Vue.set(state, 'filmName', room.filmName);
             Vue.set(state, 'isOwner', room.isOwner);
+            Vue.set(state, 'roomId', room.id);
         },
 
         SOCKET_SETOWNER(state) {
@@ -20,11 +20,11 @@ export default {
         room: state => {
             return state;
         },
-        status: state => {
-            return state.status;
-        },
         isOwner: state => {
             return state.isOwner;
+        },
+        roomId: state => {
+            return state.roomId;
         }
     }
 }

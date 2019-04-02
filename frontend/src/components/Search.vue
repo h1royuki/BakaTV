@@ -5,7 +5,7 @@
         <url-input
           class="search-input"
           :type="`text`"
-          :placeholder="`Search anything...`"
+          :placeholder="`Search films...`"
           v-model="query"
           v-on:enter="search()"
         />
@@ -76,6 +76,7 @@ export default {
   font-size: 0;
   position: absolute;
   right: 26px;
+  top: 5px;
   color: #dbdbdb;
   padding: 5px 20px;
   border-radius: 50px;
