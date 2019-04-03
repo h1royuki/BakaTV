@@ -4,18 +4,18 @@
       <p class="online-counter">{{onlineUsersCount}} online user{{onlineUsersCount > 1 ? `s` : ``}}</p>
       <show-button class="show-button" v-on:send="showUsers">
         <arrow-up-icon v-if="isShowUsers" :size="32"/>
-        <arrow-down-icon :size="32" v-else />
+        <arrow-down-icon :size="32" v-else/>
       </show-button>
     </div>
     <transition name="fade">
-    <div v-on-clickaway="hideUsers" class="users-list" v-if="isShowUsers">
-      <div v-for="(user, index) in onlineUsers" :key="index">
-        <div
-          class="list-name"
-          :style="{color : user.color}"
-        >{{ user.id == id ? `${user.name} (you)` : user.name }}</div>
+      <div v-on-clickaway="hideUsers" class="users-list" v-if="isShowUsers">
+        <div v-for="(user, index) in onlineUsers" :key="index">
+          <div class="list-name" :style="{color : user.color}">
+            <star-icon class="star-icon" v-if="user.id == ownerId" title="Room owner" size="22"/>
+            {{ user.id == id ? `${user.name} (you)` : user.name }}
+          </div>
+        </div>
       </div>
-    </div>
     </transition>
   </div>
 </template>
@@ -25,12 +25,14 @@ import { directive as onClickaway } from "vue-clickaway";
 import Button from "../Base/Button";
 import ArrowDownIcon from "vue-material-design-icons/ChevronDown";
 import ArrowUpIcon from "vue-material-design-icons/ChevronUp";
+import StarIcon from "vue-material-design-icons/Star";
 
 export default {
   components: {
     ShowButton: Button,
     ArrowDownIcon,
-    ArrowUpIcon
+    ArrowUpIcon,
+    StarIcon
   },
 
   data() {
@@ -57,10 +59,13 @@ export default {
     },
     id() {
       return this.$store.getters.userId;
+    },
+    ownerId() {
+      return this.$store.getters.ownerId;
     }
   },
   directives: {
-      onClickaway
+    onClickaway
   }
 };
 </script>
@@ -110,6 +115,13 @@ export default {
 
 .list-name {
   padding: 5px 0;
+}
+
+.star-icon {
+  margin-right: 8px;
+  font-size: 0;
+  vertical-align: top;
+  color: #ffd646;
 }
 </style>
 

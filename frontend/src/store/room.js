@@ -50,6 +50,10 @@ export default {
             return state.isOwner;
         },
 
+        ownerId: state => {
+            return state.ownerId;
+        },
+
         userId: state => {
             return state.userId;
         },
