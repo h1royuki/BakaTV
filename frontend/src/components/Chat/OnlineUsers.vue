@@ -56,7 +56,7 @@ export default {
       return this.$store.getters.onlineUsersCount;
     },
     id() {
-      return this.$store.getters.id;
+      return this.$store.getters.userId;
     }
   },
   directives: {
@@ -104,11 +104,12 @@ export default {
   max-height: 400px;
   width: calc(100% - 20px);
   box-shadow: 0px 9px 15px 1px #15192080;
+  overflow-y: auto;
+  border-bottom: 1px solid #171a21;
 }
 
 .list-name {
   padding: 5px 0;
-  overflow-y: auto;
 }
 </style>
 

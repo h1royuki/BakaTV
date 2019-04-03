@@ -1,5 +1,5 @@
 const Message = require('../../models/Message');
-const ChatService = require('../../services/ChatService');
+const UserService = require('../../services/UserService');
 const Validator = require('../../validators/MessageValidator');
 const SocketIOService = require('../../services/SocketIOService');
 
@@ -8,7 +8,7 @@ module.exports = (message, socket) => {
         Validator(message);
 
         
-        const user = ChatService.getUserFromChat(socket.id, socket.room);
+        const user = UserService.getUserFromRoom(socket.id, socket.room);
 
         const msg = new Message('message', user.id, user.name, message, user.color);
 

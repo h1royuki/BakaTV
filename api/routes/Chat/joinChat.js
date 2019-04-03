@@ -1,5 +1,5 @@
 const userNameGenerator = require('../../helpers/generators/userName');
-const ChatService = require('../../services/ChatService');
+const UserService = require('../../services/UserService');
 const colorGenerator = require('../../helpers/generators/color');
 const Message = require('../../models/Message');
 const UserModel = require('../../models/User');
@@ -13,16 +13,16 @@ module.exports = (room, socket) => {
 
         const user = new UserModel(socket.id, userNameGenerator(), colorGenerator());
 
-        ChatService.addUserToChat(user, room);
+        UserService.addUserToRoom(user, room);
 
-        const chatUsers = ChatService.getChatUsers(room);
+        const roomUsers = UserService.getRoomUsers(room);
         
-        socket.emit('joinChat', { id: user.id, online_users: chatUsers });
+        socket.emit('joinChat', roomUsers);
 
         const message = new Message('service', user.id, user.name, 'joined');
 
         SocketIOService.emitId(room, 'messageChat', message.toJson());
-        SocketIOService.emitId(room, 'updateChatUsers', chatUsers);
+        SocketIOService.emitId(room, 'updateRoomUsers', roomUsers);
     } catch (err) {
         socket.emit('err', err.message);
     }

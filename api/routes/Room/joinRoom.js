@@ -10,9 +10,10 @@ module.exports = (room, socket) => {
         if (!RoomService.getOwner(room)) {
             RoomService.setRoomOwner(socket.id, room);
             RoomService.removeRoomTimeout(room, 'destroy');
+            console.log(`User joined to ${room}, timeout remove`);
         }
         
-        socket.emit('joinRoom', RoomService.getRoomState(socket.id, room));
+        socket.emit('joinRoom', {userId: socket.id, room: RoomService.getRoom(room)});
 
     } catch (err) {
         socket.emit('err', err.message);

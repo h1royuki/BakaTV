@@ -22,7 +22,7 @@ export default {
 
   computed: {
     id() {
-      return this.$store.getters.id;
+      return this.$store.getters.userId;
     }
   }
 };

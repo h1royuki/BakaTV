@@ -7,17 +7,15 @@ class RoomService {
     createRoom(room, film) {
         return KinogoParser.getMovieURL(film.url).then((url) => {
             room.player = new Player(url, film.name);
-            
+
             roomRepository.addRoom(room);
         }).catch((err) => {
             throw new Error('Error create room');
         })
     }
 
-    getRoomState(socketId, roomId) {
-        return roomRepository
-            .getRoom(roomId)
-            .toJson(socketId);
+    getRoom(roomId) {
+        return roomRepository.getRoom(roomId).toJson();
     }
 
     getOwner(roomId) {

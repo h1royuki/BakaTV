@@ -44,8 +44,10 @@ export default {
       this.setPlayerStatus(status);
     },
 
-    setOwner() {
-      this.player.controls(true);
+    updateRoomOwner(owner) {
+      if (owner == this.userId) {
+        this.player.controls(true);
+      }
     }
   },
 
@@ -113,6 +115,9 @@ export default {
 
     lastStatus() {
       return this.$store.getters.lastStatus;
+    },
+    userId() {
+      return this.$store.getters.userId;
     }
   },
 

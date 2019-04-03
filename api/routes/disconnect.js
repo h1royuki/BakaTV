@@ -1,18 +1,24 @@
 const RoomService = require('../services/RoomService');
-const ChatService = require('../services/ChatService');
+const UserService = require('../services/UserService');
 const SocketIOService = require('../services/SocketIOService');
 const Message = require('../models/Message');
 
 module.exports = (socket) => {
     try {
+
+        const user = UserService.getUserFromRoom(socket.id, socket.room);
+        const message = new Message('service', user.id, user.name, 'leave');
+        SocketIOService.emitId(socket.room, 'messageChat', message.toJson());
+        
+        UserService.deleteUserFromRoom(socket.id, socket.room);
+
         if (socket.room) {
-            SocketIOService.getRoomSockets(socket.room);
-            if (SocketIOService.getRoomSockets(socket.room)) {
+            if (UserService.getOnlineUsersCount(socket.room) > 0) {
                 if (RoomService.isRoomOwner(socket.id, socket.room)) {
-                    const newOwner = SocketIOService.getFirstSocketOfRoom(socket.room);
+                    const newOwner = UserService.getFirstRoomUser(socket.room);
                     
                     RoomService.setRoomOwner(newOwner, socket.room);
-                    SocketIOService.emitId(newOwner, 'setOwner');
+                    SocketIOService.emitId(socket.room, 'updateRoomOwner', newOwner);
                     SocketIOService.emitId(newOwner, 'notify', 'Now you owner');
 
                     console.log(`Owner change on ${socket.room}`);
@@ -24,7 +30,7 @@ module.exports = (socket) => {
 
                 const timeout = setTimeout(() => {
 
-                    if (!SocketIOService.getRoomSockets(socket.room)) {
+                    if (UserService.getOnlineUsersCount(socket.room)) {
                         RoomService.destroyRoom(socket.room);
                         console.log(`Timer: room ${socket.room} deleted`);
                     }
@@ -33,14 +39,8 @@ module.exports = (socket) => {
                 RoomService.addRoomTimeout(socket.room, 'destroy', timeout);
             }
         }
-
-        const user = ChatService.getUserFromChat(socket.id, socket.room);
-        const message = new Message('service', user.id, user.name, 'leave');
-        SocketIOService.emitId(socket.room, 'messageChat', message.toJson());
-        
-        ChatService.deleteUserFromChat(socket.id, socket.room);
-        const chatUsers = ChatService.getChatUsers(socket.room);
-        SocketIOService.emitId(socket.room, 'updateChatUsers', chatUsers);
+        const roomUsers = UserService.getRoomUsers(socket.room);
+        SocketIOService.emitId(socket.room, 'updateRoomUsers', roomUsers);
 
     } catch (err) {
         console.log(err.message);

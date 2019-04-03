@@ -13,7 +13,7 @@ class Room {
     toJson(user_id) {
         return {
             id: this.id,
-            isOwner: this.ownerId == user_id ? true : false
+            owner: this.ownerId
         }
     }
 }

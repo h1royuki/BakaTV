@@ -155,6 +155,10 @@ export default {
 div[data-popover="control"] {
   width: 56px !important;
   background-color: #1c2027;
+  right: 7px;
+  bottom: 64px;
+  left: initial !important;
+  top: initial !important;
 }
 
 div[data-popover="control"]::before {

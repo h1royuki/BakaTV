@@ -10,8 +10,6 @@
 
 
 <script>
-import 'vue2-animate/dist/vue2-animate.min.css';
-
 export default {
   
 }
@@ -25,7 +23,7 @@ export default {
 }
 
 body {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
   margin: 0;
   background-color: #232935;
   scrollbar-color: #394353 #232935 !important;

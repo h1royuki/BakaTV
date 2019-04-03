@@ -75,14 +75,14 @@ export default {
 .start-button {
   font-size: 0;
   position: absolute;
-  right: 26px;
-  top: 5px;
+  right: 2px;
+  top: 0px;
   color: #dbdbdb;
   padding: 5px 20px;
   border-radius: 50px;
   background-color: #2e5e89;
   border: 1px solid #2e5e89;
-  margin: 3px;
+  margin: 6px;
 }
 
 .start-button:hover {
@@ -92,12 +92,12 @@ export default {
 }
 
 .search-input {
-  width: 95%;
-  max-width: 700px;
+  width: 100%;
   font-size: 25px;
   text-align: center;
   background-color: rgba(72, 81, 99, 0.3);
   border: 1px solid transparent;
+  max-height: 29px;
 }
 
 .search-input:focus {
@@ -113,8 +113,8 @@ export default {
   flex-wrap: nowrap;
   align-items: center;
   align-content: center;
-  width: 100%;
-  max-width: 700px;
+  width: 85%;
+  max-width: 750px;
   position: relative;
   margin: 60px 0;
 }

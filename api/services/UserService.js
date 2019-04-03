@@ -1,33 +1,39 @@
 const roomRepository = require('../repository/RoomRepository');
 
-class ChatService {
+class UserService {
 
-    getChatUsers(roomId) {
+    getRoomUsers(roomId) {
         const room = roomRepository.getRoom(roomId);
         return room.users;
     }
 
-    addUserToChat(user, roomId) {
+    addUserToRoom(user, roomId) {
         const room = roomRepository.getRoom(roomId);
         room.users[user.id] = user;
         roomRepository.updateRoom(room);
     }
 
-    getUserFromChat(userId, roomId) {
+    getUserFromRoom(userId, roomId) {
         const room = roomRepository.getRoom(roomId);
         return room.users[userId];
     }
 
-    deleteUserFromChat(userId, roomId) {
+    deleteUserFromRoom(userId, roomId) {
         const room = roomRepository.getRoom(roomId);
         delete room.users[userId];
         roomRepository.updateRoom(room);
     }
 
-    getOnlineUsersCount(userId, roomId) {
+    getOnlineUsersCount(roomId) {
         const room = roomRepository.getRoom(roomId);
-        return room.users.online;
+        return Object.keys(room.users).length;
+    }
+
+    getFirstRoomUser(roomId) {
+        const room = roomRepository.getRoom(roomId);
+        console.log(room.users[Object.keys(room.users)[0]].id);
+        return room.users[Object.keys(room.users)[0]].id;
     }
 }
 
-module.exports = new ChatService();
+module.exports = new UserService();
