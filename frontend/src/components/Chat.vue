@@ -29,7 +29,7 @@ export default {
     }
   },
   mounted() {
-    this.$socket.emit("joinChat", this.$route.params.id);
+    this.$socket.emit("joinChat");
   }
 };
 </script>

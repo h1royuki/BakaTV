@@ -1,37 +1,28 @@
 <template>
   <div class="index">
-    <loading
-      :active.sync="isLoading"
-      :can-cancel="false"
-      :is-full-page="true"
-      :color="`#fff`"
-      :background-color="`#000`"
-    ></loading>
     <div class="overlay">
       <div class="filter"></div>
       <img class="background" src="../assets/background.jpg">
     </div>
     <div class="container index">
       <div class="logo"></div>
-      <search></search>
+      <search v-on:select="start($event)"></search>
     </div>
   </div>
 </template>
 
 <script>
-import Loading from "vue-loading-overlay";
-import "vue-loading-overlay/dist/vue-loading.css";
 import Search from "../components/Search";
 
 export default {
   components: {
-    Search,
-    Loading
+    Search
   },
 
-  computed: {
-    isLoading() {
-      return this.$store.getters.isLoading;
+  methods: {
+    start(film) {
+      this.$socket.emit("createRoom", film);
+      this.$store.commit("changeLoading");
     }
   }
 };

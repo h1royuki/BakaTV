@@ -1,12 +1,11 @@
-const Message = require('../../models/Message');
+const Message = require('../../models/Room/Chat/Message');
 const UserService = require('../../services/UserService');
-const Validator = require('../../validators/MessageValidator');
+const MessageValidator = require('../../validators/MessageValidator');
 const SocketIOService = require('../../services/SocketIOService');
 
 module.exports = (message, socket) => {
     try {
-        Validator(message);
-
+        MessageValidator(message);
         
         const user = UserService.getUserFromRoom(socket.id, socket.room);
 

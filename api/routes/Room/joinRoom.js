@@ -17,8 +17,5 @@ module.exports = (room, socket) => {
 
     } catch (err) {
         socket.emit('err', err.message);
-        if (err instanceof NotFoundError) {
-            socket.emit('notFound');
-        }
     }
 };      

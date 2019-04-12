@@ -7,7 +7,7 @@ class Room {
         this.ownerId = ownerId;
         this.users = {};
         this.timeouts = [];
-        this.player;
+        this.playlist;
     }
 
     toJson(user_id) {

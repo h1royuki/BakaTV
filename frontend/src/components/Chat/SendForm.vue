@@ -31,6 +31,9 @@
 
       <transition name="fade">
         <popover name="control" class="modal">
+          <playlist-button v-on:send="showPlaylist" class="control-button" :title="`Playlist`">
+            <playlist-icon title/>
+          </playlist-button>
           <destroy-button v-on:send="destroyRoom" class="control-button" :title="`Destroy room`">
             <destroy-icon title/>
           </destroy-button>
@@ -43,6 +46,7 @@
 <script>
 import Button from "../Base/Button";
 import Textarea from "../Base/Textarea";
+import PlaylistIcon from "vue-material-design-icons/PlaylistPlay";
 import ControlIcon from "vue-material-design-icons/Tune";
 import DestroyIcon from "vue-material-design-icons/Delete";
 import EmojiIcon from "vue-material-design-icons/EmoticonExcitedOutline";
@@ -54,9 +58,11 @@ export default {
     SendButton: Button,
     ControlButton: Button,
     DestroyButton: Button,
+    PlaylistButton: Button,
     EmojiButton: Button,
     ControlIcon,
     EmojiIcon,
+    PlaylistIcon,
     DestroyIcon,
     EmojiPopup
   },
@@ -94,6 +100,10 @@ export default {
 
     selectEmoji(emoji) {
       this.message += ` ${emoji}`;
+    },
+
+    showPlaylist() {
+      this.$store.commit("showPlaylist");
     }
   }
 };

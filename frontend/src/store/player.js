@@ -6,9 +6,9 @@ export default {
         lastStatus: null
     },
     mutations: {
-        SOCKET_GETPLAYERSTATE(state, player) {
-            Vue.set(state, 'lastTime', player.time);
-            Vue.set(state, 'lastStatus', player.status);
+        setFilmInfo(state, film) {
+            Vue.set(state, 'lastTime', film.time);
+            Vue.set(state, 'lastStatus', film.status);
         },
 
         setLastTime(state, time) {
@@ -21,9 +21,15 @@ export default {
     },
 
     actions: {
-        socket_GETPLAYERSTATE({ commit }, room) {
-            document.title = room.name;
-            commit('SOCKET_JOINROOM', room);
+
+        socket_setCurrentFilm({commit}, film) {
+            document.title = film.name;
+            commit('setFilmInfo', film);
+        },
+
+        socket_getFilmInfo({ commit }, film) {
+            document.title = film.name;
+            commit('setFilmInfo', film);
         },
 
         setLastTime({commit}, time) {

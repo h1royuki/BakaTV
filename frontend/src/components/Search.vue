@@ -9,13 +9,13 @@
           v-model="query"
           v-on:enter="search()"
         />
-        <start-button class="start-button" :title="`Search films`" v-on:send="search()">
+        <start-button class="start-button" :title="`Search films...`" v-on:send="search()">
           <search-icon :size="30"/>
         </start-button>
       </div>
       <div v-if="items" class="search-result">
         <div v-for="(film, index ) in items" :key="index">
-          <film v-on:send="start($event)" :film="film"></film>
+          <film v-on:send="$emit('select', $event)" :film="film"></film>
         </div>
       </div>
     </div>
@@ -48,11 +48,6 @@ export default {
   },
 
   methods: {
-    start(film) {
-      this.$socket.emit("createRoom", film);
-      this.$store.commit("changeLoading");
-    },
-
     search() {
       this.items = null;
       this.$socket.emit("searchFilms", this.query);
@@ -114,7 +109,7 @@ export default {
   align-items: center;
   align-content: center;
   width: 85%;
-  max-width: 750px;
+  max-width: 650px;
   position: relative;
   margin: 60px 0;
 }
@@ -130,5 +125,12 @@ export default {
   color: white;
   font-size: 30px;
 }
+
+@media (max-width: 500px) {
+  .search-input {
+    text-align: left;
+    padding-left: 20px;
+  }
+  }
 </style>
 

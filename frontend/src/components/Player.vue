@@ -7,6 +7,7 @@
     @pause="onPlayerPause($event)"
     @timeupdate="onPlayerTimeupdate($event)"
     @ready="onPlayerReady($event)"
+    @ended="onPlayerEnded($event)"
   ></video-player>
 </template>
 
@@ -23,24 +24,34 @@ export default {
     };
   },
   sockets: {
-    getPlayerState(player) {
+    setCurrentFilm(film) {
+      this.playerOptions.sources = [];
+
       this.playerOptions.sources.push({
         withCredentials: false,
         type: "video/mp4",
-        src: player.url
+        src: film.url
       });
-
-      document.title = player.name;
     },
 
-    getPlayerTime(time) {
+    getFilmInfo(film) {
+      this.playerOptions.sources.push({
+        withCredentials: false,
+        type: "video/mp4",
+        src: film.url
+      });
+
+      document.title = film.name;
+    },
+
+    getFilmTime(time) {
       if (this.isNeedSetTime(this.player.currentTime(), time)) {
         this.$store.dispatch("setLastTime", time);
         this.player.currentTime(time);
       }
     },
 
-    getPlayerStatus(status) {
+    getFilmStatus(status) {
       this.setPlayerStatus(status);
     },
 
@@ -54,13 +65,13 @@ export default {
   methods: {
     onPlayerPlay() {
       if (this.isOwner) {
-        this.$socket.emit("updatePlayerStatus", "play");
+        this.$socket.emit("updateFilmStatus", "play");
       }
     },
 
     onPlayerPause() {
       if (this.isOwner) {
-        this.$socket.emit("updatePlayerStatus", "pause");
+        this.$socket.emit("updateFilmStatus", "pause");
       }
     },
 
@@ -68,7 +79,7 @@ export default {
       if (this.isOwner) {
         if (this.isNeedSetTime($event.currentTime(), this.lastTime)) {
           this.$store.dispatch("setLastTime", $event.currentTime());
-          this.$socket.emit("updatePlayerTime", $event.currentTime());
+          this.$socket.emit("updateFilmTime", $event.currentTime());
         }
       }
     },
@@ -81,6 +92,12 @@ export default {
         $event.controls(true);
       } else {
         $event.controls(false);
+      }
+    },
+
+    onPlayerEnded() {
+      if (this.isOwner) {
+        this.$socket.emit('getNextFilm');
       }
     },
 
@@ -122,7 +139,7 @@ export default {
   },
 
   mounted() {
-    this.$socket.emit("getPlayerState");
+    this.$socket.emit("getFilmInfo");
   }
 };
 </script>

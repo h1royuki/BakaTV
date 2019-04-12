@@ -1,4 +1,5 @@
-const Player = require('../models/Player');
+const Playlist = require('../models/Room/Playlist');
+const Film = require('../models/Room/Playlist/Film')
 const roomRepository = require('../repository/RoomRepository');
 const KinogoParser = require('../parsers/KinogoParser');
 
@@ -6,10 +7,14 @@ class RoomService {
 
     createRoom(room, film) {
         return KinogoParser.getMovieURL(film.url).then((url) => {
-            room.player = new Player(url, film.name);
+
+            const FilmModel = new Film(url, film.name);
+
+            room.playlist = new Playlist(FilmModel);
 
             roomRepository.addRoom(room);
         }).catch((err) => {
+            console.log(err);
             throw new Error('Error create room');
         })
     }

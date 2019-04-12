@@ -7,7 +7,7 @@ export default {
         users_count: null
       },
       mutations: {
-        SOCKET_JOINCHAT(state, online_users) {
+        joinChat(state, online_users) {
           Vue.set(state, 'online_users', online_users);
         },
 
@@ -15,19 +15,19 @@ export default {
           state.messages.push(message);
         },
 
-        SOCKET_UPDATEROOMUSERS(state, users) {
+        updateRoomUsers(state, users) {
           state.online_users = users;
         }
       },
 
       actions: {
         socket_joinChat({commit, state}, online_users) {
-            commit('SOCKET_JOINCHAT', online_users);
+            commit('joinChat', online_users);
             state.users_count = Object.keys(online_users).length;
         },
 
         socket_updateRoomUsers({commit, state}, users) {
-          commit('SOCKET_UPDATEROOMUSERS', users);
+          commit('updateRoomUsers', users);
           state.users_count = Object.keys(users).length;
       }
       },

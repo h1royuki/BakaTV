@@ -1,29 +1,32 @@
 <template>
   <div v-if="roomId == $route.params.id" class="room">
     <div class="container room">
+      <playlist v-if="isShowPlaylist"/>
       <div class="player">
         <player/>
       </div>
-      <chat class="chat"></chat>
+      <chat class="chat"/>
     </div>
   </div>
 </template>
 <script>
-import Player from "../components/Player"
+import Playlist from "../components/Room/Playlist";
+import Player from "../components/Player";
 import Chat from "../components/Chat";
 
 export default {
   components: {
     Player,
-    Chat
+    Chat,
+    Playlist
   },
-  data() {
-    return {};
-  },
-
   computed: {
     roomId() {
       return this.$store.getters.roomId;
+    },
+    
+    isShowPlaylist() {
+      return this.$store.getters.isShowPlaylist;
     }
   },
   mounted() {

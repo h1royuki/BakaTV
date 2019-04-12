@@ -11,7 +11,7 @@
       <div v-on-clickaway="hideUsers" class="users-list" v-if="isShowUsers">
         <div v-for="(user, index) in onlineUsers" :key="index">
           <div class="list-name" :style="{color : user.color}">
-            <star-icon class="star-icon" v-if="user.id == ownerId" title="Room owner" size="22"/>
+            <star-icon class="star-icon" v-if="user.id == ownerId" title="Room owner" :size="22"/>
             {{ user.id == id ? `${user.name} (you)` : user.name }}
           </div>
         </div>
@@ -115,6 +115,8 @@ export default {
 
 .list-name {
   padding: 5px 0;
+  display: flex;
+  align-items: center;
 }
 
 .star-icon {

@@ -8,20 +8,20 @@ export default {
         isOwner: false,
     },
     mutations: {
-        SOCKET_JOINROOM(state, data) {
+        joinRoom(state, data) {
             Vue.set(state, 'userId', data.userId);
             Vue.set(state, 'ownerId', data.room.owner);
             Vue.set(state, 'roomId', data.room.id);
         },
 
-        SOCKET_UPDATEROOMOWNER(state, owner) {
+        updateRoomOwner(state, owner) {
             Vue.set(state, 'ownerId', owner);
         }
     },
 
     actions: {
         socket_joinRoom({state, commit}, data) {
-            commit('SOCKET_JOINROOM', data);
+            commit('joinRoom', data);
 
             if(data.userId == data.room.owner) {
                 state.isOwner = true;
@@ -31,7 +31,7 @@ export default {
         },
 
         socket_updateRoomOwner({state, commit}, owner) {
-            commit('SOCKET_UPDATEROOMOWNER', owner);
+            commit('updateRoomOwner', owner);
 
             if(state.userId == owner) {
                 state.isOwner = true;

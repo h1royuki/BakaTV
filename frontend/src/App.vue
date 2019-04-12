@@ -1,32 +1,52 @@
 <template>
   <div id="app">
+    <loading
+      :active.sync="isLoading"
+      :can-cancel="false"
+      :is-full-page="true"
+      :color="`#fff`"
+      :background-color="`#000`"
+    ></loading>
     <notifications group="errors"></notifications>
     <notifications group="notify"></notifications>
     <transition name="fade">
-    <router-view/>
+      <router-view/>
     </transition>
   </div>
 </template>
 
 
 <script>
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
+
 export default {
-  
-}
+  components: {
+    Loading
+  },
+
+  computed: {
+    isLoading() {
+      return this.$store.getters.isLoading;
+    }
+  }
+};
 </script>
 
 <style>
-
-::-webkit-scrollbar,
+::-webkit-scrollbar {
+  background-color: #232935;
+}
 ::-webkit-scrollbar-thumb {
   background-color: #394353 !important;
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   margin: 0;
   background-color: #232935;
   scrollbar-color: #394353 #232935 !important;
+  color: #e1e1e1;
 }
 .notifications {
   top: 40px !important;
@@ -34,7 +54,7 @@ body {
 }
 
 .vue-notification {
-  font-family: 'Roboto', sans-serif !important;
+  font-family: "Roboto", sans-serif !important;
   font-size: 15px !important;
   border-radius: 15px;
   padding: 20px;
@@ -52,10 +72,12 @@ body {
   border: 1px solid #55cdeb !important;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .3s;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
 }
-.fade-enter, .fade-leave-to  {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 

@@ -4,6 +4,7 @@ import router from '../router';
 import chat from './chat';
 import room from './room';
 import player from './player';
+import playlist from './playlist';
 
 Vue.use(Vuex);
 
@@ -11,7 +12,8 @@ export default new Vuex.Store({
   modules: {
     chat,
     room,
-    player
+    player,
+    playlist
   },
 
   state: {
