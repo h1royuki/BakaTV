@@ -5,17 +5,17 @@
         <url-input
           class="search-input"
           :type="`text`"
-          :placeholder="`Search anything...`"
+          :placeholder="`Search films...`"
           v-model="query"
           v-on:enter="search()"
         />
-        <start-button class="start-button" :title="`Search films`" v-on:send="search()">
+        <start-button class="start-button" :title="`Search films...`" v-on:send="search()">
           <search-icon :size="30"/>
         </start-button>
       </div>
       <div v-if="items" class="search-result">
         <div v-for="(film, index ) in items" :key="index">
-          <film v-on:send="start($event)" :film="film"></film>
+          <film v-on:send="$emit('select', $event)" :film="film"></film>
         </div>
       </div>
     </div>
@@ -48,11 +48,6 @@ export default {
   },
 
   methods: {
-    start(film) {
-      this.$socket.emit("streamStart", film);
-      this.$store.commit("changeLoading");
-    },
-
     search() {
       this.items = null;
       this.$socket.emit("searchFilms", this.query);
@@ -73,28 +68,37 @@ export default {
 }
 
 .start-button {
-  padding: 0;
   font-size: 0;
   position: absolute;
-  right: 26px;
-  top: 1px;
-  background-color: transparent;
-  border: 0;
+  right: 2px;
+  top: 0px;
   color: #dbdbdb;
+  padding: 5px 20px;
+  border-radius: 50px;
+  background-color: #2e5e89;
+  border: 1px solid #2e5e89;
+  margin: 6px;
 }
 
 .start-button:hover {
-  background-color: transparent;
-  color: #fff;
+  background-color: #2e5e89;
+  border: 1px solid #2e5e89;
   transform: scale(1.05);
 }
 
 .search-input {
-  margin: 0 10px;
-  width: 95%;
-  max-width: 700px;
-  font-size: 20px;
+  width: 100%;
+  font-size: 25px;
   text-align: center;
+  background-color: rgba(72, 81, 99, 0.3);
+  border: 1px solid transparent;
+  max-height: 29px;
+}
+
+.search-input:focus {
+  border-color: #696969;
+  transition: 0.3s;
+  background-color: rgba(72, 81, 99, 0.75);
 }
 
 .search-form {
@@ -104,10 +108,10 @@ export default {
   flex-wrap: nowrap;
   align-items: center;
   align-content: center;
-  width: 100%;
-  max-width: 700px;
-  margin-bottom: 50px;
+  width: 85%;
+  max-width: 650px;
   position: relative;
+  margin: 60px 0;
 }
 
 .search-result {
@@ -121,5 +125,12 @@ export default {
   color: white;
   font-size: 30px;
 }
+
+@media (max-width: 500px) {
+  .search-input {
+    text-align: left;
+    padding-left: 20px;
+  }
+  }
 </style>
 

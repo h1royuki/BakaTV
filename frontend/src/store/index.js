@@ -3,13 +3,17 @@ import Vuex from 'vuex';
 import router from '../router';
 import chat from './chat';
 import room from './room';
+import player from './player';
+import playlist from './playlist';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
     chat,
-    room
+    room,
+    player,
+    playlist
   },
 
   state: {
@@ -23,16 +27,15 @@ export default new Vuex.Store({
   },
 
   actions: {
-    socket_roomCreated({ state }, id) {
+    socket_createRoom({ state }, id) {
       router.push('room/' + id);
       state.loading = false;
     },
 
-    socket_roomDestroy({state}) {
-      Vue.set(state.room.room, 'filmName', null);
-      Vue.set(state.room.room, 'status', null);
-      Vue.set(state.room.room, 'isOwner', false);
-      Vue.set(state.room.player, 'sources', []);
+    socket_destroyRoom({state}) {
+      Vue.set(state.room, 'filmName', null);
+      Vue.set(state.room, 'status', null);
+      Vue.set(state.room, 'isOwner', false);
       Vue.set(state.chat, 'messages', []);
       
       router.push("/");

@@ -23,6 +23,10 @@ button {
   position: relative;
 }
 
+button:focus {
+  outline: 0;
+}
+
 button:hover {
   cursor: pointer;
 }

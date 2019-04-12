@@ -3,23 +3,45 @@ import Vue from 'vue';
 export default {
     state: {
         messages: [],
-        id: null,
+        online_users: null,
+        users_count: null
       },
       mutations: {
-        SOCKET_CHATJOIN(state, id) {
-          Vue.set(state, 'id', id);
+        joinChat(state, online_users) {
+          Vue.set(state, 'online_users', online_users);
         },
 
-        SOCKET_CHATMESSAGE(state, message) {
+        SOCKET_MESSAGECHAT(state, message) {
           state.messages.push(message);
         },
+
+        updateRoomUsers(state, users) {
+          state.online_users = users;
+        }
+      },
+
+      actions: {
+        socket_joinChat({commit, state}, online_users) {
+            commit('joinChat', online_users);
+            state.users_count = Object.keys(online_users).length;
+        },
+
+        socket_updateRoomUsers({commit, state}, users) {
+          commit('updateRoomUsers', users);
+          state.users_count = Object.keys(users).length;
+      }
       },
      getters: {
          messages: state => {
              return state.messages;
          },
-         id: state => {
-             return state.id;
+
+         onlineUsers: state => {
+          return state.online_users;
+         },
+
+         onlineUsersCount: state => {
+           return state.users_count;
          }
      }
 }

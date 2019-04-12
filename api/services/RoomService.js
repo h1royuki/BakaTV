@@ -1,21 +1,32 @@
-const Stream = require('../models/Stream');
-const FFMpeg = require('../modules/FFMpeg');
+const Playlist = require('../models/Room/Playlist');
+const Film = require('../models/Room/Playlist/Film')
 const roomRepository = require('../repository/RoomRepository');
 const KinogoParser = require('../parsers/KinogoParser');
 
 class RoomService {
 
-    startStream(room, filmURL) {
-        return KinogoParser.getMovieURL(filmURL).then((url) => {
+    createRoom(room, film) {
+        return KinogoParser.getMovieURL(film.url).then((url) => {
 
-            room.stream = new Stream(url);
-            room.stream.ffmpeg = FFMpeg.start(room);
-            console.log('ewqewqe');
+            const FilmModel = new Film(url, film.name);
+
+            room.playlist = new Playlist(FilmModel);
 
             roomRepository.addRoom(room);
         }).catch((err) => {
-            throw new Error('Error start stream');
+            console.log(err);
+            throw new Error('Error create room');
         })
+    }
+
+    getRoom(roomId) {
+        return roomRepository.getRoom(roomId).toJson();
+    }
+
+    getOwner(roomId) {
+        return roomRepository
+            .getRoom(roomId)
+            .ownerId;
     }
 
     isRoomOwner(socketId, roomId) {
@@ -30,49 +41,21 @@ class RoomService {
         roomRepository.updateRoom(room);
     }
 
-    setStreamStatus(roomId, status) {
-        if (status == 'pause') {
-            return this.pauseStream(roomId);
-        }
-
-        if(status == 'resume') {
-            return this.resumeStream(roomId);
-        }
-
-        throw new Error('Invalid status');
-    }
-
     destroyRoom(roomId) {
-            const room = roomRepository.getRoom(roomId);
-
-            room.status = 'destroy';
-            roomRepository.updateRoom(room);
-            
-            room.stream.ffmpeg.kill();
+        roomRepository.removeRoom(roomId);
     }
 
-    pauseStream(roomId) {
+    addRoomTimeout(roomId, type, timeout) {
         const room = roomRepository.getRoom(roomId);
-
-        if (room.status == 'work') {
-            room.status = "pause";
-            room.stream.ffmpeg.kill();
-            roomRepository.updateRoom(room);
-            return room.status;
-        }
-        throw new Error('Room not streaming');
+        room.timeouts[type] = timeout;
+        roomRepository.updateRoom(room);
     }
 
-    resumeStream(roomId) {
+    removeRoomTimeout(roomId, type) {
         const room = roomRepository.getRoom(roomId);
-
-        if (room.status == 'pause') {
-            room.status = "start";
-            room.stream.ffmpeg = FFMpeg.start(room);
-            roomRepository.updateRoom(room);
-            return room.status;
-        }
-        throw new Error('Room not paused');
+        clearTimeout(room.timeouts[type]);
+        delete room.timeouts[type];
+        roomRepository.updateRoom(room);
     }
 }
 

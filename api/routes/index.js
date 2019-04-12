@@ -1,19 +1,40 @@
-const chatJoin = require('./chatJoin');
-const chatMessage = require('./chatMessage');
+const joinChat = require('./Chat/joinChat');
+const messageChat = require('./Chat/messageChat');
+const searchFilms = require('./Search/searchFilms');
+const joinRoom = require('./Room/joinRoom');
+const destroyRoom = require('./Room/destroyRoom')
+const createRoom = require('./Room/createRoom');
+const addToPlaylist = require('./Playlist/addToPlaylist');
+const removeFromPlaylist = require('./Playlist/removeFromPlaylist');
+const setCurrentFilm = require('./Playlist/setCurrentFilm');
+const getNextFilm = require('./Playlist/getNextFilm');
+const getPlaylist = require('./Playlist/getPlaylist');
+const getFilmInfo = require('./Playlist/getFilmInfo');
+const updateFilmStatus = require('./Playlist/updateFilmStatus');
+const updateFilmTime = require('./Playlist/updateFilmTime');
 const disconnect = require('./disconnect');
-const searchFilms = require('./searchFilms');
-const roomJoin = require('./roomJoin');
-const roomDestroy = require('./roomDestroy')
-const streamStart = require('./streamStart');
-const streamControl = require('./streamControl');
+
+const middlewares = require('../middlewares');
 
 module.exports = (socket) => {
+
+    middlewares.forEach(middleware => {
+        socket.use((packet, next) => middleware(socket, packet, next));
+    });
+
     socket.on('searchFilms', (query) => searchFilms(query, socket));
-    socket.on('streamStart', (url) => streamStart(url, socket));
-    socket.on('roomJoin', (room) => roomJoin(room, socket));
-    socket.on('roomDestroy', () => roomDestroy(socket));
-    socket.on('streamControl', (status) => streamControl(status, socket));
-    socket.on('chatJoin', (room) => chatJoin(room, socket));
-    socket.on('chatMessage', (msg) => chatMessage(msg, socket));
+    socket.on('createRoom', (url) => createRoom(url, socket));
+    socket.on('joinRoom', (room) => joinRoom(room, socket));
+    socket.on('destroyRoom', () => destroyRoom(socket));
+    socket.on('getFilmInfo', () => getFilmInfo(socket));
+    socket.on('addToPlaylist', (film) => addToPlaylist(film, socket));
+    socket.on('removeFromPlaylist', (id) => removeFromPlaylist(id, socket));
+    socket.on('setCurrentFilm', (id) => setCurrentFilm(id, socket));
+    socket.on('getPlaylist', () => getPlaylist(socket));
+    socket.on('getNextFilm', () => getNextFilm(socket));
+    socket.on('updateFilmStatus', (status) => updateFilmStatus(status, socket));
+    socket.on('updateFilmTime', (time) => updateFilmTime(time, socket));
+    socket.on('joinChat', () => joinChat(socket));
+    socket.on('messageChat', (msg) => messageChat(msg, socket));
     socket.on('disconnect', () => disconnect(socket));
 }

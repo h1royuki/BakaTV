@@ -1,42 +1,36 @@
 <template>
-  <div class="room">
+  <div v-if="roomId == $route.params.id" class="room">
     <div class="container room">
-      <div class="stream">
-          <video-player v-if="room.status == 'work'" class="player" :options="player"></video-player>
-          <div class="status" v-if="room.status == 'start'">
-            <p>Stream init</p>
-          </div>
-          <div class="status" v-if="room.status == 'pause'">
-            <p>Stream paused</p>
-          </div>
-          <div class="status" v-if="room.status == 'stop'">
-            <p>Stream stopped</p>
-          </div>
+      <playlist v-if="isShowPlaylist"/>
+      <div class="player">
+        <player/>
       </div>
-      <chat class="chat"></chat>
+      <chat class="chat"/>
     </div>
   </div>
 </template>
 <script>
+import Playlist from "../components/Room/Playlist";
+import Player from "../components/Player";
 import Chat from "../components/Chat";
 
 export default {
   components: {
-    Chat
+    Player,
+    Chat,
+    Playlist
   },
-
   computed: {
-    room() {
-      return this.$store.getters.room;
+    roomId() {
+      return this.$store.getters.roomId;
     },
-
-    player() {
-      return this.$store.getters.player;
+    
+    isShowPlaylist() {
+      return this.$store.getters.isShowPlaylist;
     }
   },
-
   mounted() {
-    this.$socket.emit("roomJoin", this.$route.params.id);
+    this.$socket.emit("joinRoom", this.$route.params.id);
   }
 };
 </script>
@@ -53,7 +47,7 @@ export default {
   position: absolute;
 }
 
-.stream {
+.player {
   background-color: black;
   width: 100%;
   max-width: calc(100% - 350px);
@@ -62,35 +56,10 @@ export default {
   align-items: center;
 }
 
-.player {
-  width: 100%;
-  height: 100%;
-}
-
-.video-js {
-  width: 100%;
-  height: 100%;
-}
-
-.status {
-  color: white;
-  font-weight: 700;
-  font-size: 40px;
-  text-align: center;
-}
-
-.chat {
-  width: 350px;
-}
-
 @media (max-width: 800px) {
-  .stream {
+  .player {
     min-width: 100%;
     height: 35%;
-  }
-  .chat {
-    width: 100%;
-    height: 65%;
   }
 }
 </style>

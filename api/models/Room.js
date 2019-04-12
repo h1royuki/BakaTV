@@ -2,20 +2,18 @@
 const roomIdGenerator = require('../helpers/generators/randomString');
 
 class Room {
-    constructor(ownerId, filmName) {
+    constructor(ownerId) {
         this.id = roomIdGenerator();
         this.ownerId = ownerId;
-        this.filmName = filmName;
-        this.stream;
-        this.status = 'start';
+        this.users = {};
+        this.timeouts = [];
+        this.playlist;
     }
 
-    toJson(id) {
+    toJson(user_id) {
         return {
-            filmName: this.filmName,
-            streamId: this.stream.id,
-            status: this.status,
-            isOwner: this.ownerId == id ? true : false
+            id: this.id,
+            owner: this.ownerId
         }
     }
 }
