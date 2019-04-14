@@ -38,6 +38,10 @@ new Vue({
         title: 'Error',
         text: text,
       });
+
+      if (this.$store.getters.isLoading) {
+        this.$store.commit('stopLoading');
+      }
     },
     this.$options.sockets.notify = (text) => {
       this.$notify({

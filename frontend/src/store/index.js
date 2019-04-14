@@ -23,6 +23,10 @@ export default new Vuex.Store({
   mutations: {
     changeLoading(state) {
       Vue.set(state, 'loading', !state.loading);
+    },
+
+    stopLoading(state) {
+      Vue.set(state, 'loading', false);
     }
   },
 

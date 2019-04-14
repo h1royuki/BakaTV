@@ -36,9 +36,11 @@ export default {
 <style>
 ::-webkit-scrollbar {
   background-color: #232935;
+  width: 10px;
 }
 ::-webkit-scrollbar-thumb {
   background-color: #394353 !important;
+  border-radius: 10px;
 }
 
 body {

@@ -10,11 +10,17 @@ class PlaylistService {
         const playlist = {};
         playlist.current = room.playlist.current;
         playlist.films = Object.assign({}, room.playlist.films);
-        
+
         return playlist;
     }
 
     addToPlaylist(roomId, film) {
+        const room = roomRepository.getRoom(roomId);
+
+        if(room.playlist.films.length > 20) {
+            throw new Error('Playlist is full. Maybe delete anything?')
+        }
+
         return KinogoParser.getMovieURL(film.url).then((url) => {
             const newFilm = new FilmModel(url, film.name, film.cover);
             const room = roomRepository.getRoom(roomId);
@@ -29,6 +35,11 @@ class PlaylistService {
 
     removeFromPlaylist(roomId, id) {
         const room = roomRepository.getRoom(roomId);
+        const current = room.playlist.current;
+
+        if (current > id) {
+            room.playlist.current = current - 1;
+        }
 
         delete room.playlist.films[id];
         room.playlist.films = room.playlist.films.filter(val => val);
@@ -54,11 +65,11 @@ class PlaylistService {
         const room = roomRepository.getRoom(roomId);
         const current = room.playlist.current;
 
-        room.playlist.films[current].status = 'ended';
+        room.playlist.films[current].status = 'end';
         room.playlist.films[current].time = '0';
-
-        if(room.playlist.films[current + 1]) {
-            room.playlist.current = current + 1;            
+        
+        if (room.playlist.films[current + 1]) {
+            room.playlist.current = current + 1;
             roomRepository.updateRoom(room);
         } else {
             throw new Error('Playlist ended');
@@ -68,7 +79,7 @@ class PlaylistService {
 
     getNextOrPrevFilmId(id, roomId) {
         const room = roomRepository.getRoom(roomId);
-        
+
         if (room.playlist.films[id + 1]) {
             return id;
         }

@@ -26,50 +26,60 @@
             <div class="item-name">{{film.name}}</div>
           </div>
           <div class="item-actions-container">
-          <div class="item-actions">
-            <play-circle-icon :size="22" title="Playing" class="play" v-if="film.status == `play`"/>
-            <pause-circle-icon
-              :size="22"
-              title="Paused"
-              class="play"
-              v-if="film.status == `pause`"
-            />
-            <wait-circle-icon
-              :size="22"
-              title="Waiting to play"
-              class="play"
-              v-if="film.status == `wait`"
-            />
-          </div>
-          <div class="item-time">
-            <clock-icon
-              v-popover.top="{name: `time` + index}"
-              class="icon"
-              :size="22"
-              title="Film time"
-            />
-            <transition name="fade">
-              <popover class="popover time" :name="`time` + index">
-                <div class="time">{{ film.time | digitToTime}}</div>
-              </popover>
-            </transition>
-          </div>
-          <div class="item-url">
-            <link-icon v-popover.top="{name: `link` + index}" :title="film.url | getDomain"/>
-            <transition name="fade">
-              <popover class="popover url" :name="`link` + index">
-                <a class="link" :href="film.url">{{film.url | getDomain}}</a>
-              </popover>
-            </transition>
-          </div>
-          <div class="item-delete">
-            <delete-icon
-              @click="removeFromPlaylist(index)"
-              :size="24"
-              title="Delete film"
-              class="icon"
-            />
-          </div>
+            <div class="item-status">
+              <play-circle-icon
+                :size="22"
+                title="Playing"
+                class="play"
+                v-if="film.status == `play`"
+              />
+              <pause-circle-icon
+                :size="22"
+                title="Paused"
+                class="play"
+                v-if="film.status == `pause`"
+              />
+              <wait-circle-icon
+                :size="22"
+                title="Waiting to play"
+                class="play"
+                v-if="film.status == `wait`"
+              />
+              <ended-circle-icon 
+                :size="22" 
+                title="Ended" 
+                class="end" 
+                v-if="film.status == `end`"/>
+            </div>
+            <div class="item-time">
+              <clock-icon
+                v-popover.top="{name: `time` + index}"
+                class="icon"
+                :size="23"
+                title="Film time"
+              />
+              <transition name="fade">
+                <popover class="popover time" :name="`time` + index">
+                  <div class="time">{{ film.time | digitToTime}}</div>
+                </popover>
+              </transition>
+            </div>
+            <div class="item-url">
+              <link-icon v-popover.top="{name: `link` + index}" :title="film.url | getDomain"/>
+              <transition name="fade">
+                <popover class="popover url" :name="`link` + index">
+                  <a class="link" :href="film.url">{{film.url | getDomain}}</a>
+                </popover>
+              </transition>
+            </div>
+            <div class="item-delete">
+              <delete-icon
+                @click="removeFromPlaylist(index)"
+                :size="24"
+                title="Delete film"
+                class="icon"
+              />
+            </div>
           </div>
           <div class="line" v-if="index != playlist.current"></div>
         </div>
@@ -91,6 +101,7 @@ import PlayCircleIcon from "vue-material-design-icons/PlayCircle";
 import PauseCircleIcon from "vue-material-design-icons/PauseCircle";
 import WaitCircleIcon from "vue-material-design-icons/CircleSlice3";
 import CloseCircleIcon from "vue-material-design-icons/CloseCircle";
+import EndedCircleIcon from "vue-material-design-icons/CheckboxMarkedCircle";
 import DeleteIcon from "vue-material-design-icons/DeleteCircle";
 import LinkIcon from "vue-material-design-icons/LinkVariant";
 import ClockIcon from "vue-material-design-icons/ClockOutline";
@@ -104,6 +115,7 @@ export default {
     PauseCircleIcon,
     WaitCircleIcon,
     CloseCircleIcon,
+    EndedCircleIcon,
     DeleteIcon,
     LinkIcon,
     ClockIcon,
@@ -239,7 +251,7 @@ export default {
   border: 1px solid #2f3747;
   padding: 20px;
   border-radius: 8px;
-  max-width: 500px;
+  max-width: 475px;
   width: 100%;
   position: relative;
   display: flex;
@@ -259,11 +271,10 @@ export default {
 }
 
 .playlist-items {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-size: 20px;
+  font-size: 17px;
+  max-height: 500px;
+  overflow: auto;
+  padding: 0 5px;
 }
 
 .playlist-item {
@@ -276,7 +287,6 @@ export default {
 .playlist-items .active {
   border-radius: 5px;
   background-color: #323a4a;
-  padding: 5px;
   border-bottom: none !important;
 }
 
@@ -320,9 +330,8 @@ export default {
 
 .playlist-item .item-name {
   padding: 0 10px;
-  width: 200px;
+  width: 180px;
 }
-
 
 .playlist-item .item-actions-container {
   display: flex;
@@ -330,7 +339,7 @@ export default {
   width: 100%;
 }
 
-.item-actions-container .item-actions {
+.item-actions-container .item-status {
   padding: 0 10px;
   position: relative;
 }

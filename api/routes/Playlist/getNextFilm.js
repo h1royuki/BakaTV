@@ -9,7 +9,7 @@ module.exports = (socket) => {
         const playlist = PlaylistService.getPlaylist(socket.room);
 
         socket.emit('updatePlaylist', playlist);
-        SocketIOService.emitId(socket.room, 'setCurrentFilm', currentFilm);
+        SocketIOService.emitId(socket.room, 'updateFilm', currentFilm);
 
     } catch (err) {
         socket.emit('err', err.message);
