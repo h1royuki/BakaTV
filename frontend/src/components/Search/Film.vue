@@ -1,6 +1,6 @@
 <template>
   <div v-if="film" class="film" @click="$emit('send', film)">
-    <img class="film-poster" :src="film.cover" @error="replace">
+    <img class="film-cover" :src="film.cover" @error="replace">
     <div class="film-overlay">
       <search-icon :size="128"/>
     </div>
@@ -36,7 +36,7 @@ export default {
   width: 170px;
   height: 260px;
   position: relative;
-  box-shadow: 0 -10px 30px 1px #0003;
+  box-shadow: 0 -10px 20px 0 #0000001a;
   border-radius: 10px;
   overflow: hidden;
 }
@@ -45,7 +45,7 @@ export default {
   cursor: pointer;
 }
 
-.film-poster {
+.film-cover {
   width: 170px;
   height: 260px;
 }

@@ -4,10 +4,11 @@ export default {
     state: {
         playlist: [],
         isShow: false,
+        length: 0
     },
 
     mutations: {
-        getPlaylist(state, playlist) {
+        updatePlaylist(state, playlist) {
             state.playlist = playlist;
         },
 
@@ -20,8 +21,9 @@ export default {
     },
 
     actions: {
-        socket_getPlaylist({ commit, rootState }, playlist) {
-            commit('getPlaylist', playlist);
+        socket_updatePlaylist({ commit, state, rootState }, playlist) {
+            commit('updatePlaylist', playlist);
+            state.length = Object.keys(playlist.films).length;
             rootState.loading = false;
         }
     },
@@ -29,8 +31,13 @@ export default {
         playlist: state => {
             return state.playlist;
         },
+
         isShowPlaylist: state => {
             return state.isShow;
+        },
+
+        playlistLength: state => {
+            return state.length;
         }
     }
 }

@@ -1,11 +1,12 @@
 
 class Film {
 
-    constructor(url, name) {
+    constructor(url, name, cover) {
         this.url = url;
         this.name = name,
         this.time = 0;
-        this.status = 'play';
+        this.cover = cover;
+        this.status = 'wait';
     }
 
 }

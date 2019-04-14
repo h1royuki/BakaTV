@@ -1,6 +1,6 @@
 const RoomService = require('../services/RoomService');
 
-const routes = ['destroyRoom', 'updateFilmTime', 'updateFilmStatus'];
+const routes = ['addToPlaylist', 'getFilm', 'getNextFilm', 'getPlaylist', 'removeFromPlaylist', 'setFilm', 'updateFilmStatus', 'updateFilmTime'];
 
 module.exports = (socket, packet, next) => {
     try {

@@ -1,25 +1,23 @@
 <template>
-  <transition name="fade">
-    <div class="search">
-      <div class="search-form">
-        <url-input
-          class="search-input"
-          :type="`text`"
-          :placeholder="`Search films...`"
-          v-model="query"
-          v-on:enter="search()"
-        />
-        <start-button class="start-button" :title="`Search films...`" v-on:send="search()">
-          <search-icon :size="30"/>
-        </start-button>
-      </div>
-      <div v-if="items" class="search-result">
-        <div v-for="(film, index ) in items" :key="index">
-          <film v-on:send="$emit('select', $event)" :film="film"></film>
-        </div>
+  <div class="search">
+    <div class="search-form" v-bind:class="{pinned: pinnedInput}">
+      <url-input
+        class="search-input"
+        :type="`text`"
+        :placeholder="`Search films...`"
+        v-model="query"
+        v-on:enter="search()"
+      />
+      <start-button class="start-button" :title="`Search films...`" v-on:send="search()">
+        <search-icon :size="30"/>
+      </start-button>
+    </div>
+    <div v-if="items" class="search-result" v-bind:class="{scroll : scroll}">
+      <div v-for="(film, index ) in items" :key="index">
+        <film v-on:send="$emit('select', $event)" :film="film"></film>
       </div>
     </div>
-  </transition>
+  </div>
 </template>
 <script>
 import Button from "./Base/Button.vue";
@@ -28,6 +26,8 @@ import SearchIcon from "vue-material-design-icons/Magnify.vue";
 import Film from "./Search/Film";
 
 export default {
+  props: ["scroll"],
+
   components: {
     UrlInput: Input,
     StartButton: Button,
@@ -111,7 +111,6 @@ export default {
   width: 85%;
   max-width: 650px;
   position: relative;
-  margin: 60px 0;
 }
 
 .search-result {
@@ -119,6 +118,13 @@ export default {
   flex-direction: row;
   justify-content: center;
   flex-wrap: wrap;
+  padding-top: 40px;
+}
+
+.scroll {
+  height: 280px;
+  overflow: auto;
+  width: 100%;
 }
 
 .search-empty {
@@ -131,6 +137,6 @@ export default {
     text-align: left;
     padding-left: 20px;
   }
-  }
+}
 </style>
 

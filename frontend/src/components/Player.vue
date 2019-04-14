@@ -24,7 +24,7 @@ export default {
     };
   },
   sockets: {
-    setCurrentFilm(film) {
+    updateFilm(film) {
       this.playerOptions.sources = [];
 
       this.playerOptions.sources.push({
@@ -32,26 +32,17 @@ export default {
         type: "video/mp4",
         src: film.url
       });
-    },
-
-    getFilmInfo(film) {
-      this.playerOptions.sources.push({
-        withCredentials: false,
-        type: "video/mp4",
-        src: film.url
-      });
-
       document.title = film.name;
     },
 
-    getFilmTime(time) {
+    updateFilmTime(time) {
       if (this.isNeedSetTime(this.player.currentTime(), time)) {
-        this.$store.dispatch("setLastTime", time);
+        this.$store.dispatch("setFilmTime", time);
         this.player.currentTime(time);
       }
     },
 
-    getFilmStatus(status) {
+    updateFilmStatus(status) {
       this.setPlayerStatus(status);
     },
 
@@ -78,7 +69,7 @@ export default {
     onPlayerTimeupdate($event) {
       if (this.isOwner) {
         if (this.isNeedSetTime($event.currentTime(), this.lastTime)) {
-          this.$store.dispatch("setLastTime", $event.currentTime());
+          this.$store.dispatch("setFilmTime", $event.currentTime());
           this.$socket.emit("updateFilmTime", $event.currentTime());
         }
       }
@@ -97,12 +88,12 @@ export default {
 
     onPlayerEnded() {
       if (this.isOwner) {
-        this.$socket.emit('getNextFilm');
+        this.$socket.emit("getNextFilm");
       }
     },
 
     setPlayerStatus(status) {
-      this.$store.dispatch("setLastStatus", status);
+      this.$store.dispatch("setFilmStatus", status);
 
       if (status == "play") {
         this.player.play();
@@ -139,7 +130,7 @@ export default {
   },
 
   mounted() {
-    this.$socket.emit("getFilmInfo");
+    this.$socket.emit("getFilm");
   }
 };
 </script>

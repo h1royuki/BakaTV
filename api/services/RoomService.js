@@ -8,7 +8,7 @@ class RoomService {
     createRoom(room, film) {
         return KinogoParser.getMovieURL(film.url).then((url) => {
 
-            const FilmModel = new Film(url, film.name);
+            const FilmModel = new Film(url, film.name, film.cover);
 
             room.playlist = new Playlist(FilmModel);
 

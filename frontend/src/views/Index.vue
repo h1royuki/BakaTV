@@ -6,7 +6,7 @@
     </div>
     <div class="container index">
       <div class="logo"></div>
-      <search v-on:select="start($event)"></search>
+      <search class="index-search" v-on:select="start($event)"></search>
     </div>
   </div>
 </template>
@@ -74,6 +74,10 @@ export default {
   max-width: 100%;
   margin: 0 auto;
   z-index: 0;
+}
+
+.index-search {
+  margin-top: 20px;
 }
 
 @media (max-width: 800px) {

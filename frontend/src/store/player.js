@@ -6,7 +6,7 @@ export default {
         lastStatus: null
     },
     mutations: {
-        setFilmInfo(state, film) {
+        updateFilm(state, film) {
             Vue.set(state, 'lastTime', film.time);
             Vue.set(state, 'lastStatus', film.status);
         },
@@ -21,22 +21,15 @@ export default {
     },
 
     actions: {
-
-        socket_setCurrentFilm({commit}, film) {
-            document.title = film.name;
-            commit('setFilmInfo', film);
+        socket_updateFilm({ commit }, film) {
+            commit('updateFilm', film);
         },
 
-        socket_getFilmInfo({ commit }, film) {
-            document.title = film.name;
-            commit('setFilmInfo', film);
-        },
-
-        setLastTime({commit}, time) {
+        setFilmTime({commit}, time) {
             commit('setLastTime', time);
         },
 
-        setLastStatus({commit}, status) {
+        setFilmStatus({commit}, status) {
             commit('setLastStatus', status);
         }
     },

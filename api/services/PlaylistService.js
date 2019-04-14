@@ -16,7 +16,7 @@ class PlaylistService {
 
     addToPlaylist(roomId, film) {
         return KinogoParser.getMovieURL(film.url).then((url) => {
-            const newFilm = new FilmModel(url, film.name);
+            const newFilm = new FilmModel(url, film.name, film.cover);
             const room = roomRepository.getRoom(roomId);
 
             room.playlist.films.push(newFilm);
@@ -34,6 +34,13 @@ class PlaylistService {
         room.playlist.films = room.playlist.films.filter(val => val);
 
         roomRepository.updateRoom(room);
+    }
+
+    isCurrentFilm(roomId, id) {
+        const room = roomRepository.getRoom(roomId);
+        const current = room.playlist.current;
+
+        return id == current;
     }
 
     getCurrentFilmInfo(roomId) {
@@ -59,6 +66,18 @@ class PlaylistService {
 
     }
 
+    getNextOrPrevFilmId(id, roomId) {
+        const room = roomRepository.getRoom(roomId);
+        
+        if (room.playlist.films[id + 1]) {
+            return id;
+        }
+
+        if (room.playlist.films[id - 1]) {
+            return id - 1;
+        }
+    }
+
     updatePlaylist(films) {
         const room = roomRepository.getRoom(roomId);
 
@@ -67,8 +86,14 @@ class PlaylistService {
         roomRepository.updateRoom(room);
     }
 
-    setCurrentFilm(id, roomId) {
+    setFilm(id, roomId) {
         const room = roomRepository.getRoom(roomId);
+        const current = room.playlist.current;
+
+
+        if (room.playlist.films[current]) {
+            room.playlist.films[current].status = 'pause';
+        }
 
         room.playlist.films[id].status = 'play';
         room.playlist.current = id;

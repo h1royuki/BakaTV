@@ -31,7 +31,7 @@ class UserService {
 
     getFirstRoomUser(roomId) {
         const room = roomRepository.getRoom(roomId);
-        console.log(room.users[Object.keys(room.users)[0]].id);
+        
         return room.users[Object.keys(room.users)[0]].id;
     }
 }

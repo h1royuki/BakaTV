@@ -1,6 +1,6 @@
 const RoomService = require('../services/RoomService');
 
-const routes = ['joinChat', 'messageChat', 'destroyRoom', 'getFilmInfo', 'updateFilmStatus', 'updateFilmTime'];
+const routes = ['joinChat', 'messageChat', 'getFilm'];
 
 module.exports = (socket, packet, next) => {
     try {
