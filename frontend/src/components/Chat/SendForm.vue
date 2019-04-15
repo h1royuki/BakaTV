@@ -5,20 +5,16 @@
       v-model="message"
       :rows="3"
       :placeholder="`Enter message`"
-      v-on:enter="sendMessage()"
+      :max-chars="200"
+      v-on:enter="sendMessage"
     ></message-input>
     <emoji-popup v-on:hide="hideEmoji" v-on:select="selectEmoji($event)" v-if="isShowEmoji"></emoji-popup>
-    <emoji-button v-on:send="showEmoji" class="emoji-button" :title="`Emoji`">
+    <emoji-button @click="showEmoji" class="emoji-button" :title="`Emoji`">
       <emoji-icon/>
     </emoji-button>
 
     <div class="control-buttons">
-      <send-button
-        class="chat-button"
-        :title="`Send message`"
-        v-on:send="sendMessage"
-        :text="`Send`"
-      ></send-button>
+      <send-button class="chat-button" :title="`Send message`" @click="sendMessage">Send message</send-button>
 
       <control-button
         v-popover:control.top
@@ -31,10 +27,10 @@
 
       <transition name="fade">
         <popover name="control" class="modal">
-          <playlist-button v-on:send="showPlaylist" class="control-button" :title="`Playlist`">
+          <playlist-button @click="showPlaylist" class="control-button" :title="`Playlist`">
             <playlist-icon title/>
           </playlist-button>
-          <destroy-button v-on:send="destroyRoom" class="control-button" :title="`Destroy room`">
+          <destroy-button @click="destroyRoom" class="control-button" :title="`Destroy room`">
             <destroy-icon title/>
           </destroy-button>
         </popover>

@@ -2,7 +2,7 @@
   <div class="online-users">
     <div class="count-container">
       <p class="online-counter">{{onlineUsersCount}} online user{{onlineUsersCount > 1 ? `s` : ``}}</p>
-      <show-button class="show-button" v-on:send="showUsers">
+      <show-button class="show-button" @click="showUsers">
         <arrow-up-icon v-if="isShowUsers" :size="32"/>
         <arrow-down-icon :size="32" v-else/>
       </show-button>

@@ -16,8 +16,10 @@
 
 <script>
 export default {
-  props: ["message"],
-  
+  props: {
+    message: { type: Object, required: true }
+  },
+
   computed: {
     id() {
       return this.$store.getters.userId;

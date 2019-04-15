@@ -6,17 +6,23 @@
     </div>
     <div class="container index">
       <div class="logo"></div>
-      <search class="index-search" v-on:select="start($event)"></search>
+      <search class="index-search" v-on:select="start($event)">
+        <template v-slot:cover-icon>
+          <play-icon :size="60" title="Create room" />
+        </template>
+      </search>
     </div>
   </div>
 </template>
 
 <script>
 import Search from "../components/Search";
+import PlayIcon from "vue-material-design-icons/Play.vue";
 
 export default {
   components: {
-    Search
+    Search,
+    PlayIcon
   },
 
   methods: {
@@ -77,7 +83,7 @@ export default {
 }
 
 .index-search {
-  margin-top: 20px;
+  margin-top: 40px;
 }
 
 @media (max-width: 800px) {

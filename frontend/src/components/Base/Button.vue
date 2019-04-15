@@ -1,13 +1,15 @@
 <template>
-  <button :title="title" v-on:click="$emit('send')">
+  <button :title="title" @click="$emit('click')">
     <slot></slot>
-    {{text}}
   </button>
 </template>
   
 <script>
 export default {
-  props: ["text", "title"]
+  props: {
+    title: {type: String, default: 'Button'},
+
+  }
 };
 </script>
 

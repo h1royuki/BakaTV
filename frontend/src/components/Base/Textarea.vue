@@ -3,14 +3,26 @@
     :value="value"
     :placeholder="placeholder ? placeholder : 'Placeholder'"
     :rows="rows ? rows : 1"
+    :class="{error: isValid(value)}"
     v-on:keyup.ctrl.enter="$emit('enter')"
-    v-on:input="$emit('input', $event.target.value)"
+    v-on:input="$emit('input', $event.target.value);"
   />
 </template>
 
 <script>
 export default {
-  props: ["value", "placeholder", "rows"]
+  props: {
+    value: { type: String },
+    placeholder: { type: String, default: "Placeholder" },
+    rows: { type: Number, default: 1 },
+    maxChars: { type: Number, default: 300 }
+  },
+
+  methods: {
+    isValid(value) {
+      return value.length > this.maxChars;
+    }
+  }
 };
 </script>
 
@@ -30,9 +42,13 @@ textarea {
   transition: 0.2s;
 }
 
+textarea.error {
+  border-color: #ff3e3e !important;
+}
+
 textarea:focus {
   background-color: #222730 !important;
-  border-color: #969595 !important;
+  border-color: #969595;
   border: 1px solid;
   transition: 0.2s;
 }

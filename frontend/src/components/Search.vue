@@ -1,20 +1,38 @@
 <template>
   <div class="search">
-    <div class="search-form" v-bind:class="{pinned: pinnedInput}">
+    <div class="search-form">
       <url-input
         class="search-input"
+        :class="{small: small}"
         :type="`text`"
         :placeholder="`Search films...`"
         v-model="query"
         v-on:enter="search()"
       />
-      <start-button class="start-button" :title="`Search films...`" v-on:send="search()">
-        <search-icon :size="30"/>
+      <start-button
+        class="start-button"
+        :class="{small: small}"
+        :title="`Search films...`"
+        @click="search()"
+      >
+        <search-icon :size="small ? 20 : 30"/>
       </start-button>
     </div>
-    <div v-if="items" class="search-result" v-bind:class="{scroll : scroll}">
+    <div v-if="items" class="search-result" :class="{scroll : scroll}">
       <div v-for="(film, index ) in items" :key="index">
-        <film v-on:send="$emit('select', $event)" :film="film"></film>
+        <film
+          :width="small ? 100 : 150"
+          :height="small ? 145 : 213"
+          :margin="small ? 10 : 20"
+          :font-size="small ? 13 : 15"
+          @click="$emit('select', film)"
+          :cover="film.cover"
+          :name="film.name"
+        >
+          <template v-slot:cover-icon>
+            <slot name="cover-icon"></slot>
+          </template>
+        </film>
       </div>
     </div>
   </div>
@@ -23,10 +41,13 @@
 import Button from "./Base/Button.vue";
 import Input from "./Base/Input.vue";
 import SearchIcon from "vue-material-design-icons/Magnify.vue";
-import Film from "./Search/Film";
+import Film from "./Room/Film";
 
 export default {
-  props: ["scroll"],
+  props: {
+    scroll: { type: Boolean, default: false },
+    small: { type: Boolean, default: false }
+  },
 
   components: {
     UrlInput: Input,
@@ -80,6 +101,11 @@ export default {
   margin: 6px;
 }
 
+.start-button.small {
+  border-radius: 8px;
+  padding: 5px 10px;
+}
+
 .start-button:hover {
   background-color: #2e5e89;
   border: 1px solid #2e5e89;
@@ -93,6 +119,12 @@ export default {
   background-color: rgba(72, 81, 99, 0.3);
   border: 1px solid transparent;
   max-height: 29px;
+}
+
+.search-input.small {
+  font-size: 20px;
+  border-radius: 8px;
+  max-height: 18px;
 }
 
 .search-input:focus {
@@ -121,10 +153,11 @@ export default {
   padding-top: 40px;
 }
 
-.scroll {
-  height: 280px;
+.search-result.scroll {
+  max-height: 335px;
   overflow: auto;
   width: 100%;
+  padding-top: 20px;
 }
 
 .search-empty {

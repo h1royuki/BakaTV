@@ -1,23 +1,28 @@
 <template>
-  <div v-if="film" class="film" @click="$emit('send', film)">
-    <img class="film-cover" :src="film.cover" @error="replace">
+  <div class="film" :style="{ margin: margin + 'px'}" @click="$emit('send')">
+    <img :style="{width: width + 'px', height: height + 'px' }" :src="cover" @error="replace">
     <div class="film-overlay">
-      <search-icon :size="128"/>
+      <slot name="cover-icon"></slot>
     </div>
-    <div class="film-props">
-      <div class="film-name">{{film.name}}</div>
+    <div class="film-props" v-if="name">
+      <div class="film-name" :style="{ fontSize: fontSize + 'px' }">{{name}}</div>
     </div>
   </div>
 </template>
 
 <script>
-import SearchIcon from "vue-material-design-icons/Play.vue";
 import noImg from "../../assets/no_img.svg";
+
 export default {
-  props: ["film"],
-  components: {
-    SearchIcon
+  props: {
+    name: String,
+    cover: { type: String, required: true },
+    width: { type: Number, default: 100 },
+    height: { type: Number, default: 145 },
+    fontSize: { type: Number, default: 15 },
+    margin: { type: Number, default: 0 }
   },
+
   methods: {
     replace(e) {
       e.target.src = noImg;
@@ -31,23 +36,14 @@ export default {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  margin: 10px 10px;
-  max-width: 240px;
-  width: 170px;
-  height: 260px;
   position: relative;
   box-shadow: 0 -10px 20px 0 #0000001a;
-  border-radius: 10px;
+  border-radius: 6px;
   overflow: hidden;
 }
 
 .film:hover {
   cursor: pointer;
-}
-
-.film-cover {
-  width: 170px;
-  height: 260px;
 }
 
 .film-overlay {
@@ -60,8 +56,7 @@ export default {
   width: 100%;
   height: 100%;
   background: #000000b3;
-  z-index: 10;
-  border-radius: 9px;
+  z-index: 1;
   opacity: 0;
   color: white;
   align-items: center;
@@ -80,8 +75,6 @@ export default {
   position: absolute;
   bottom: 0;
   background-color: #000c;
-  border-bottom-left-radius: 9px;
-  border-bottom-right-radius: 9px;
 }
 
 .film-name {
@@ -89,13 +82,6 @@ export default {
   color: white;
   padding: 5px;
   text-align: center;
-}
-
-.film-desc {
-  color: #a7a4a4;
-  text-align: center;
-  font-size: 15px;
-  padding: 5px;
 }
 </style>
 

@@ -1,8 +1,9 @@
 <template>
   <input
     :value="value"
-    :type="type ? type : 'text'"
-    :placeholder="placeholder ? placeholder : 'Placeholder'"
+    :type="type"
+    :placeholder="placeholder"
+    :class="{error: isValid(value)}"
     @input="$emit('input', $event.target.value)"
     v-on:keydown.enter="$emit('enter')"
   >
@@ -10,7 +11,18 @@
 
 <script>
 export default {
-  props: ["value", "type", "placeholder"]
+  props: {
+    value: { type: String },
+    type: { type: String, default: "text" },
+    placeholder: { type: String, default: "Placeholder" },
+    maxChars: { type: Number, default: 30 }
+  },
+
+  methods: {
+    isValid(value) {
+      return value.length > this.maxChars;
+    }
+  }
 };
 </script>
 
@@ -23,7 +35,11 @@ input {
   border-radius: 50px;
   transition: 0.3s;
   outline: none;
-  font-family: 'Roboto Light', sans-serif;
+  font-family: "Roboto Light", sans-serif;
+}
+
+input.error {
+  border-color: #ff3e3e !important;
 }
 
 input::placeholder {

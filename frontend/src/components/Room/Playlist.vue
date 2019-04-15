@@ -1,8 +1,12 @@
 <template>
   <div class="playlist-container">
     <div class="add-film" v-if="isSearchPopupShow">
-      <close-circle-icon @click="hideSearchPopup" :size="30" class="close"/>
-      <search :scroll="true" v-on:select="addToPlaylist($event)"/>
+      <close-circle-icon @click="hideSearchPopup" :size="25" class="close"/>
+      <search :scroll="true" :small="true" v-on:select="addToPlaylist($event)">
+        <template v-slot:cover-icon>
+          <playlist-add-icon :size="35" title="Add to playlist"/>
+        </template>
+      </search>
     </div>
     <div v-else class="playlist">
       <div class="playlist-title">
@@ -13,14 +17,17 @@
         <div
           class="playlist-item"
           v-for="(film, index) in playlist.films"
-          v-bind:class="{line: isLineNeed(index), active: index == playlist.current}"
+          :class="{line: isLineNeed(index), active: index == playlist.current}"
           :key="index"
         >
           <div class="item-cover" @click="setCurrentFilm(index)">
-            <img class="cover" :src="film.cover">
-            <div class="play" v-if="index != playlist.current">
-              <play-icon title="Play film" :size="42"/>
-            </div>
+            <film :width="60" :height="86" :cover="film.cover">
+              <template v-slot:cover-icon>
+                <div class="play" v-if="index != playlist.current">
+                  <play-icon title="Play film" :size="42"/>
+                </div>
+              </template>
+            </film>
           </div>
           <div class="item-text-container">
             <div class="item-name">{{film.name}}</div>
@@ -45,11 +52,7 @@
                 class="play"
                 v-if="film.status == `wait`"
               />
-              <ended-circle-icon 
-                :size="22" 
-                title="Ended" 
-                class="end" 
-                v-if="film.status == `end`"/>
+              <ended-circle-icon :size="22" title="Ended" class="end" v-if="film.status == `end`"/>
             </div>
             <div class="item-time">
               <clock-icon
@@ -85,8 +88,8 @@
         </div>
       </div>
       <div class="control-buttons">
-        <search-button class="add" v-if="!isSearchPopupShow" v-on:send="showSearchPopup">Add film</search-button>
-        <close-playlist-button class="close" v-on:send="hidePopup">Close</close-playlist-button>
+        <search-button class="add" v-if="!isSearchPopupShow" @click="showSearchPopup">Add film</search-button>
+        <close-playlist-button class="close" @click="hidePopup">Close</close-playlist-button>
       </div>
     </div>
   </div>
@@ -105,6 +108,8 @@ import EndedCircleIcon from "vue-material-design-icons/CheckboxMarkedCircle";
 import DeleteIcon from "vue-material-design-icons/DeleteCircle";
 import LinkIcon from "vue-material-design-icons/LinkVariant";
 import ClockIcon from "vue-material-design-icons/ClockOutline";
+import PlaylistAddIcon from "vue-material-design-icons/PlaylistPlus";
+import Film from "./Film";
 
 export default {
   components: {
@@ -119,8 +124,10 @@ export default {
     DeleteIcon,
     LinkIcon,
     ClockIcon,
+    PlaylistAddIcon,
     SearchButton: Button,
-    ClosePlaylistButton: Button
+    ClosePlaylistButton: Button,
+    Film
   },
 
   data() {
@@ -233,8 +240,10 @@ export default {
   border: 1px solid #2f3747;
   border-radius: 8px;
   position: relative;
-  max-width: 700px;
-  padding: 50px 0;
+  max-width: 650px;
+  min-height: 229px;
+  padding: 30px 0;
+  padding-bottom: 15px;
   width: 90%;
 }
 
@@ -292,35 +301,8 @@ export default {
 
 .playlist-item .item-cover {
   margin: 0 10px;
-  top: 3px;
   position: relative;
   cursor: pointer;
-}
-
-.item-cover .cover {
-  width: 60px;
-  border-radius: 5px;
-}
-
-.item-cover .play {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 6px;
-  color: white;
-  width: 100%;
-  border-radius: 5px;
-  opacity: 0;
-  transition: 0.3s;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.item-cover .play:hover {
-  opacity: 1;
-  transition: 0.3s;
-  background-color: #0009;
 }
 
 .playlist-item .item-text-container {
