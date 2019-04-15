@@ -1,5 +1,5 @@
 <template>
-  <div class="film" :style="{ margin: margin + 'px'}" @click="$emit('send')">
+  <div class="film" :style="{ margin: margin + 'px'}" @click="$emit('click')">
     <img :style="{width: width + 'px', height: height + 'px' }" :src="cover" @error="replace">
     <div class="film-overlay">
       <slot name="cover-icon"></slot>
