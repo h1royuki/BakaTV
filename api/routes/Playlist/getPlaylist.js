@@ -1,11 +1,12 @@
 const PlaylistService = require('../../services/PlaylistService');
 
-module.exports = (socket) => {
+module.exports = async (socket) => {
     try {
-        const playlist = PlaylistService.getPlaylist(socket.room);
+        const playlist = await PlaylistService.getPlaylist(socket.room);
         
         socket.emit('updatePlaylist', playlist);
     } catch (err) {
+        console.log(err);
         socket.emit('err', err.message)
     }
 }

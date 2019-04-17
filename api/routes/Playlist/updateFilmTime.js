@@ -1,11 +1,12 @@
 const PlaylistService = require('../../services/PlaylistService');
 
-module.exports = (time, socket) => {
+module.exports = async (time, socket) => {
     try {
-        PlaylistService.updateCurrentTime(socket.room, time);
+        await PlaylistService.updateCurrentTime(socket.room, time);
 
-            socket.broadcast.to(socket.room).emit('updateFilmTime', time);
+        socket.broadcast.to(socket.room).emit('updateFilmTime', time);
     } catch (err) {
+        console.log(err);
         socket.emit('err', err.message);
     }
 }

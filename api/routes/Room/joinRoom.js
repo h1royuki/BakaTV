@@ -1,21 +1,32 @@
+const userNameGenerator = require('../../helpers/generators/userName');
+const UserService = require('../../services/UserService');
+const colorGenerator = require('../../helpers/generators/color');
+const UserModel = require('../../entity/Room/User');
 const RoomService = require('../../services/RoomService');
-const NotFoundError = require('../../errors/NotFoundError');
 
-module.exports = (room, socket) => {
+module.exports = async (id, socket) => {
     try {
 
-        socket.room = room;
-        socket.join(room);
+        socket.room = id;
+        socket.join(id);
 
-        if (!RoomService.getOwner(room)) {
-            RoomService.setRoomOwner(socket.id, room);
-            RoomService.removeRoomTimeout(room, 'destroy');
-            console.log(`User joined to ${room}, timeout remove`);
+        if (!socket.userId) {
+            socket.userId = Date.now();
         }
-        
-        socket.emit('joinRoom', {userId: socket.id, room: RoomService.getRoom(room)});
 
+        if (!await RoomService.getOwner(id)) {
+            console.log('owner not found');
+            await RoomService.setRoomOwner(socket.userId, id);
+        }
+
+        const user = new UserModel(socket.userId, socket.id, userNameGenerator(), colorGenerator());
+        const room = await RoomService.getRoom(id);
+
+        await UserService.addUserToRoom(user, socket.room);
+
+        socket.emit('joinRoom', { userId: socket.userId, room: room });
     } catch (err) {
+        console.log(err);
         socket.emit('err', err.message);
     }
 };      

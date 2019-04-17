@@ -1,61 +1,52 @@
-const Playlist = require('../models/Room/Playlist');
-const Film = require('../models/Room/Playlist/Film')
-const roomRepository = require('../repository/RoomRepository');
+const Film = require('../entity/Room/Playlist/Film');
+const PlaylistRepository = require('../repository/PlaylistRepository');
+const RoomRepository = require('../repository/RoomRepository');
 const KinogoParser = require('../parsers/KinogoParser');
 
 class RoomService {
 
-    createRoom(room, film) {
-        return KinogoParser.getMovieURL(film.url).then((url) => {
+    async createRoom(room, props) {
+        try {
+            const link = await KinogoParser.getMovieURL(props.url);
+            
+            const film = new Film(link, props.name, props.cover);
 
-            const FilmModel = new Film(url, film.name, film.cover);
+            await PlaylistRepository.addItemToPlaylist(room.id, film);
+            await PlaylistRepository.setCurrentItemId(room.id, film.id);
 
-            room.playlist = new Playlist(FilmModel);
-
-            roomRepository.addRoom(room);
-        }).catch((err) => {
+            return await RoomRepository.addRoom(room);
+        } catch (err) {
             console.log(err);
             throw new Error('Error create room');
-        })
+        }
     }
 
-    getRoom(roomId) {
-        return roomRepository.getRoom(roomId).toJson();
+    async getRoom(roomId) {
+        return await RoomRepository.getRoom(roomId);
     }
 
-    getOwner(roomId) {
-        return roomRepository
-            .getRoom(roomId)
-            .ownerId;
+    async getOwner(roomId) {
+        const room = await this.getRoom(roomId);
+
+        return room.ownerId;
     }
 
-    isRoomOwner(socketId, roomId) {
-        const room = roomRepository.getRoom(roomId);
+    async isRoomOwner(userId, roomId) {
+        const room = await this.getRoom(roomId);
 
-        return socketId == room.ownerId;
+        return userId == room.ownerId;
     }
 
-    setRoomOwner(socketId, roomId) {
-        const room = roomRepository.getRoom(roomId);
-        room.ownerId = socketId;
-        roomRepository.updateRoom(room);
+    async setRoomOwner(userId, roomId) {
+        const room = await this.getRoom(roomId);
+
+        room.ownerId = userId;
+        
+        return await RoomRepository.updateRoom(room);
     }
 
-    destroyRoom(roomId) {
-        roomRepository.removeRoom(roomId);
-    }
-
-    addRoomTimeout(roomId, type, timeout) {
-        const room = roomRepository.getRoom(roomId);
-        room.timeouts[type] = timeout;
-        roomRepository.updateRoom(room);
-    }
-
-    removeRoomTimeout(roomId, type) {
-        const room = roomRepository.getRoom(roomId);
-        clearTimeout(room.timeouts[type]);
-        delete room.timeouts[type];
-        roomRepository.updateRoom(room);
+    async removeRoom(roomId) {
+        return await RoomRepository.deleteRoom(roomId);
     }
 }
 

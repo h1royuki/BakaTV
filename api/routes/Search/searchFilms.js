@@ -1,10 +1,12 @@
 const KinogoParser = require('../../parsers/KinogoParser')
 
-module.exports = (query, socket) => {
-    KinogoParser.searchFilms(query).then((items) => {
+module.exports = async (query, socket) => {
+    try {
+        const items = await KinogoParser.searchFilms(query)
+        
         socket.emit('searchFilms', items);
-    }).catch((err) => {
+    } catch (err) {
+        console.log(err);
         socket.emit('err', err.message);
-
-    })
+    }
 };

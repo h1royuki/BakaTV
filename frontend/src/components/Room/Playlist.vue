@@ -17,10 +17,10 @@
         <div
           class="playlist-item"
           v-for="(film, index) in playlist.films"
-          :class="{line: isLineNeed(index), active: index == playlist.current}"
+          :class="{line: isLineNeed(index), active: film.id == playlist.current}"
           :key="index"
         >
-          <div class="item-cover" @click="setCurrentFilm(index)">
+          <div class="item-cover" @click="setCurrentFilm(film.id)">
             <film :width="60" :height="86" :cover="film.cover">
               <template v-slot:cover-icon>
                 <div class="play" v-if="index != playlist.current">
@@ -77,7 +77,7 @@
             </div>
             <div class="item-delete">
               <delete-icon
-                @click="removeFromPlaylist(index)"
+                @click="removeFromPlaylist(film.id)"
                 :size="24"
                 title="Delete film"
                 class="icon"

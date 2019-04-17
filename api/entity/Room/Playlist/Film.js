@@ -2,6 +2,7 @@
 class Film {
 
     constructor(url, name, cover) {
+        this.id = Date.now();
         this.url = url;
         this.name = name,
         this.time = 0;

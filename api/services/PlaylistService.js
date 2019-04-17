@@ -1,133 +1,94 @@
-const FilmModel = require('../models/Room/Playlist/Film');
+const FilmModel = require('../entity/Room/Playlist/Film');
 const KinogoParser = require('../parsers/KinogoParser');
-const roomRepository = require('../repository/RoomRepository');
+const PlaylistRepository = require('../repository/PlaylistRepository');
 
 class PlaylistService {
 
-    getPlaylist(roomId) {
-        const room = roomRepository.getRoom(roomId);
+    async getPlaylist(roomId) {
+        let playlist = await PlaylistRepository.getPlaylist(roomId);
+        const current = await PlaylistRepository.getCurrentItemId(roomId);
 
-        const playlist = {};
-        playlist.current = room.playlist.current;
-        playlist.films = Object.assign({}, room.playlist.films);
+        const object = {};
+        object.current = current;
+        object.films = Object.assign({}, this.convertPlaylistItemsToObject(playlist));
 
-        return playlist;
+        return object;
     }
 
-    addToPlaylist(roomId, film) {
-        const room = roomRepository.getRoom(roomId);
-
-        if(room.playlist.films.length > 20) {
-            throw new Error('Playlist is full. Maybe delete anything?')
-        }
-
-        return KinogoParser.getMovieURL(film.url).then((url) => {
+    async addToPlaylist(roomId, film) {
+        try {
+            const url = await KinogoParser.getMovieURL(film.url);
             const newFilm = new FilmModel(url, film.name, film.cover);
-            const room = roomRepository.getRoom(roomId);
 
-            room.playlist.films.push(newFilm);
+            return await PlaylistRepository.addItemToPlaylist(roomId, newFilm);
 
-            roomRepository.updateRoom(room);
-        }).catch((err) => {
+        } catch (err) {
+            console.log(err);
             throw new Error('Error add to playlist');
-        });
-    }
-
-    removeFromPlaylist(roomId, id) {
-        const room = roomRepository.getRoom(roomId);
-        const current = room.playlist.current;
-
-        if (current > id) {
-            room.playlist.current = current - 1;
         }
 
-        delete room.playlist.films[id];
-        room.playlist.films = room.playlist.films.filter(val => val);
-
-        roomRepository.updateRoom(room);
     }
 
-    isCurrentFilm(roomId, id) {
-        const room = roomRepository.getRoom(roomId);
-        const current = room.playlist.current;
+    async removeFromPlaylist(playlistId, itemId) {
+        const currentId = await PlaylistRepository.getCurrentItemId(playlistId);
 
-        return id == current;
+        if (currentId == itemId) {
+            throw new Error('You can not delete active item');
+        }
+
+        return await PlaylistRepository.removeItemFromPlaylist(playlistId, itemId);
     }
 
-    getCurrentFilmInfo(roomId) {
-        const room = roomRepository.getRoom(roomId);
-        const current = room.playlist.current;
+    async getCurrentFilm(playlistId) {
+        const currentId = await PlaylistRepository.getCurrentItemId(playlistId);
+        const film = await PlaylistRepository.getItemFromPlaylist(playlistId, currentId);
 
-        return room.playlist.films[current];
+        return film;
     }
 
-    startNextFilm(roomId) {
-        const room = roomRepository.getRoom(roomId);
-        const current = room.playlist.current;
+    async startNextFilm(playlistId) {
+        const current = await PlaylistRepository.getCurrentItemId(playlistId);
 
-        room.playlist.films[current].status = 'end';
-        room.playlist.films[current].time = '0';
-        
-        if (room.playlist.films[current + 1]) {
-            room.playlist.current = current + 1;
-            roomRepository.updateRoom(room);
-        } else {
+        if (current == itemId) {
+            const after = await PlaylistRepository.getPlaylistItemsAfter(playlistIs, itemId);
+
+            if (after[0]) {
+                const newCurrent = JSON.parse(after[0]);
+                await PlaylistRepository.setCurrentItemId(playlistId, newCurrent.id)
+                return newCurrent;
+            }
+
             throw new Error('Playlist ended');
         }
 
     }
 
-    getNextOrPrevFilmId(id, roomId) {
-        const room = roomRepository.getRoom(roomId);
+    async setFilm(playlistId, itemId) {
+        return await PlaylistRepository.setCurrentItemId(playlistId, itemId);
+    }
 
-        if (room.playlist.films[id + 1]) {
-            return id;
+    async updateCurrentStatus(playlistId, status) {
+        const item = await this.getCurrentFilm(playlistId);
+        item.status = status;
+        return await PlaylistRepository.updateItemFromPlaylist(playlistId, item);
+    }
+
+    async updateCurrentTime(playlistId, time) {
+        const item = await this.getCurrentFilm(playlistId);
+        item.time = time;
+        return await PlaylistRepository.updateItemFromPlaylist(playlistId, item);
+    }
+
+    async removePlaylist(playlistId) {
+        await PlaylistRepository.removeCurrentItemId(playlistId);
+        return await PlaylistRepository.removePlaylist(playlistId);
+    }
+
+    convertPlaylistItemsToObject(playlist) {
+        for (let i = 0; i < playlist.length; i++) {
+            playlist[i] = JSON.parse(playlist[i]);
         }
-
-        if (room.playlist.films[id - 1]) {
-            return id - 1;
-        }
-    }
-
-    updatePlaylist(films) {
-        const room = roomRepository.getRoom(roomId);
-
-        room.playlist.films = films;
-
-        roomRepository.updateRoom(room);
-    }
-
-    setFilm(id, roomId) {
-        const room = roomRepository.getRoom(roomId);
-        const current = room.playlist.current;
-
-
-        if (room.playlist.films[current]) {
-            room.playlist.films[current].status = 'pause';
-        }
-
-        room.playlist.films[id].status = 'play';
-        room.playlist.current = id;
-
-        roomRepository.updateRoom(room);
-    }
-
-    updateCurrentStatus(roomId, status) {
-        const room = roomRepository.getRoom(roomId);
-        const current = room.playlist.current;
-
-        room.playlist.films[current].status = status;
-
-        roomRepository.updateRoom(room);
-    }
-
-    updateCurrentTime(roomId, time) {
-        const room = roomRepository.getRoom(roomId);
-        const current = room.playlist.current;
-
-        room.playlist.films[current].time = time;
-
-        roomRepository.updateRoom(room);
+        return playlist;
     }
 
 }

@@ -1,42 +1,26 @@
-
-const NotFoundError = require('../errors/NotFoundError')
-
+const redis = require('../modules/redis');
 
 class RoomRepository {
 
-    constructor() {
-        this._rooms = [];
+    async addRoom(room) {
+        return await this.updateRoom(room);
+    }
+    
+    async getRoom(id) {
+        const room =  await redis.get(`room:${id}`);
+
+        if(!room) {
+            throw new Error('Room not found');
+        }
+        return JSON.parse(room);
     }
 
-    addRoom(room) {
-        if (!(room.id in this._rooms)) {
-            this._rooms[room.id] = room;
-        } else {
-            throw new Error('Room already created');
-        }
+    async updateRoom(room) {
+        return await redis.set(`room:${room.id}`, JSON.stringify(room));
     }
-
-    removeRoom(id) {
-        if (id in this._rooms) {
-            delete this._rooms[id];
-        } else {
-            throw new Error('Room not created');
-        }
-    }
-
-    getRoom(id) {
-        if (id in this._rooms) {
-            return this._rooms[id];
-        }
-        throw new NotFoundError('Room not found');
-    }
-
-    updateRoom(room) {
-        if (room.id in this._rooms) {
-            this._rooms[room.id] = room;
-        } else {
-            throw new NotFoundError('Room not found');
-        }
+    
+    async deleteRoom(roomId) {
+       return await redis.del(`room:${roomId}`);
     }
 
 }

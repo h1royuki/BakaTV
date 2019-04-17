@@ -12,6 +12,7 @@
     "debug": "~2.6.9",
     "dotenv": "^6.2.0",
     "iconv-lite": "^0.4.24",
+    "redis": "^2.8.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
     "socket.io": "^2.2.0",

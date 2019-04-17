@@ -1,13 +1,19 @@
-const Room = require('../../models/Room')
+const Room = require('../../entity/Room')
 const RoomService = require('../../services/RoomService');
 
-module.exports = (film, socket) => {
+module.exports = async (film, socket) => {
+        try {
+                socket.userId = Math.random() * 10000;
 
-        const room = new Room(socket.id, film.name);
+                const room = new Room(socket.userId);
 
-        RoomService.createRoom(room, film).then(() => {
+                await RoomService.createRoom(room, film);
+
                 socket.emit('createRoom', room.id);
-        }).catch((err) => {
+
+                console.log(`Room ${room.id} created`);
+        } catch (err) {
+                console.log(err);
                 socket.emit('err', err.message);
-        });
+        }
 };

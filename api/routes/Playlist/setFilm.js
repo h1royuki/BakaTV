@@ -1,17 +1,18 @@
 const SocketIOService = require('../../services/SocketIOService')
 const PlaylistService = require('../../services/PlaylistService');
 
-module.exports = (id, socket) => {
+module.exports = async (id, socket) => {
     try {
 
-        PlaylistService.setFilm(id, socket.room);
+        await PlaylistService.setFilm(socket.room, id);
 
-        const currentFilm = PlaylistService.getCurrentFilmInfo(socket.room);
-        const playlist = PlaylistService.getPlaylist(socket.room);
+        const currentFilm = await PlaylistService.getCurrentFilm(socket.room);
+        const playlist = await PlaylistService.getPlaylist(socket.room);
 
         socket.emit('updatePlaylist', playlist);
         SocketIOService.emitId(socket.room, 'updateFilm', currentFilm);
     } catch (err) {
+        console.log(err);
         socket.emit('err', err.message);
     }
 }

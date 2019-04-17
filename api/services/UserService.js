@@ -1,38 +1,48 @@
-const roomRepository = require('../repository/RoomRepository');
+const UserRepository = require('../repository/UserRepository');
 
 class UserService {
 
-    getRoomUsers(roomId) {
-        const room = roomRepository.getRoom(roomId);
-        return room.users;
+    async getRoomUsers(roomId) {
+        const users = await UserRepository.getUsers(roomId);
+        const object =  this.convertUsersToObject(users);
+
+        return Object.assign({}, object);
     }
 
-    addUserToRoom(user, roomId) {
-        const room = roomRepository.getRoom(roomId);
-        room.users[user.id] = user;
-        roomRepository.updateRoom(room);
+    async addUserToRoom(user, roomId) {
+       return await UserRepository.addUser(roomId, user);
     }
 
-    getUserFromRoom(userId, roomId) {
-        const room = roomRepository.getRoom(roomId);
-        return room.users[userId];
+    async getUserFromRoom(userId, roomId) {
+        return await UserRepository.getUser(roomId, userId);
     }
 
-    deleteUserFromRoom(userId, roomId) {
-        const room = roomRepository.getRoom(roomId);
-        delete room.users[userId];
-        roomRepository.updateRoom(room);
+    async deleteUserFromRoom(userId, roomId) {
+        return await UserRepository.removeUser(roomId, userId);
     }
 
-    getOnlineUsersCount(roomId) {
-        const room = roomRepository.getRoom(roomId);
-        return Object.keys(room.users).length;
+    async getOnlineUsersCount(roomId) {
+       return await UserRepository.getUsersCount(roomId);
     }
 
-    getFirstRoomUser(roomId) {
-        const room = roomRepository.getRoom(roomId);
-        
-        return room.users[Object.keys(room.users)[0]].id;
+    async removeUsers(roomId) {
+        return await UserRepository.removeUsers(roomId);
+    }
+
+    async getNextRoomUser(userId, roomId) {
+        const users = await UserRepository.getUsersAfter(roomId, userId);
+
+        console.log(users);
+        if(users[0]) {
+            return JSON.parse(users[0]);
+        }
+    }
+
+    convertUsersToObject(users) {
+        for (let i = 0; i < users.length; i++) {
+            users[i] = JSON.parse(users[i]);
+        }
+        return users;
     }
 }
 

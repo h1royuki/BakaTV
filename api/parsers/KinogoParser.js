@@ -6,7 +6,7 @@ const baseURL = 'https://kinogo.by';
 
 class KinogoParser {
 
-    searchFilms(query) {
+    async searchFilms(query) {
         const options = {
             method: 'POST',
             uri: baseURL + '/index.php?do=search',
@@ -26,33 +26,29 @@ class KinogoParser {
             }
         };
 
-        return rp(options)
-            .then(($) => {
-                const items = [];
+        const html = await rp(options);
 
-                $('.shortstory').map(function (i, el) {
-                    const item = {};
-                    const type = $(this).text();
-                    item.name = $(this).find('.zagolovki').text();
+        const items = [];
 
-                    if (!item.name.match(/.*\(\d*\)/) || type.match(/(С|с)ериал/gmu)) {
-                        return;
-                    };
+        html('.shortstory').map(function (i, el) {
+            const item = {};
+            const type = html(this).text();
+            item.name = html(this).find('.zagolovki').text();
 
-                    item.url = $(this).find('.zagolovki').children().last().attr('href');
-                    item.cover = 'https://kinogo.by' + $(this).find('.shortimg').find('img').attr('src');
+            if (!item.name.match(/.*\(\d*\)/) || type.match(/(С|с)ериал/gmu)) {
+                return;
+            };
 
-                    items.push(item);
-                });
+            item.url = html(this).find('.zagolovki').children().last().attr('href');
+            item.cover = 'https://kinogo.by' + html(this).find('.shortimg').find('img').attr('src');
 
-                return items;
-            })
-            .catch((err) => {
-                throw new Error('Error search');
-            });
+            items.push(item);
+        });
+
+        return items;
     }
 
-    getMovieURL(url) {
+    async getMovieURL(url) {
         const options = {
             method: 'GET',
             uri: url,
@@ -63,18 +59,14 @@ class KinogoParser {
             }
         };
 
-        return rp(options)
-            .then(($) => {
-                const url = $('#video-inner-save-timeline-temp').parent().next().children().last().attr('href');
-                if(url.match(/https\:\/\/.*\.mp4/)) {
-                    return url;
-                } else {
-                    throw new Error('URL not found');
-                }
-            })
-            .catch((err) => {
-                throw new Error('Error get movie URL');
-            });
+        const html = await rp(options);
+
+        const filmUrl = html('#video-inner-save-timeline-temp').parent().next().children().last().attr('href');
+        if (filmUrl.match(/https\:\/\/.*\.mp4/)) {
+            return filmUrl;
+        } else {
+            throw new Error('URL not found');
+        }
     }
 
     _encode(query) {

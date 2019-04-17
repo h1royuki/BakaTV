@@ -10,7 +10,7 @@ export default {
     mutations: {
         joinRoom(state, data) {
             Vue.set(state, 'userId', data.userId);
-            Vue.set(state, 'ownerId', data.room.owner);
+            Vue.set(state, 'ownerId', data.room.ownerId);
             Vue.set(state, 'roomId', data.room.id);
         },
 
@@ -23,7 +23,7 @@ export default {
         socket_joinRoom({state, commit}, data) {
             commit('joinRoom', data);
 
-            if(data.userId == data.room.owner) {
+            if(data.userId == data.room.ownerId) {
                 state.isOwner = true;
             } else {
                 state.isOwner = false;

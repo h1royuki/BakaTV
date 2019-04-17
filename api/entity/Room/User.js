@@ -1,7 +1,8 @@
 
 class User {
-    constructor(id, name, color) {
+    constructor(id, socketId, name, color) {
         this.id = id;
+        this.socketId = socketId;
         this.name = name;
         this.color = color;
     }

@@ -1,29 +1,21 @@
-const userNameGenerator = require('../../helpers/generators/userName');
+const Message = require('../../entity/Room/Chat/Message');
 const UserService = require('../../services/UserService');
-const colorGenerator = require('../../helpers/generators/color');
-const Message = require('../../models/Room/Chat/Message');
-const UserModel = require('../../models/Room/User');
 const SocketIOService = require('../../services/SocketIOService');
 
 
-module.exports = (socket) => {
+module.exports = async (socket) => {
 
     try {
-        console.log(`Socket ${socket.id} connected to ${socket.room}`);
 
-        const user = new UserModel(socket.id, userNameGenerator(), colorGenerator());
-
-        UserService.addUserToRoom(user, socket.room);
-
-        const roomUsers = UserService.getRoomUsers(socket.room);
-        
-        socket.emit('joinChat', roomUsers);
-
+        const user = await UserService.getUserFromRoom(socket.userId, socket.room);
+        const roomUsers = await UserService.getRoomUsers(socket.room);
         const message = new Message('service', user.id, user.name, 'joined');
 
-        SocketIOService.emitId(socket.room, 'messageChat', message.toJson());
+        socket.emit('joinChat', roomUsers);
+        SocketIOService.emitId(socket.room, 'messageChat', message);
         SocketIOService.emitId(socket.room, 'updateRoomUsers', roomUsers);
     } catch (err) {
+        console.log(err);
         socket.emit('err', err.message);
     }
 };
