@@ -6,7 +6,7 @@ module.exports = async (status, socket) => {
         
         socket.broadcast.to(socket.room).emit('updateFilmStatus', status);
     } catch (err) {
-        console.log(err);
-        socket.emit('err', err.message);
+        
+        socket.emit('err', 'Error update status');
     }
 }

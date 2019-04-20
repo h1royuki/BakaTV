@@ -7,8 +7,8 @@ export default {
     },
     mutations: {
         updateFilm(state, film) {
-            Vue.set(state, 'lastTime', film.time);
-            Vue.set(state, 'lastStatus', film.status);
+            state.lastTime = film.time;
+            state.lastStatus = film.status;
         },
 
         setLastTime(state, time) {
@@ -17,6 +17,11 @@ export default {
 
         setLastStatus(state, status) {
             state.lastStatus = status;
+        },
+
+        resetPlayer(state) {
+            state.lastTime = null;
+            state.lastStatus = null;
         }
     },
 
@@ -25,19 +30,19 @@ export default {
             commit('updateFilm', film);
         },
 
-        setFilmTime({commit}, time) {
+        setFilmTime({ commit }, time) {
             commit('setLastTime', time);
         },
 
-        setFilmStatus({commit}, status) {
+        setFilmStatus({ commit }, status) {
             commit('setLastStatus', status);
         }
     },
     getters: {
-        lastTime : state => {
+        lastTime: state => {
             return state.lastTime;
         },
-        lastStatus : state => {
+        lastStatus: state => {
             return state.lastStatus;
         }
     }

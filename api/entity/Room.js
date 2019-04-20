@@ -1,9 +1,9 @@
 const roomIdGenerator = require('../helpers/generators/randomString');
 
 class Room {
-    constructor(ownerId) {
+    constructor() {
         this.id = roomIdGenerator();
-        this.ownerId = ownerId;
+        this.ownerId;
     }
 }
 

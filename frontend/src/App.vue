@@ -10,7 +10,7 @@
     <notifications group="errors"></notifications>
     <notifications group="notify"></notifications>
     <transition name="fade">
-      <router-view/>
+      <router-view v-if="isAuthorize"/>
     </transition>
   </div>
 </template>
@@ -24,10 +24,13 @@ export default {
   components: {
     Loading
   },
-
+  
   computed: {
     isLoading() {
       return this.$store.getters.isLoading;
+    },
+    isAuthorize() {
+      return this.$store.getters.isAuthorize;
     }
   }
 };

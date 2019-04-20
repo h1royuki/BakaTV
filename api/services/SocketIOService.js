@@ -6,8 +6,9 @@ class SocketIOService {
         io.to(socketId).emit(message, data);
     }
 
-
-
+    getRoom(roomId) {
+        return io.adapter.rooms[roomId];
+    }
 }
 
 module.exports = new SocketIOService();

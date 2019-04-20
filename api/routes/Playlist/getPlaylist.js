@@ -6,7 +6,7 @@ module.exports = async (socket) => {
         
         socket.emit('updatePlaylist', playlist);
     } catch (err) {
-        console.log(err);
-        socket.emit('err', err.message)
+        
+        socket.emit('err', 'Error get playlist: ' + err.message)
     }
 }

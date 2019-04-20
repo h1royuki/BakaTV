@@ -5,48 +5,42 @@ const KinogoParser = require('../parsers/KinogoParser');
 
 class RoomService {
 
-    async createRoom(room, props) {
+    async createRoom(roomId, ownerId, props) {
         try {
             const link = await KinogoParser.getMovieURL(props.url);
             
             const film = new Film(link, props.name, props.cover);
 
-            await PlaylistRepository.addItemToPlaylist(room.id, film);
-            await PlaylistRepository.setCurrentItemId(room.id, film.id);
+            await PlaylistRepository.addItemToPlaylist(roomId, film);
+            await PlaylistRepository.setCurrentItemId(roomId, film.id);
 
-            return await RoomRepository.addRoom(room);
+            return await RoomRepository.setRoomOwner(roomId, ownerId);
         } catch (err) {
-            console.log(err);
             throw new Error('Error create room');
         }
     }
 
-    async getRoom(roomId) {
-        return await RoomRepository.getRoom(roomId);
-    }
-
     async getOwner(roomId) {
-        const room = await this.getRoom(roomId);
-
-        return room.ownerId;
+        return await RoomRepository.getRoomOwner(roomId);
     }
 
     async isRoomOwner(userId, roomId) {
-        const room = await this.getRoom(roomId);
+        const owner = await this.getOwner(roomId);
 
-        return userId == room.ownerId;
+        return userId == owner;
+    }
+
+    async isRoomExist(roomId) {
+        return await RoomRepository.getRoomKeys(roomId);
     }
 
     async setRoomOwner(userId, roomId) {
-        const room = await this.getRoom(roomId);
-
-        room.ownerId = userId;
-        
-        return await RoomRepository.updateRoom(room);
+        return await RoomRepository.setRoomOwner(roomId, userId);
     }
 
     async removeRoom(roomId) {
-        return await RoomRepository.deleteRoom(roomId);
+        await RoomRepository.removeRoomOwner(roomId);
+        return await RoomRepository.removeRoomUsers(roomId);
     }
 }
 

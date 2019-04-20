@@ -3,8 +3,7 @@ export default {
 
     state: {
         playlist: [],
-        isShow: false,
-        length: 0
+        isShow: false
     },
 
     mutations: {
@@ -17,6 +16,11 @@ export default {
         },
         hidePlaylist(state) {
             state.isShow = false;
+        },
+
+        resetPlaylist(state) {
+            state.playlist = [];
+
         }
     },
 
@@ -34,10 +38,6 @@ export default {
 
         isShowPlaylist: state => {
             return state.isShow;
-        },
-
-        playlistLength: state => {
-            return state.length;
         }
     }
 }

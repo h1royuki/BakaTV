@@ -11,7 +11,6 @@ module.exports = async (socket, packet, next) => {
         }
         next();
     } catch (err) {
-        console.log(err);
         socket.emit('err', err.message);
     }
 }

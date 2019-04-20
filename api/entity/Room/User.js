@@ -1,7 +1,6 @@
-
 class User {
-    constructor(id, socketId, name, color) {
-        this.id = id;
+    constructor(socketId, name, color) {
+        this.id = Math.floor(Math.random() * 1000000);
         this.socketId = socketId;
         this.name = name;
         this.color = color;

@@ -7,7 +7,7 @@ class PlaylistRepository {
     }
 
     async setCurrentItemId(playlistId, itemId) {
-        return await redis.set(`playlist:${playlistId}:current`, JSON.stringify(itemId));
+        return await redis.set(`playlist:${playlistId}:current`, itemId);
     }
 
     async removeCurrentItemId(playlistId) {
@@ -15,7 +15,12 @@ class PlaylistRepository {
     } 
 
     async getPlaylist(playlistId) {
-        return await redis.zrange(`playlist:${playlistId}`, 0, -1);
+        const playlist =  await redis.zrange(`playlist:${playlistId}`, 0, -1);
+
+        if(!playlist) {
+            throw new Error('Playlist not found');
+        }
+        return playlist;
     }
 
     async removePlaylist(playlistId) {
@@ -28,6 +33,10 @@ class PlaylistRepository {
 
     async getItemFromPlaylist(playlistId, itemId) {
         const item = await redis.zrangebyscore(`playlist:${playlistId}`, itemId, itemId);
+
+        if(!item) {
+            throw new Error('Item not found');
+        }
         return JSON.parse(item);
     }
 

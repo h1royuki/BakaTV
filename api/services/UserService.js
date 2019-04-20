@@ -1,49 +1,51 @@
 const UserRepository = require('../repository/UserRepository');
+const RoomRepository = require('../repository/RoomRepository');
 
 class UserService {
 
+
+    async addUser(user, token) {
+        await UserRepository.addUser(user);
+        return await UserRepository.setUserToken(user.id, token);
+    }
+
+    async getUserToken(userId) {
+        return await UserRepository.getUserToken(userId);
+    }
+
+    async getUser(userId) {
+        return await UserRepository.getUser(userId);
+    }
+
+    async updateUser(user) {
+        return await UserRepository.addUser(user);
+    }
+
     async getRoomUsers(roomId) {
-        const users = await UserRepository.getUsers(roomId);
-        const object =  this.convertUsersToObject(users);
-
-        return Object.assign({}, object);
+        const userIds = await RoomRepository.getRoomUsers(roomId);
+        const users = await UserRepository.getUsers(userIds);
+        return Object.assign({}, users);
     }
 
-    async addUserToRoom(user, roomId) {
-       return await UserRepository.addUser(roomId, user);
-    }
-
-    async getUserFromRoom(userId, roomId) {
-        return await UserRepository.getUser(roomId, userId);
+    async addUserToRoom(userId, roomId) {
+        return await RoomRepository.addUserToRoom(roomId, userId);
     }
 
     async deleteUserFromRoom(userId, roomId) {
-        return await UserRepository.removeUser(roomId, userId);
+        return await RoomRepository.removeUserFromRoom(roomId, userId);
     }
 
-    async getOnlineUsersCount(roomId) {
-       return await UserRepository.getUsersCount(roomId);
+    async getOnlineRoomUsersCount(roomId) {
+        return await RoomRepository.getRoomUsersCount(roomId);
     }
 
-    async removeUsers(roomId) {
-        return await UserRepository.removeUsers(roomId);
+    async getRandomRoomUser(roomId) {
+        return await RoomRepository.getRandomUserFromRoom(roomId);
     }
 
-    async getNextRoomUser(userId, roomId) {
-        const users = await UserRepository.getUsersAfter(roomId, userId);
-
-        console.log(users);
-        if(users[0]) {
-            return JSON.parse(users[0]);
-        }
-    }
-
-    convertUsersToObject(users) {
-        for (let i = 0; i < users.length; i++) {
-            users[i] = JSON.parse(users[i]);
-        }
-        return users;
+    async isUserJoinedToRoom(roomId, userId) {
+        return await RoomRepository.isOnRoom(roomId, userId);
     }
 }
 
-module.exports = new UserService();
+module.exports = new UserService(); 

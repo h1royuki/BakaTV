@@ -12,7 +12,6 @@ module.exports = async (id, socket) => {
         socket.emit('updatePlaylist', playlist);
         SocketIOService.emitId(socket.room, 'updateFilm', currentFilm);
     } catch (err) {
-        console.log(err);
-        socket.emit('err', err.message);
+        socket.emit('err', 'Error set film: ' + err.message);
     }
 }

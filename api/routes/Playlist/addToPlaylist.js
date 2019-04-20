@@ -10,7 +10,7 @@ module.exports = async (film, socket) => {
         socket.emit('updatePlaylist', playlist);
 
     } catch(err) {
-        console.log(err);
+        
         socket.emit('err', `Error adding to playlist: ${err.message}`);
     }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="roomId == $route.params.id" class="room">
+  <div v-if="isJoined" class="room">
     <div class="container room">
       <playlist v-if="isShowPlaylist"/>
       <div class="player">
@@ -20,17 +20,28 @@ export default {
     Chat,
     Playlist
   },
+
+  sockets: {
+    reconnect() {
+      this.$socket.emit("reconnectToRoom", this.$route.params.id);
+    }
+  },
+
   computed: {
-    roomId() {
-      return this.$store.getters.roomId;
-    },
-    
     isShowPlaylist() {
       return this.$store.getters.isShowPlaylist;
-    }
+    },
+    isJoined() {
+      return this.$store.getters.isJoined;
+    },
   },
   mounted() {
     this.$socket.emit("joinRoom", this.$route.params.id);
+  },
+
+  beforeDestroy() {
+    this.$store.dispatch('socket_destroyRoom');
+    this.$socket.emit("leaveFromRoom");
   }
 };
 </script>

@@ -7,7 +7,7 @@ module.exports = async (socket) => {
 
     try {
 
-        const user = await UserService.getUserFromRoom(socket.userId, socket.room);
+        const user = await UserService.getUser(socket.userId);
         const roomUsers = await UserService.getRoomUsers(socket.room);
         const message = new Message('service', user.id, user.name, 'joined');
 
@@ -15,7 +15,7 @@ module.exports = async (socket) => {
         SocketIOService.emitId(socket.room, 'messageChat', message);
         SocketIOService.emitId(socket.room, 'updateRoomUsers', roomUsers);
     } catch (err) {
-        console.log(err);
-        socket.emit('err', err.message);
+        
+        socket.emit('err', 'Error join to chat: ' + err.message);
     }
 };

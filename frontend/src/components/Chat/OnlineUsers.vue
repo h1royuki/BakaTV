@@ -57,6 +57,7 @@ export default {
     onlineUsersCount() {
       return this.$store.getters.onlineUsersCount;
     },
+    
     id() {
       return this.$store.getters.userId;
     },

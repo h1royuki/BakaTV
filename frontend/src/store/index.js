@@ -17,30 +17,45 @@ export default new Vuex.Store({
   },
 
   state: {
+    isAuthorize: null,
     loading: false
   },
 
   mutations: {
     changeLoading(state) {
-      Vue.set(state, 'loading', !state.loading);
+      state.isLoading = !state.isLoading;
     },
 
     stopLoading(state) {
-      Vue.set(state, 'loading', false);
+      state.isLoading = false;
+    },
+
+    auth(state, bool) {
+     state.isAuthorize = bool;
     }
   },
 
   actions: {
+
+    socket_auth({commit}, bool) {
+      commit('auth', bool);
+    },
+
+    socket_updateToken({}, data) {
+      localStorage.setItem('userId', data.userId);
+      localStorage.setItem('userToken', data.userToken)
+    },
+
     socket_createRoom({ state }, id) {
       router.push('room/' + id);
       state.loading = false;
     },
 
-    socket_destroyRoom({state}) {
-      Vue.set(state.room, 'filmName', null);
-      Vue.set(state.room, 'status', null);
-      Vue.set(state.room, 'isOwner', false);
-      Vue.set(state.chat, 'messages', []);
+    socket_destroyRoom({commit}) {
+      commit('resetChat');
+      commit('resetPlayer');
+      commit('resetPlaylist');
+      commit('resetRoom');
       
       router.push("/");
   },
@@ -49,6 +64,10 @@ export default new Vuex.Store({
   getters: {
     isLoading: state => {
       return state.loading;
+    },
+
+    isAuthorize: state => {
+      return state.isAuthorize;
     }
   }
 })

@@ -2,38 +2,40 @@ import Vue from 'vue';
 
 export default {
     state: {
-        userId: null,
-        roomId: null,
+        userId: localStorage.getItem('userId'),
         ownerId: null,
+        joined: false,
         isOwner: false,
     },
     mutations: {
-        joinRoom(state, data) {
-            Vue.set(state, 'userId', data.userId);
-            Vue.set(state, 'ownerId', data.room.ownerId);
-            Vue.set(state, 'roomId', data.room.id);
+        updateRoomOwner(state, owner) {
+            state.ownerId = owner;
         },
 
-        updateRoomOwner(state, owner) {
-            Vue.set(state, 'ownerId', owner);
+        resetRoom(state) {
+            state.ownerId = null;
+            state.joined = false;
+            state.isOwner = false;
         }
     },
 
     actions: {
-        socket_joinRoom({state, commit}, data) {
-            commit('joinRoom', data);
+        socket_joinRoom({ state, commit }, ownerId) {
+            commit('updateRoomOwner', ownerId);
 
-            if(data.userId == data.room.ownerId) {
+            if (state.userId == ownerId) {
                 state.isOwner = true;
             } else {
                 state.isOwner = false;
             }
+
+            state.joined = true;
         },
 
-        socket_updateRoomOwner({state, commit}, owner) {
+        socket_updateRoomOwner({ state, commit }, owner) {
             commit('updateRoomOwner', owner);
 
-            if(state.userId == owner) {
+            if (state.userId == owner) {
                 state.isOwner = true;
             } else {
                 state.isOwner = false;
@@ -41,7 +43,7 @@ export default {
 
         }
     },
-    
+
     getters: {
         room: state => {
             return state;
@@ -50,16 +52,16 @@ export default {
             return state.isOwner;
         },
 
+        isJoined: state => {
+            return state.joined
+        },
+
         ownerId: state => {
             return state.ownerId;
         },
 
         userId: state => {
             return state.userId;
-        },
-
-        roomId: state => {
-            return state.roomId;
         }
     }
 }

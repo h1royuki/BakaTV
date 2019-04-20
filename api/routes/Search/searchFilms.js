@@ -6,7 +6,7 @@ module.exports = async (query, socket) => {
         
         socket.emit('searchFilms', items);
     } catch (err) {
-        console.log(err);
-        socket.emit('err', err.message);
+        
+        socket.emit('err', 'Search error: ' + err.message);
     }
 };

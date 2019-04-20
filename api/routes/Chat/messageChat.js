@@ -7,13 +7,13 @@ module.exports = async (message, socket) => {
     try {
         MessageValidator(message);
         
-        const user = await UserService.getUserFromRoom(socket.userId, socket.room);
+        const user = await UserService.getUser(socket.userId);
 
         const msg = new Message('message', user.id, user.name, message, user.color);
 
         SocketIOService.emitId(socket.room, 'messageChat', msg);
     } catch(err) {
-        console.log(err);
-        socket.emit('err', err.message);
+        
+        socket.emit('err', 'Error send message: ' + err.message);
     }
 };

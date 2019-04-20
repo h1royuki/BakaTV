@@ -6,19 +6,18 @@ const Message = require('../entity/Room/Chat/Message');
 module.exports = async (socket) => {
     try {
         if (socket.room) {
-            const user = await UserService.getUserFromRoom(socket.userId, socket.room);
+            const user = await UserService.getUser(socket.userId);
             const message = new Message('service', user.id, user.name, 'leave');
             
             SocketIOService.emitId(socket.room, 'messageChat', message);
 
             await UserService.deleteUserFromRoom(socket.userId, socket.room);
 
-            console.log(await UserService.getOnlineUsersCount(socket.room));
-
-            if (await UserService.getOnlineUsersCount(socket.room) > 0) {
+            if (await UserService.getOnlineRoomUsersCount(socket.room) > 0) {
                 if (RoomService.isRoomOwner(socket.userId, socket.room)) {
-                    const newOwner = await UserService.getNextRoomUser(socket.userId, socket.room);
-                    console.log(newOwner);
+                    const newOwnerId = await UserService.getRandomRoomUser(socket.room);
+
+                    const newOwner = await UserService.getUser(newOwnerId);
 
                     await RoomService.setRoomOwner(newOwner.id, socket.room);
 
@@ -28,7 +27,6 @@ module.exports = async (socket) => {
                     console.log(`Owner change on ${socket.room}`);
                 }
             } else { 
-                console.log('owner user')
                 await RoomService.setRoomOwner(null, socket.room);
             }
 
@@ -37,7 +35,6 @@ module.exports = async (socket) => {
         }
 
     } catch (err) {
-        console.log(err);
         console.log(err.message);
     }
 };

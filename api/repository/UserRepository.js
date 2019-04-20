@@ -1,34 +1,38 @@
 const redis = require('../modules/redis');
 
 class UserRepository {
-
-    async getUsers(roomId) {
-        return await redis.zrange(`users:${roomId}`, 0, -1);
+    async removeUser(userId) {
+        return await redis.del(`user:${userId}`);
     }
 
-    async removeUsers(roomId) {
-        return await redis.del(`users:${roomId}`);
+    async addUser(user) {
+        return await redis.set(`user:${user.id}`, JSON.stringify(user));
     }
 
-    async addUser(roomId, user) {
-        return await redis.zadd(`users:${roomId}`, user.id, JSON.stringify(user));
+    async setUserToken(userId, token) {
+        return await redis.set(`user:${userId}:token`, token);
     }
 
-    async getUser(roomId, userId) {
-        const item = await redis.zrangebyscore(`users:${roomId}`, userId, userId);
-        return JSON.parse(item);
+    async getUserToken(userId) {
+        return await redis.get(`user:${userId}:token`);
     }
 
-    async removeUser(roomId, userId) {
-        return await redis.zremrangebyscore(`users:${roomId}`, userId, userId);
+    async getUser(userId) {
+        const user = await redis.get(`user:${userId}`);
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return JSON.parse(user);
     }
 
-    async getUsersCount(roomId) {
-        return await redis.zcount(`users:${roomId}`, `-inf`, `+inf`);
-    }
+    async getUsers(userIds) {
+        const users = [];
+        for (let i = 0; i < userIds.length; i++) {
+            users.push(await this.getUser(userIds[i]));
+        }
 
-    async getUsersAfter(roomId, userId) {
-        return await redis.zrangebyscore(`users:${roomId}`, `(${userId}`, `+inf`);
+        return users;
     }
 }
 

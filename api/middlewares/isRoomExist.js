@@ -1,20 +1,29 @@
 const RoomService = require('../services/RoomService');
 
-const routes = ['joinChat', 'messageChat', 'getFilm'];
+const exclude = ['createRoom', 'searchFilms', 'reconnectToRoom'];
 
 module.exports = async (socket, packet, next) => {
     try {
-        if (packet[0] == 'joinRoom') {
-            await RoomService.getRoom(packet[1]);
-        }
-        
-        if (routes.includes(packet[0])) {
-            await RoomService.getRoom(socket.room);
+        if (exclude.includes(packet[0])) {
+            return next();
         }
 
-        next();
+        if (packet[0] == 'joinRoom') {
+
+            const keys = await RoomService.isRoomExist(packet[1]);
+
+            if (keys.length == 0) {
+                throw new Error('Room not found');
+            }
+        } else {
+            const keys = await RoomService.isRoomExist(socket.room);
+
+            if (keys.length == 0) {
+                throw new Error('Room not found');
+            }
+        }
+        return next();
     } catch (err) {
-        console.log(err);
         socket.emit('notFound');
         socket.emit('err', err.message);
     }

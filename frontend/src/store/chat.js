@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { stat } from 'fs';
 
 export default {
     state: {
@@ -17,6 +18,12 @@ export default {
 
         updateRoomUsers(state, users) {
           state.online_users = users;
+        },
+
+        resetChat(state) {
+          state.messages = [];
+          state.online_users = null;
+          state.users_count = null;
         }
       },
 

@@ -9,7 +9,7 @@ module.exports = async (socket) => {
         SocketIOService.emitId(socket.room, 'updateFilm', newFilm);
 
     } catch (err) {
-        console.log(err);
-        socket.emit('err', err.message);
+        
+        socket.emit('err', 'Error get next film: ' + err.message);
     }
 }

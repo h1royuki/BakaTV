@@ -23,19 +23,37 @@ class PlaylistService {
             return await PlaylistRepository.addItemToPlaylist(roomId, newFilm);
 
         } catch (err) {
-            console.log(err);
+
             throw new Error('Error add to playlist');
         }
 
     }
 
-    async removeFromPlaylist(playlistId, itemId) {
+    async isCurrentItem(playlistId, itemId) {
+        const current = await PlaylistRepository.getCurrentItemId(playlistId);
+        return itemId == current;
+    }
+
+    async getNextOrPrevItemFromPlaylist(playlistId) {
         const currentId = await PlaylistRepository.getCurrentItemId(playlistId);
+        const nextItems = await PlaylistRepository.getPlaylistItemsAfter(playlistId, currentId);
 
-        if (currentId == itemId) {
-            throw new Error('You can not delete active item');
+        if (nextItems[0]) {
+            const nextItem = JSON.parse(nextItems[0]);
+
+            await this.setFilm(playlistId, nextItem.id);
+            return nextItem;
         }
+        const prevItems = await PlaylistRepository.getPlaylistItemsBefore(playlistId, currentId);
 
+        if (prevItems[prevItems.length - 1]) {
+            const prevItem = JSON.parse(prevItems[prevItems.length - 1]);
+            await this.setFilm(playlistId, prevItem.id);
+            return prevItem;
+        }
+    }
+
+    async removeItemFromPlaylist(playlistId, itemId) {
         return await PlaylistRepository.removeItemFromPlaylist(playlistId, itemId);
     }
 
@@ -49,18 +67,14 @@ class PlaylistService {
     async startNextFilm(playlistId) {
         const current = await PlaylistRepository.getCurrentItemId(playlistId);
 
-        if (current == itemId) {
-            const after = await PlaylistRepository.getPlaylistItemsAfter(playlistIs, itemId);
+        const after = await PlaylistRepository.getPlaylistItemsAfter(playlistId, current);
 
-            if (after[0]) {
-                const newCurrent = JSON.parse(after[0]);
-                await PlaylistRepository.setCurrentItemId(playlistId, newCurrent.id)
-                return newCurrent;
-            }
-
-            throw new Error('Playlist ended');
+        if (after[0]) {
+            const newCurrent = JSON.parse(after[0]);
+            await PlaylistRepository.setCurrentItemId(playlistId, newCurrent.id)
+            return newCurrent;
         }
-
+        throw new Error('Playlist ended');
     }
 
     async setFilm(playlistId, itemId) {

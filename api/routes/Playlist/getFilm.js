@@ -5,8 +5,7 @@ module.exports = async (socket) => {
         const film = await PlaylistService.getCurrentFilm(socket.room);
 
         socket.emit('updateFilm', film);
-    } catch (err) {
-        console.log(err);
-        socket.emit('err', err.message);
+    } catch (err) {        
+        socket.emit('err', 'Error get film: ' + err.message);
     }
 }

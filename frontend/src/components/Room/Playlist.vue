@@ -17,13 +17,13 @@
         <div
           class="playlist-item"
           v-for="(film, index) in playlist.films"
-          :class="{line: isLineNeed(index), active: film.id == playlist.current}"
+          :class="{active: film.id == playlist.current}"
           :key="index"
         >
           <div class="item-cover" @click="setCurrentFilm(film.id)">
             <film :width="60" :height="86" :cover="film.cover">
               <template v-slot:cover-icon>
-                <div class="play" v-if="index != playlist.current">
+                <div class="play" v-if="film.id != playlist.current">
                   <play-icon title="Play film" :size="42"/>
                 </div>
               </template>
@@ -162,17 +162,6 @@ export default {
 
     hidePopup() {
       this.$store.commit("hidePlaylist");
-    },
-
-    isLineNeed(id) {
-      if (
-        id == this.playlistLength - 1 ||
-        id == this.playlist.current ||
-        id == this.playlist.current - 1
-      ) {
-        return false;
-      }
-      return true;
     }
   },
 
@@ -344,10 +333,6 @@ export default {
 
 .item-delete .icon {
   color: #ff3e3e;
-}
-
-.line {
-  border-bottom: 1px solid #364053;
 }
 
 .item-delete .icon {
