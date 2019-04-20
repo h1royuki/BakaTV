@@ -146,7 +146,7 @@ export default {
     },
 
     addToPlaylist(film) {
-      this.$store.commit("changeLoading");
+      this.$store.commit("startLoading");
       this.$socket.emit("addToPlaylist", film);
     },
 

@@ -63,7 +63,7 @@ export default {
   },
   sockets: {
     searchFilms(items) {
-      this.$store.commit("changeLoading");
+      this.$store.commit("stopLoading");
       this.items = items;
     }
   },
@@ -72,7 +72,7 @@ export default {
     search() {
       this.items = null;
       this.$socket.emit("searchFilms", this.query);
-      this.$store.commit("changeLoading");
+      this.$store.commit("startLoading");
     }
   }
 };

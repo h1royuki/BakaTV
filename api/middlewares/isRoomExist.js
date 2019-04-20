@@ -1,6 +1,6 @@
 const RoomService = require('../services/RoomService');
 
-const exclude = ['createRoom', 'searchFilms', 'reconnectToRoom'];
+const exclude = ['createRoom', 'searchFilms', 'reconnectToRoom', 'leaveFromRoom'];
 
 module.exports = async (socket, packet, next) => {
     try {

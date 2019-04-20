@@ -2,9 +2,8 @@ import Vue from 'vue';
 
 export default {
     state: {
-        userId: localStorage.getItem('userId'),
-        ownerId: null,
         joined: false,
+        ownerId: null,
         isOwner: false,
     },
     mutations: {
@@ -20,10 +19,10 @@ export default {
     },
 
     actions: {
-        socket_joinRoom({ state, commit }, ownerId) {
+        socket_joinRoom({ state, commit, rootState }, ownerId) {
             commit('updateRoomOwner', ownerId);
 
-            if (state.userId == ownerId) {
+            if (rootState.userId == ownerId) {
                 state.isOwner = true;
             } else {
                 state.isOwner = false;
@@ -32,10 +31,10 @@ export default {
             state.joined = true;
         },
 
-        socket_updateRoomOwner({ state, commit }, owner) {
+        socket_updateRoomOwner({ state, commit, rootState }, owner) {
             commit('updateRoomOwner', owner);
 
-            if (state.userId == owner) {
+            if (rootState.userId == owner) {
                 state.isOwner = true;
             } else {
                 state.isOwner = false;
@@ -58,10 +57,6 @@ export default {
 
         ownerId: state => {
             return state.ownerId;
-        },
-
-        userId: state => {
-            return state.userId;
         }
     }
 }

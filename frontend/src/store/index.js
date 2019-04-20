@@ -18,32 +18,36 @@ export default new Vuex.Store({
 
   state: {
     isAuthorize: null,
-    loading: false
+    loading: false,
+    userId: null,
+    userName: null
   },
 
   mutations: {
-    changeLoading(state) {
-      state.isLoading = !state.isLoading;
+    startLoading(state) {
+      state.loading = true;
     },
 
     stopLoading(state) {
-      state.isLoading = false;
+      state.loading = false;
     },
 
-    auth(state, bool) {
-     state.isAuthorize = bool;
+    auth(state, data) {
+     state.isAuthorize = true;
+     state.userId = data.userId;
+     state.userName = data.userName;
     }
   },
 
   actions: {
 
-    socket_auth({commit}, bool) {
-      commit('auth', bool);
+    socket_auth({commit}, data) {
+      commit('auth', data);
     },
 
     socket_updateToken({}, data) {
       localStorage.setItem('userId', data.userId);
-      localStorage.setItem('userToken', data.userToken)
+      localStorage.setItem('userToken', data.userToken);
     },
 
     socket_createRoom({ state }, id) {
@@ -68,6 +72,14 @@ export default new Vuex.Store({
 
     isAuthorize: state => {
       return state.isAuthorize;
+    },
+
+    userId: state => {
+      return state.userId;
+    },
+
+    userName: state => {
+      return state.userName;
     }
   }
 })

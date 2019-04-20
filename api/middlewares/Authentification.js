@@ -11,7 +11,7 @@ module.exports = async (socket) => {
         if (data.userId != 'null') {
             const user = await UserService.getUser(data.userId);
 
-            if (data.userToken) {
+            if (data.userToken != 'null') {
                 const token = await UserService.getUserToken(data.userId);
 
                 if (data.userToken != token) {
@@ -36,15 +36,11 @@ module.exports = async (socket) => {
 
             socket.emit('updateToken', { userId: user.id, userToken: token });
         }
-
         const user = await UserService.getUser(socket.userId);
         
-        socket.emit('auth', true);
-        socket.emit('notify', 'Succesfully auth: ' + user.name);
-
+        socket.emit('auth', {userId: user.id, userName: user.name});
     } catch (err) {
         socket.emit('err', `Auth error: ${err.message}`);
-        socket.emit('auth', false);
         socket.disconnect();
     }
 }
