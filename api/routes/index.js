@@ -14,6 +14,7 @@ const getFilm = require('./Playlist/getFilm');
 const updateFilmStatus = require('./Playlist/updateFilmStatus');
 const updateFilmTime = require('./Playlist/updateFilmTime');
 const reconnectToRoom = require('./Room/reconnectToRoom');
+const getUserRooms = require('./User/getUserRooms');
 const disconnect = require('./disconnect');
 
 module.exports = (socket) => {
@@ -33,5 +34,6 @@ module.exports = (socket) => {
     socket.on('joinChat', () => joinChat(socket));
     socket.on('messageChat', (msg) => messageChat(msg, socket));
     socket.on('reconnectToRoom', (roomId) => reconnectToRoom(roomId, socket));
+    socket.on('getUserRooms', () => getUserRooms(socket));
     socket.on('disconnect', () => disconnect(socket));
 }

@@ -16,9 +16,11 @@ module.exports = async (roomId, socket) => {
         }
 
         await UserService.addUserToRoom(socket.userId, roomId);
-        const ownerId = await RoomService.getOwner(roomId);
 
-        socket.emit('joinRoom', ownerId);
+        const isRoomCreator = await RoomService.isRoomCreator(socket.userId, socket.room);
+        const isRoomOwner = await RoomService.isRoomOwner(socket.userId, socket.room);
+
+        socket.emit('joinRoom', {owner: isRoomOwner, creator: isRoomCreator});
     } catch (err) {
         socket.emit('err', err.message);
         socket.emit('notFound');

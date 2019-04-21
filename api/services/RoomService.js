@@ -2,19 +2,22 @@ const Film = require('../entity/Room/Playlist/Film');
 const PlaylistRepository = require('../repository/PlaylistRepository');
 const RoomRepository = require('../repository/RoomRepository');
 const KinogoParser = require('../parsers/KinogoParser');
+const UserRepository = require('../repository/UserRepository');
 
 class RoomService {
 
-    async createRoom(roomId, ownerId, props) {
+    async createRoom(roomId, creatorId, props) {
         try {
             const link = await KinogoParser.getMovieURL(props.url);
-            
+
             const film = new Film(link, props.name, props.cover);
 
             await PlaylistRepository.addItemToPlaylist(roomId, film);
             await PlaylistRepository.setCurrentItemId(roomId, film.id);
+            await UserRepository.addUserRoom(creatorId, roomId);
+            await RoomRepository.setRoomOwner(roomId, creatorId);
 
-            return await RoomRepository.setRoomOwner(roomId, ownerId);
+            return await RoomRepository.setRoomCreator(roomId, creatorId);
         } catch (err) {
             throw new Error('Error create room');
         }
@@ -30,6 +33,16 @@ class RoomService {
         return userId == owner;
     }
 
+    async getCreator(roomId) {
+        return await RoomRepository.getRoomCreator(roomId);
+    }
+
+    async isRoomCreator(userId, roomId) {
+        const creator = await this.getCreator(roomId);
+
+        return userId == creator;
+    }
+
     async isRoomExist(roomId) {
         return await RoomRepository.getRoomKeys(roomId);
     }
@@ -39,8 +52,7 @@ class RoomService {
     }
 
     async removeRoom(roomId) {
-        await RoomRepository.removeRoomOwner(roomId);
-        return await RoomRepository.removeRoomUsers(roomId);
+        return await RoomRepository.removeRoom(roomId);
     }
 }
 

@@ -94,7 +94,6 @@ class PlaylistService {
     }
 
     async removePlaylist(playlistId) {
-        await PlaylistRepository.removeCurrentItemId(playlistId);
         return await PlaylistRepository.removePlaylist(playlistId);
     }
 

@@ -1,52 +1,33 @@
-import Vue from 'vue';
-
 export default {
     state: {
         joined: false,
-        ownerId: null,
         isOwner: false,
+        isCreator: false
     },
     mutations: {
-        updateRoomOwner(state, owner) {
-            state.ownerId = owner;
+        joinToRoom(state, data) {
+            state.isOwner = data.owner;
+            state.isCreator = data.creator;
+            state.joined = true;
         },
 
         resetRoom(state) {
-            state.ownerId = null;
             state.joined = false;
             state.isOwner = false;
+            state.isCreator = false;
         }
     },
 
     actions: {
-        socket_joinRoom({ state, commit, rootState }, ownerId) {
-            commit('updateRoomOwner', ownerId);
-
-            if (rootState.userId == ownerId) {
-                state.isOwner = true;
-            } else {
-                state.isOwner = false;
-            }
-
-            state.joined = true;
+        socket_joinRoom({ commit }, data) {
+            commit('joinToRoom', data);
         },
-
-        socket_updateRoomOwner({ state, commit, rootState }, owner) {
-            commit('updateRoomOwner', owner);
-
-            if (rootState.userId == owner) {
-                state.isOwner = true;
-            } else {
-                state.isOwner = false;
-            }
-
+        socket_updateRoomOwner({ state }) {
+            state.isOwner = true;
         }
     },
 
     getters: {
-        room: state => {
-            return state;
-        },
         isOwner: state => {
             return state.isOwner;
         },
@@ -55,8 +36,8 @@ export default {
             return state.joined
         },
 
-        ownerId: state => {
-            return state.ownerId;
+        isCreator: state => {
+            return state.isCreator;
         }
     }
 }

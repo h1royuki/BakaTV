@@ -9,11 +9,13 @@ module.exports = async (socket) => {
 
         const user = await UserService.getUser(socket.userId);
         const roomUsers = await UserService.getRoomUsers(socket.room);
-        const message = new Message('service', user.id, user.name, 'joined');
+        const messageToOther = new Message('service', user.name, 'joined');
+        const messageToSocket = new Message('service', 'You', 'joined');
 
-        socket.emit('joinChat', roomUsers);
-        SocketIOService.emitId(socket.room, 'messageChat', message);
+        socket.emit('messageChat', messageToSocket);
+        socket.broadcast.to(socket.room).emit('messageChat', messageToOther);
         SocketIOService.emitId(socket.room, 'updateRoomUsers', roomUsers);
+
     } catch (err) {
         
         socket.emit('err', 'Error join to chat: ' + err.message);

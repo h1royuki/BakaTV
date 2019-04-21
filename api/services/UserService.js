@@ -4,9 +4,9 @@ const RoomRepository = require('../repository/RoomRepository');
 class UserService {
 
 
-    async addUser(user, token) {
-        await UserRepository.addUser(user);
-        return await UserRepository.setUserToken(user.id, token);
+    async addUser(user, id, token) {
+        await UserRepository.addUser(id, user);
+        return await UserRepository.setUserToken(id, token);
     }
 
     async getUserToken(userId) {
@@ -22,9 +22,19 @@ class UserService {
     }
 
     async getRoomUsers(roomId) {
+        const ownerId = await RoomRepository.getRoomOwner(roomId);
+        const creatorId = await RoomRepository.getRoomCreator(roomId);
         const userIds = await RoomRepository.getRoomUsers(roomId);
         const users = await UserRepository.getUsers(userIds);
-        return Object.assign({}, users);
+
+        if(users[ownerId]) {
+            users[ownerId].owner = true; 
+        }
+
+        if(users[creatorId]) {
+            users[creatorId].creator = true; 
+        }
+        return users;
     }
 
     async addUserToRoom(userId, roomId) {
@@ -45,6 +55,22 @@ class UserService {
 
     async isUserJoinedToRoom(roomId, userId) {
         return await RoomRepository.isOnRoom(roomId, userId);
+    }
+
+    async updateSocketId(userId, socketId) {
+        return await UserRepository.setUserSocketId(userId, socketId);
+    }
+
+    async getSocketId(userId) {
+        return await UserRepository.getUserSocketId(userId);
+    }
+
+    async getUserRooms(userId) {
+        return await UserRepository.getUserRooms(userId);
+    }
+
+    async removeUserRoom(userId, roomId) {
+        return await UserRepository.removeUserRoom(userId, roomId);
     }
 }
 

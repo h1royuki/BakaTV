@@ -1,4 +1,10 @@
 module.exports = (roomId, socket) => {
-    socket.room = roomId;
-    socket.join(roomId);
+
+    try {
+        socket.room = roomId;
+        socket.join(roomId);
+    }
+    catch(err) {
+        socket.emit('err', 'Reconnect error: ' + err.message);
+    }
 }

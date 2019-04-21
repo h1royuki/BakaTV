@@ -5,8 +5,8 @@ class UserRepository {
         return await redis.del(`user:${userId}`);
     }
 
-    async addUser(user) {
-        return await redis.set(`user:${user.id}`, JSON.stringify(user));
+    async addUser(id, user) {
+        return await redis.set(`user:${id}`, JSON.stringify(user));
     }
 
     async setUserToken(userId, token) {
@@ -27,12 +27,32 @@ class UserRepository {
     }
 
     async getUsers(userIds) {
-        const users = [];
-        for (let i = 0; i < userIds.length; i++) {
-            users.push(await this.getUser(userIds[i]));
-        }
+        const users = {};
 
+        for (let i = 0; i < userIds.length; i++) {
+           users[userIds[i]] = await this.getUser(userIds[i]);
+        }
         return users;
+    }
+
+    async setUserSocketId(userId, socketId) {
+        return await redis.set(`user:${userId}:socket`, socketId);
+    }
+
+    async getUserSocketId(userId) {
+        return await redis.get(`user:${userId}:socket`);
+    }
+
+    async addUserRoom(userId, roomId) {
+        return await redis.sadd(`user:${userId}:rooms`, roomId)
+    }
+
+    async getUserRooms(userId) {
+        return await redis.smembers(`user:${userId}:rooms`);
+    }
+
+    async removeUserRoom(userId, roomId) {
+        return await redis.srem(`user:${userId}:rooms`, roomId);
     }
 }
 

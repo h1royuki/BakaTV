@@ -2,6 +2,15 @@ const redis = require('../modules/redis');
 
 class RoomRepository {
 
+    async setRoomCreator(roomId, creatorId) {
+        return await redis.set(`room:${roomId}:creator`, JSON.stringify(creatorId));
+    }
+
+    async getRoomCreator(roomId) {
+        const creator = await redis.get(`room:${roomId}:creator`);
+        return JSON.parse(creator);
+    }
+
     async setRoomOwner(roomId, ownerId) {
         return await redis.set(`room:${roomId}:owner`, JSON.stringify(ownerId));
     }
@@ -9,10 +18,6 @@ class RoomRepository {
     async getRoomOwner(roomId) {
         const ownerId = await redis.get(`room:${roomId}:owner`);
         return JSON.parse(ownerId);
-    }
-
-    async removeRoomOwner(roomId) {
-        return await redis.del(`room:${roomId}:owner`);
     }
 
     async getRoomUsers(roomId) {
@@ -27,10 +32,6 @@ class RoomRepository {
         return await redis.srem(`room:${roomId}:users`, userId);
     }
 
-    async removeRoomUsers(roomId) {
-        return await redis.del(`room:${roomId}:users`);
-    }
-
     async getRoomUsersCount(roomId) {
         return await redis.scard(`room:${roomId}:users`);
     }
@@ -41,6 +42,14 @@ class RoomRepository {
 
     async getRoomKeys(roomId) {
         return await redis.keys(`room:${roomId}:*`);
+    }
+
+    async removeRoom(roomId) {
+        const keys = await this.getRoomKeys(roomId);
+
+        for(let i = 0; i < keys.length; i++) {
+            await redis.del(keys[i]);
+        }
     }
 
     async isOnRoom(roomId, userId) {

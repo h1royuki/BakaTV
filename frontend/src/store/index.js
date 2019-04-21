@@ -20,7 +20,8 @@ export default new Vuex.Store({
     isAuthorize: null,
     loading: false,
     userId: null,
-    userName: null
+    userName: null,
+    userRooms: []
   },
 
   mutations: {
@@ -33,19 +34,22 @@ export default new Vuex.Store({
     },
 
     auth(state, data) {
-     state.isAuthorize = true;
-     state.userId = data.userId;
-     state.userName = data.userName;
+      state.isAuthorize = true;
+      state.userId = data.userId;
+      state.userName = data.userName;
+    },
+
+    setUserRooms(state, rooms) {
+      state.userRooms = rooms;
     }
   },
 
   actions: {
-
-    socket_auth({commit}, data) {
+    socket_auth({ commit }, data) {
       commit('auth', data);
     },
 
-    socket_updateToken({}, data) {
+    socket_updateToken({ }, data) {
       localStorage.setItem('userId', data.userId);
       localStorage.setItem('userToken', data.userToken);
     },
@@ -55,14 +59,18 @@ export default new Vuex.Store({
       state.loading = false;
     },
 
-    socket_destroyRoom({commit}) {
+    socket_updateUserRooms({ commit }, rooms) {
+      commit('setUserRooms', rooms);
+    },
+
+    socket_destroyRoom({ commit }) {
       commit('resetChat');
       commit('resetPlayer');
       commit('resetPlaylist');
       commit('resetRoom');
-      
+
       router.push("/");
-  },
+    },
   },
 
   getters: {
@@ -80,6 +88,10 @@ export default new Vuex.Store({
 
     userName: state => {
       return state.userName;
+    },
+
+    userRooms: state => {
+      return state.userRooms;
     }
   }
 })

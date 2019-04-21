@@ -46,10 +46,8 @@ export default {
       this.setPlayerStatus(status);
     },
 
-    updateRoomOwner(owner) {
-      if (owner == this.userId) {
+    updateRoomOwner() {
         this.player.controls(true);
-      }
     }
   },
 

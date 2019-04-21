@@ -3,12 +3,9 @@
     <div
       v-if="message.type == 'service'"
       class="message service"
-    >{{ message.id == id ? `You (${message.name}) ` : message.name }} {{message.message}}</div>
+    >{{ message.name }} {{message.message}}</div>
     <div v-else class="message">
-      <div
-        class="name"
-        :style="{color : message.color}"
-      >{{ message.id == id ? 'You: ' : message.name + ':' }}</div>
+      <div class="name" :style="{color : message.color}">{{ `${message.name}:` }}</div>
       {{message.message}}
     </div>
   </transition>

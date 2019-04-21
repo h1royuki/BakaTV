@@ -15,26 +15,12 @@
 
     <div class="control-buttons">
       <send-button class="chat-button" :title="`Send message`" @click="sendMessage">Send message</send-button>
-
-      <control-button
-        v-popover:control.top
-        v-show="isOwner"
-        class="control-button"
-        :title="`Room settings`"
-      >
-        <control-icon/>
-      </control-button>
-
-      <transition name="fade">
-        <popover name="control" class="modal">
-          <playlist-button @click="showPlaylist" class="control-button" :title="`Playlist`">
+          <playlist-button v-if="isOwner || isRoomCreator" @click="showPlaylist" class="control-button" :title="`Playlist`">
             <playlist-icon title/>
           </playlist-button>
-          <destroy-button @click="destroyRoom" class="control-button" :title="`Destroy room`">
+          <destroy-button v-if="isRoomCreator" @click="destroyRoom" class="control-button" :title="`Destroy room`">
             <destroy-icon title/>
           </destroy-button>
-        </popover>
-      </transition>
     </div>
   </div>
 </template>
@@ -43,7 +29,6 @@
 import Button from "../Base/Button";
 import Textarea from "../Base/Textarea";
 import PlaylistIcon from "vue-material-design-icons/PlaylistPlay";
-import ControlIcon from "vue-material-design-icons/Tune";
 import DestroyIcon from "vue-material-design-icons/Delete";
 import EmojiIcon from "vue-material-design-icons/EmoticonExcitedOutline";
 import EmojiPopup from "./SendForm/EmojiPopup";
@@ -52,11 +37,9 @@ export default {
   components: {
     MessageInput: Textarea,
     SendButton: Button,
-    ControlButton: Button,
     DestroyButton: Button,
     PlaylistButton: Button,
     EmojiButton: Button,
-    ControlIcon,
     EmojiIcon,
     PlaylistIcon,
     DestroyIcon,
@@ -73,6 +56,10 @@ export default {
   computed: {
     isOwner() {
       return this.$store.getters.isOwner;
+    },
+
+    isRoomCreator() {
+      return this.$store.getters.isCreator;
     }
   },
 

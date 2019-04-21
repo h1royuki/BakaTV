@@ -1,7 +1,6 @@
 const Message = require('../../entity/Room/Chat/Message');
 const UserService = require('../../services/UserService');
 const MessageValidator = require('../../validators/MessageValidator');
-const SocketIOService = require('../../services/SocketIOService');
 
 module.exports = async (message, socket) => {
     try {
@@ -9,9 +8,11 @@ module.exports = async (message, socket) => {
         
         const user = await UserService.getUser(socket.userId);
 
-        const msg = new Message('message', user.id, user.name, message, user.color);
+        const messageToOther = new Message('message', user.name, message, user.color);
+        const messageToSocket = new Message('message', 'You', message, user.color);
 
-        SocketIOService.emitId(socket.room, 'messageChat', msg);
+        socket.emit('messageChat', messageToSocket);
+        socket.broadcast.to(socket.room).emit('messageChat', messageToOther);
     } catch(err) {
         
         socket.emit('err', 'Error send message: ' + err.message);

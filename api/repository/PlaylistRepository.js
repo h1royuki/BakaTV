@@ -10,21 +10,13 @@ class PlaylistRepository {
         return await redis.set(`playlist:${playlistId}:current`, itemId);
     }
 
-    async removeCurrentItemId(playlistId) {
-        return await redis.del(`playlist:${playlistId}:current`);
-    } 
-
     async getPlaylist(playlistId) {
-        const playlist =  await redis.zrange(`playlist:${playlistId}`, 0, -1);
+        const playlist = await redis.zrange(`playlist:${playlistId}`, 0, -1);
 
-        if(!playlist) {
+        if (!playlist) {
             throw new Error('Playlist not found');
         }
         return playlist;
-    }
-
-    async removePlaylist(playlistId) {
-        return await redis.del(`playlist:${playlistId}`);
     }
 
     async addItemToPlaylist(playlistId, item) {
@@ -34,7 +26,7 @@ class PlaylistRepository {
     async getItemFromPlaylist(playlistId, itemId) {
         const item = await redis.zrangebyscore(`playlist:${playlistId}`, itemId, itemId);
 
-        if(!item) {
+        if (!item) {
             throw new Error('Item not found');
         }
         return JSON.parse(item);
@@ -57,7 +49,17 @@ class PlaylistRepository {
         return await this.addItemToPlaylist(playlistId, item);
     }
 
+    async getPlaylistKeys(playlistId) {
+        return await redis.keys(`playlist:${playlistId}*`);
+    }
 
+    async removePlaylist(playlistId) {
+        const keys = await this.getPlaylistKeys(playlistId);
+
+        for (let i = 0; i < keys.length; i++) {
+            await redis.del(keys[i]);
+        }
+    }
 }
 
 module.exports = new PlaylistRepository();

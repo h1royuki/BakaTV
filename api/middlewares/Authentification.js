@@ -1,7 +1,5 @@
 const UserModel = require('../entity/Room/User');
 const UserService = require('../services/UserService');
-const userNameGenerator = require('../helpers/generators/userName');
-const colorGenerator = require('../helpers/generators/color');
 const crypto = require('crypto');
 
 module.exports = async (socket) => {
@@ -19,26 +17,28 @@ module.exports = async (socket) => {
                 }
 
                 socket.userId = data.userId;
-                user.socketId = socket.id;
-
-                await UserService.updateUser(user);
+                
+                await UserService.updateSocketId(data.userId, socket.id);
 
             } else {
                 throw new Error('Token not found');
             }
         } else {
 
+            const id = Math.floor(Math.random() * 1000000);
             const token = crypto.randomBytes(20).toString('hex');
-            const user = new UserModel(socket.id, userNameGenerator(), colorGenerator());
-            await UserService.addUser(user, token);
+            const user = new UserModel();
 
-            socket.userId = user.id;
+            await UserService.addUser(user, id, token);
+            await UserService.updateSocketId(id, socket.id);
 
-            socket.emit('updateToken', { userId: user.id, userToken: token });
+            socket.userId = id;
+            socket.emit('updateToken', { userId: id, userToken: token });
         }
+
         const user = await UserService.getUser(socket.userId);
         
-        socket.emit('auth', {userId: user.id, userName: user.name});
+        socket.emit('auth', {userId: socket.userId, userName: user.name});
     } catch (err) {
         socket.emit('err', `Auth error: ${err.message}`);
         socket.disconnect();

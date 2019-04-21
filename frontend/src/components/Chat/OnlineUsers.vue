@@ -11,8 +11,9 @@
       <div v-on-clickaway="hideUsers" class="users-list" v-if="isShowUsers">
         <div v-for="(user, index) in onlineUsers" :key="index">
           <div class="list-name" :style="{color : user.color}">
-            <star-icon class="star-icon" v-if="user.id == ownerId" title="Room owner" :size="22"/>
-            {{ user.id == id ? `${user.name} (you)` : user.name }}
+            <owner-icon class="owner-icon" v-if="user.owner" title="Room owner" :size="22"/>
+            <creator-icon class="creator-icon" v-if="user.creator" title="Room creator" :size="22"/>
+            {{ index == id ? `${user.name} (you)` : user.name }}
           </div>
         </div>
       </div>
@@ -25,14 +26,16 @@ import { directive as onClickaway } from "vue-clickaway";
 import Button from "../Base/Button";
 import ArrowDownIcon from "vue-material-design-icons/ChevronDown";
 import ArrowUpIcon from "vue-material-design-icons/ChevronUp";
-import StarIcon from "vue-material-design-icons/Star";
+import OwnerIcon from "vue-material-design-icons/AccountEdit";
+import CreatorIcon from "vue-material-design-icons/AccountKey";
 
 export default {
   components: {
     ShowButton: Button,
     ArrowDownIcon,
     ArrowUpIcon,
-    StarIcon
+    OwnerIcon,
+    CreatorIcon
   },
 
   data() {
@@ -60,9 +63,6 @@ export default {
     
     id() {
       return this.$store.getters.userId;
-    },
-    ownerId() {
-      return this.$store.getters.ownerId;
     }
   },
   directives: {
@@ -120,11 +120,16 @@ export default {
   align-items: center;
 }
 
-.star-icon {
+.owner-icon {
+  margin-right: 3px;
+  font-size: 0;
+  color: #ffd646;
+}
+
+.creator-icon {
   margin-right: 8px;
   font-size: 0;
-  vertical-align: top;
-  color: #ffd646;
+  color: #ff4646;
 }
 </style>
 
