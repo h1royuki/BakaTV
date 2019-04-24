@@ -17,6 +17,11 @@ class PlaylistService {
 
     async addToPlaylist(roomId, items) {
         try {
+
+            if (Object.keys(items).length == 0) {
+                throw new Error('Nothing to add');
+            }
+            
             await Object.keys(items).map(async (key, index) => {
 
                 const url = KinogoParser.getUrlFromFiles(items[key].files);

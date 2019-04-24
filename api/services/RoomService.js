@@ -9,6 +9,10 @@ class RoomService {
     async createRoom(roomId, creatorId, items) {
         try {
 
+            if (Object.keys(items).length == 0) {
+                throw new Error('Empty playlist');
+            }
+            
             await Object.keys(items).map(async (key, index) => {
 
                 const url = KinogoParser.getUrlFromFiles(items[key].files);
