@@ -37,7 +37,7 @@ export default {
         resetSearch(state) {
             state.searchItems = [];
             state.searchItemsJson = {};
-            state.searchItemsJson = {};
+            state.selectedItems = {};
             state.selectedSeasons = {};
         }
 

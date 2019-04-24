@@ -34,7 +34,7 @@
         </div>
         <div class="actions">
           <action-button class="action-button" @click="$emit('action', selected)">{{actionName}}</action-button>
-          <close-button class="close-button" @click="$emit('close')" >Close</close-button>
+          <close-button class="close-button" @click="closeSearch" >Close</close-button>
         </div>
       </div>
     </div>
@@ -78,6 +78,11 @@ export default {
 
     deleteItem(index) {
       this.$store.commit('unselect', index);
+    },
+
+    closeSearch() {
+      this.$store.commit('resetSearch');
+      this.$emit('close');
     }
   },
 

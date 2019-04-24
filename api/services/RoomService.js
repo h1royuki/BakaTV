@@ -27,7 +27,6 @@ class RoomService {
 
             return await RoomRepository.setRoomCreator(roomId, creatorId);
         } catch (err) {
-            console.log(err);
             throw new Error('Error create room');
         }
     }

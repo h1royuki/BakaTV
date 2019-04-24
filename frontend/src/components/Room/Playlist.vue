@@ -25,6 +25,7 @@
             :season="film.season"
             :desc="film.desc"
             :cover="film.cover"
+            @click="setCurrentFilm(film.id)"
           ></film>
           <div class="item-actions-container">
             <div class="item-status">
@@ -93,32 +94,26 @@
 import Button from "../Base/Button.vue";
 import Search from "../Search.vue";
 import PlaylistStarIcon from "vue-material-design-icons/PlaylistStar";
-import PlayIcon from "vue-material-design-icons/Play";
 import PlayCircleIcon from "vue-material-design-icons/PlayCircle";
 import PauseCircleIcon from "vue-material-design-icons/PauseCircle";
 import WaitCircleIcon from "vue-material-design-icons/CircleSlice3";
-import CloseCircleIcon from "vue-material-design-icons/CloseCircle";
 import EndedCircleIcon from "vue-material-design-icons/CheckboxMarkedCircle";
 import DeleteIcon from "vue-material-design-icons/DeleteCircle";
 import LinkIcon from "vue-material-design-icons/LinkVariant";
 import ClockIcon from "vue-material-design-icons/ClockOutline";
-import PlaylistAddIcon from "vue-material-design-icons/PlaylistPlus";
 import Film from "../Film";
 
 export default {
   components: {
     Search,
     PlaylistStarIcon,
-    PlayIcon,
     PlayCircleIcon,
     PauseCircleIcon,
     WaitCircleIcon,
-    CloseCircleIcon,
     EndedCircleIcon,
     DeleteIcon,
     LinkIcon,
     ClockIcon,
-    PlaylistAddIcon,
     SearchButton: Button,
     ClosePlaylistButton: Button,
     Film
@@ -223,7 +218,7 @@ export default {
   border: 1px solid #2f3747;
   padding: 20px;
   border-radius: 8px;
-  max-width: 475px;
+  max-width: 510px;
   width: 100%;
   position: relative;
   display: flex;
@@ -262,11 +257,11 @@ export default {
   border-bottom: none !important;
 }
 
-
 .playlist-item .item-props {
   display: flex;
   padding-left: 10px;
-  width: 700px;
+  width: 830px;
+  cursor: pointer;
 }
 
 .playlist-item .item-actions-container {

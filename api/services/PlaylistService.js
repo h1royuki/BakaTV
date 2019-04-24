@@ -22,7 +22,7 @@ class PlaylistService {
                 const url = KinogoParser.getUrlFromFiles(items[key].files);
                 const film = new FilmModel(url, items[key].name, items[key].cover, items[key].season, items[key].desc);
                 await PlaylistRepository.addItemToPlaylist(roomId, film);
-                await PlaylistRepository.setPlaylistLastId(roomId, room.id);
+                await PlaylistRepository.setPlaylistLastId(roomId, film.id);
             })
 
         } catch (err) {
