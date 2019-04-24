@@ -1,14 +1,13 @@
 <template>
   <div class="playlist-container">
-    <div class="add-film" v-if="isSearchPopupShow">
-      <close-circle-icon @click="hideSearchPopup" :size="25" class="close"/>
-      <search :scroll="true" :small="true" v-on:select="addToPlaylist($event)">
-        <template v-slot:cover-icon>
-          <playlist-add-icon :size="35" title="Add to playlist"/>
-        </template>
-      </search>
-    </div>
-    <div v-else class="playlist">
+    <search
+      v-if="isSearchPopupShow"
+      v-on:action="addToPlaylist($event)"
+      v-on:close="hideSearchPopup"
+      v-on:select="addToPlaylist($event)"
+      :action-name="`Add to playlist`"
+    ></search>
+    <div class="playlist">
       <div class="playlist-title">
         Playlist
         <playlist-star-icon class="icon" :size="36"/>
@@ -20,18 +19,13 @@
           :class="{active: film.id == playlist.current}"
           :key="index"
         >
-          <div class="item-cover" @click="setCurrentFilm(film.id)">
-            <film :width="60" :height="86" :cover="film.cover">
-              <template v-slot:cover-icon>
-                <div class="play" v-if="film.id != playlist.current">
-                  <play-icon title="Play film" :size="42"/>
-                </div>
-              </template>
-            </film>
-          </div>
-          <div class="item-text-container">
-            <div class="item-name">{{film.name}}</div>
-          </div>
+          <film
+            class="item-props"
+            :name="film.name"
+            :season="film.season"
+            :desc="film.desc"
+            :cover="film.cover"
+          ></film>
           <div class="item-actions-container">
             <div class="item-status">
               <play-circle-icon
@@ -109,7 +103,7 @@ import DeleteIcon from "vue-material-design-icons/DeleteCircle";
 import LinkIcon from "vue-material-design-icons/LinkVariant";
 import ClockIcon from "vue-material-design-icons/ClockOutline";
 import PlaylistAddIcon from "vue-material-design-icons/PlaylistPlus";
-import Film from "./Film";
+import Film from "../Film";
 
 export default {
   components: {
@@ -145,9 +139,9 @@ export default {
       this.isSearchPopupShow = false;
     },
 
-    addToPlaylist(film) {
+    addToPlaylist(items) {
       this.$store.commit("startLoading");
-      this.$socket.emit("addToPlaylist", film);
+      this.$socket.emit("addToPlaylist", items);
     },
 
     removeFromPlaylist(id) {
@@ -224,26 +218,6 @@ export default {
   justify-content: center;
 }
 
-.add-film {
-  background-color: #232935;
-  border: 1px solid #2f3747;
-  border-radius: 8px;
-  position: relative;
-  max-width: 650px;
-  min-height: 229px;
-  padding: 30px 0;
-  padding-bottom: 15px;
-  width: 90%;
-}
-
-.add-film .close {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  color: #ff3e3e;
-  cursor: pointer;
-}
-
 .playlist {
   background-color: #232935;
   border: 1px solid #2f3747;
@@ -288,20 +262,11 @@ export default {
   border-bottom: none !important;
 }
 
-.playlist-item .item-cover {
-  margin: 0 10px;
-  position: relative;
-  cursor: pointer;
-}
 
-.playlist-item .item-text-container {
+.playlist-item .item-props {
   display: flex;
-  width: 100%;
-}
-
-.playlist-item .item-name {
-  padding: 0 10px;
-  width: 180px;
+  padding-left: 10px;
+  width: 700px;
 }
 
 .playlist-item .item-actions-container {

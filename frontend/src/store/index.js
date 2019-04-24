@@ -5,6 +5,7 @@ import chat from './chat';
 import room from './room';
 import player from './player';
 import playlist from './playlist';
+import search from './search';
 
 Vue.use(Vuex);
 
@@ -13,7 +14,8 @@ export default new Vuex.Store({
     chat,
     room,
     player,
-    playlist
+    playlist,
+    search
   },
 
   state: {
@@ -68,9 +70,10 @@ export default new Vuex.Store({
       commit('resetPlayer');
       commit('resetPlaylist');
       commit('resetRoom');
+      commit('resetSearch');
 
       router.push("/");
-    },
+    }
   },
 
   getters: {

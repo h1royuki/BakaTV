@@ -19,11 +19,7 @@ class KinogoParser {
                 'result_from': '1',
                 'story': this._encode(query),
             },
-            transform: function (body) {
-                body = new Buffer.from(body, 'binary');
-                body = iconv.decode(body, 'win1251');
-                return cheerio.load(body);
-            }
+            transform: (body) => this._transform(body, true)
         };
 
         const html = await rp(options);
@@ -35,9 +31,11 @@ class KinogoParser {
             const type = html(this).text();
             item.name = html(this).find('.zagolovki').text();
 
-            if (!item.name.match(/.*\(\d*\)/) || type.match(/(С|с)ериал/gmu)) {
-                return;
-            };
+            if (type.match(/(С|с)ериал/gmu)) {
+                item.type = 'serial';
+            } else {
+                item.type = 'film';
+            }
 
             item.url = html(this).find('.zagolovki').children().last().attr('href');
             item.cover = 'https://kinogo.by' + html(this).find('.shortimg').find('img').attr('src');
@@ -48,24 +46,39 @@ class KinogoParser {
         return items;
     }
 
-    async getMovieURL(url) {
+    async getMovieJson(url) {
         const options = {
             method: 'GET',
             uri: url,
-            transform: function (body) {
-                body = new Buffer.from(body, 'binary');
-                body = iconv.decode(body, 'win1251');
-                return cheerio.load(body);
-            }
+            encoding: 'binary',
+            transform: (body) => this._transform(body, false)
         };
 
-        const html = await rp(options);
+        let html = await rp(options);
 
-        const filmUrl = html('#video-inner-save-timeline-temp').parent().next().children().last().attr('href');
-        if (filmUrl.match(/https\:\/\/.*\.mp4/)) {
-            return filmUrl;
+        html = html.match(/Playerjs\((.*)\)\;/)[1]; // get json string
+        html = html.replace(/(id|preroll|cuid)/g, '"$1"'); // fix json
+
+        return JSON.parse(html);
+    }
+
+
+    getUrlFromFiles(files) {
+        return files.match(/\[720p\](.*?)or/)[1];
+    }
+
+    async parseJsonItem(item) {
+
+    }
+
+    _transform(body, isUserCheerio) {
+        body = new Buffer.from(body, 'binary');
+        body = iconv.decode(body, 'win1251');
+
+        if (isUserCheerio) {
+            return cheerio.load(body);
         } else {
-            throw new Error('URL not found');
+            return body;
         }
     }
 

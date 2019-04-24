@@ -6,35 +6,52 @@
     </div>
     <div class="container index">
       <div class="user-badge-container">
-        <user-badge />
+        <user-badge/>
       </div>
       <div class="logo"></div>
-      <search class="index-search" v-on:select="start($event)">
-        <template v-slot:cover-icon>
-          <play-icon :size="60" title="Create room"/>
-        </template>
-      </search>
+      <search-button @click="showSearch" class="search-button">Create room</search-button>
     </div>
+    <search
+      class="index-search"
+      v-if="isShowSearch"
+      v-on:close="hideSearch"
+      :action-name="`Create room`"
+      v-on:action="createRoom($event)"
+    ></search>
   </div>
 </template>
 
 <script>
 import Search from "../components/Search";
-import PlayIcon from "vue-material-design-icons/Play.vue";
-import UserBadge from '../components/User/UserBadge'
+import UserBadge from "../components/User/UserBadge";
+import Button from "../components/Base/Button.vue";
 
 export default {
   components: {
     Search,
-    PlayIcon,
-    UserBadge
+    UserBadge,
+    SearchButton: Button
   },
 
+  data() {
+    return {
+      isShowSearch: false
+    };
+  },
 
   methods: {
-    start(film) {
-      this.$socket.emit("createRoom", film);
+    createRoom(items) {
+      this.$socket.emit("createRoom", items);
+      this.$store.commit('resetSearch');
       this.$store.commit("startLoading");
+    },
+
+    showSearch() {
+      this.isShowSearch = true;
+    },
+
+    hideSearch() {
+      this.isShowSearch = false;
     }
   }
 };
@@ -88,14 +105,17 @@ export default {
   z-index: 0;
 }
 
+.index .search-button {
+  margin-top: 80px;
+  font-size: 20px;
+  padding: 20px 50px;
+  border-radius: 100px;
+}
+
 .user-badge-container {
   position: absolute;
   top: 20px;
   right: 20px;
-}
-
-.index-search {
-  margin-top: 40px;
 }
 
 @media (max-width: 800px) {

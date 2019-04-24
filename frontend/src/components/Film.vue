@@ -1,24 +1,25 @@
 <template>
   <div class="film" :style="{ margin: margin + 'px'}" @click="$emit('click')">
     <img :style="{width: width + 'px', height: height + 'px' }" :src="cover" @error="replace">
-    <div class="film-overlay">
-      <slot name="cover-icon"></slot>
-    </div>
     <div class="film-props" v-if="name">
       <div class="film-name" :style="{ fontSize: fontSize + 'px' }">{{name}}</div>
+      <div class="film-season" v-if="season">{{season}}</div>
+      <div class="film-desc" v-if="desc" v-html="desc"></div>
     </div>
   </div>
 </template>
 
 <script>
-import noImg from "../../assets/no_img.svg";
+import noImg from "../assets/no_img.svg";
 
 export default {
   props: {
     name: String,
+    desc: String,
+    season: String,
     cover: { type: String, required: true },
-    width: { type: Number, default: 100 },
-    height: { type: Number, default: 145 },
+    width: { type: Number, default: 60 },
+    height: { type: Number, default: 80 },
     fontSize: { type: Number, default: 15 },
     margin: { type: Number, default: 0 }
   },
@@ -34,16 +35,14 @@ export default {
 <style>
 .film {
   display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
+  flex-direction: row;
   position: relative;
-  box-shadow: 0 -10px 20px 0 #0000001a;
-  border-radius: 6px;
+  align-items: center;
   overflow: hidden;
 }
 
-.film:hover {
-  cursor: pointer;
+.film img {
+  border-radius: 8px;
 }
 
 .film-overlay {
@@ -62,26 +61,23 @@ export default {
   align-items: center;
   display: flex;
   justify-content: center;
-  transition: 0.3s;
-}
-
-.film-overlay:hover {
-  opacity: 1;
-  transition: 0.3s;
 }
 
 .film-props {
   width: 100%;
-  position: absolute;
   bottom: 0;
-  background-color: #000c;
+  margin-left: 20px;
 }
 
 .film-name {
+  width: 250px;
   font-size: 15px;
   color: white;
-  padding: 5px;
-  text-align: center;
+}
+
+
+.film-season, .film-desc {
+  font-size: 15px;
 }
 </style>
 

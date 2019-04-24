@@ -1,4 +1,4 @@
-const Film = require('../entity/Room/Playlist/Film');
+const Film = require('../entity/Film');
 const PlaylistRepository = require('../repository/PlaylistRepository');
 const RoomRepository = require('../repository/RoomRepository');
 const KinogoParser = require('../parsers/KinogoParser');
@@ -6,19 +6,28 @@ const UserRepository = require('../repository/UserRepository');
 
 class RoomService {
 
-    async createRoom(roomId, creatorId, props) {
+    async createRoom(roomId, creatorId, items) {
         try {
-            const link = await KinogoParser.getMovieURL(props.url);
 
-            const film = new Film(link, props.name, props.cover);
+            await Object.keys(items).map(async (key, index) => {
 
-            await PlaylistRepository.addItemToPlaylist(roomId, film);
-            await PlaylistRepository.setCurrentItemId(roomId, film.id);
+                const url = KinogoParser.getUrlFromFiles(items[key].files);
+                const film = new Film(url, items[key].name, items[key].cover, items[key].season, items[key].desc);
+                await PlaylistRepository.addItemToPlaylist(roomId, film);
+                await PlaylistRepository.setPlaylistLastId(roomId, film.id);
+
+
+                if (index == 0) {
+                    await PlaylistRepository.setCurrentItemId(roomId, film.id);
+                }
+            })
+
             await UserRepository.addUserRoom(creatorId, roomId);
             await RoomRepository.setRoomOwner(roomId, creatorId);
 
             return await RoomRepository.setRoomCreator(roomId, creatorId);
         } catch (err) {
+            console.log(err);
             throw new Error('Error create room');
         }
     }

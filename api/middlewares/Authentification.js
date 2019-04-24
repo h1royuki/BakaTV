@@ -1,4 +1,4 @@
-const UserModel = require('../entity/Room/User');
+const UserModel = require('../entity/User');
 const UserService = require('../services/UserService');
 const crypto = require('crypto');
 

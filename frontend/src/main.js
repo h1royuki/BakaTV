@@ -24,7 +24,7 @@ Vue.use(VueSocketio, socketio, { store: store });
 Vue.use(VueChatScroll);
 Vue.use(Notifications);
 Vue.use(videoPlayer);
-Vue.use(Popover)
+Vue.use(Popover);
 
 
 router.afterEach((to) => {

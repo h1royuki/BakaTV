@@ -1,6 +1,7 @@
 const joinChat = require('./Chat/joinChat');
 const messageChat = require('./Chat/messageChat');
 const searchFilms = require('./Search/searchFilms');
+const getSeriesJson = require('./Search/getSeriesJson');
 const joinRoom = require('./Room/joinRoom');
 const destroyRoom = require('./Room/destroyRoom')
 const createRoom = require('./Room/createRoom');
@@ -19,12 +20,13 @@ const disconnect = require('./disconnect');
 
 module.exports = (socket) => {
     socket.on('searchFilms', (query) => searchFilms(query, socket));
+    socket.on('getSeriesJson', (data) => getSeriesJson(data, socket));
     socket.on('createRoom', (url) => createRoom(url, socket));
     socket.on('joinRoom', (room) => joinRoom(room, socket));
     socket.on('destroyRoom', () => destroyRoom(socket));
     socket.on('leaveFromRoom', () => leaveFromRoom(socket));
     socket.on('getFilm', () => getFilm(socket));
-    socket.on('addToPlaylist', (film) => addToPlaylist(film, socket));
+    socket.on('addToPlaylist', (items) => addToPlaylist(items, socket));
     socket.on('removeFromPlaylist', (id) => removeFromPlaylist(id, socket));
     socket.on('setFilm', (id) => setFilm(id, socket));
     socket.on('getPlaylist', () => getPlaylist(socket));

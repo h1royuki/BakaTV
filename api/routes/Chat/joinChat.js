@@ -1,4 +1,4 @@
-const Message = require('../../entity/Room/Chat/Message');
+const Message = require('../../entity/Message');
 const UserService = require('../../services/UserService');
 const SocketIOService = require('../../services/SocketIOService');
 

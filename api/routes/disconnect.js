@@ -1,7 +1,7 @@
 const RoomService = require('../services/RoomService');
 const UserService = require('../services/UserService');
 const SocketIOService = require('../services/SocketIOService');
-const Message = require('../entity/Room/Chat/Message');
+const Message = require('../entity/Message');
 
 module.exports = async (socket) => {
     try {

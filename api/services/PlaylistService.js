@@ -1,4 +1,4 @@
-const FilmModel = require('../entity/Room/Playlist/Film');
+const FilmModel = require('../entity/Film');
 const KinogoParser = require('../parsers/KinogoParser');
 const PlaylistRepository = require('../repository/PlaylistRepository');
 
@@ -15,15 +15,17 @@ class PlaylistService {
         return object;
     }
 
-    async addToPlaylist(roomId, film) {
+    async addToPlaylist(roomId, items) {
         try {
-            const url = await KinogoParser.getMovieURL(film.url);
-            const newFilm = new FilmModel(url, film.name, film.cover);
+            await Object.keys(items).map(async (key, index) => {
 
-            return await PlaylistRepository.addItemToPlaylist(roomId, newFilm);
+                const url = KinogoParser.getUrlFromFiles(items[key].files);
+                const film = new FilmModel(url, items[key].name, items[key].cover, items[key].season, items[key].desc);
+                await PlaylistRepository.addItemToPlaylist(roomId, film);
+                await PlaylistRepository.setPlaylistLastId(roomId, room.id);
+            })
 
         } catch (err) {
-
             throw new Error('Error add to playlist');
         }
 

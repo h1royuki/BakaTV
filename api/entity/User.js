@@ -1,5 +1,5 @@
-const userNameGenerator = require('../../helpers/generators/userName');
-const colorGenerator = require('../../helpers/generators/color');
+const userNameGenerator = require('../helpers/generators/userName');
+const colorGenerator = require('../helpers/generators/color');
 
 class User {
     constructor() {

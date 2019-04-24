@@ -19,6 +19,15 @@ class PlaylistRepository {
         return playlist;
     }
 
+    async getPlaylistLastId(playlistId) {
+        return parseInt(await redis.get(`playlist:${playlistId}:lastid`));
+    }
+
+    async setPlaylistLastId(playlistId, id) {
+        console.log(id);
+        return await redis.set(`playlist:${playlistId}:lastid`, id);
+    }
+
     async addItemToPlaylist(playlistId, item) {
         return await redis.zadd(`playlist:${playlistId}`, item.id, JSON.stringify(item));
     }
