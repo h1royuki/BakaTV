@@ -24,7 +24,6 @@ class PlaylistRepository {
     }
 
     async setPlaylistLastId(playlistId, id) {
-        console.log(id);
         return await redis.set(`playlist:${playlistId}:lastid`, id);
     }
 
