@@ -1,44 +1,49 @@
 <template>
-  <div class="search-container">
-    <div class="search">
-      <div class="search-wrapper">
-        <div class="search-form">
-          <url-input
-            class="search-input"
-            :type="`text`"
-            :placeholder="`Search films...`"
-            v-model="query"
-            v-on:enter="search()"
-          />
-          <start-button class="start-button" :title="`Search films...`" @click="search()">
-            <search-icon/>
-          </start-button>
-        </div>
-        <div v-if="searchItems" class="search-result" :class="{scroll : scroll}">
-          <div v-for="(item, index ) in searchItems" :key="index">
-            <item :index="index" :film="item">
-              <template v-slot:cover-icon>
-                <slot name="cover-icon"></slot>
-              </template>
-            </item>
+  <transition name="fade">
+    <div class="search-container">
+      <div class="search">
+        <div class="search-wrapper">
+          <div class="search-form">
+            <url-input
+              class="search-input"
+              :type="`text`"
+              :placeholder="`Search films...`"
+              v-model="query"
+              v-on:enter="search()"
+            />
+            <start-button class="start-button" :title="`Search films...`" @click="search()">
+              <search-icon/>
+            </start-button>
+          </div>
+          <div v-if="searchItems" class="search-result" :class="{scroll : scroll}">
+            <div v-for="(item, index ) in searchItems" :key="index">
+              <item :index="index" :film="item">
+                <template v-slot:cover-icon>
+                  <slot name="cover-icon"></slot>
+                </template>
+              </item>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="selected">
-        <div class="selected-items">
-          <p class="text">Selected items</p>
-          <div class="selected-item" v-for="(item, index) in selected" :key="index">
-            <film :cover="item.cover" :season="item.season" :desc="item.desc" :name="item.name"></film>
-            <delete-icon class="delete-icon" @click="deleteItem(index)" />
+        <div class="selected">
+          <div class="selected-items">
+            <p class="text">Selected items</p>
+            <div v-if="selectedLength > 0">
+              <div class="selected-item" v-for="(item, index) in selected" :key="index">
+                <film :cover="item.cover" :season="item.season" :desc="item.desc" :name="item.name"></film>
+                <delete-icon class="delete-icon" @click="deleteItem(index)"/>
+              </div>
+            </div>
+            <div v-else class="selected-empty"><empty-icon :size="70" /><p>Choose anything</p></div>
           </div>
-        </div>
-        <div class="actions">
-          <action-button class="action-button" @click="$emit('action', selected)">{{actionName}}</action-button>
-          <close-button class="close-button" @click="closeSearch" >Close</close-button>
+          <div class="actions">
+            <action-button class="action-button" @click="$emit('action', selected)">{{actionName}}</action-button>
+            <close-button class="close-button" @click="closeSearch">Close</close-button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 <script>
 import Button from "./Base/Button.vue";
@@ -47,7 +52,7 @@ import SearchIcon from "vue-material-design-icons/Magnify.vue";
 import Item from "./Search/Item";
 import Film from "./Film";
 import DeleteIcon from "vue-material-design-icons/DeleteCircle";
-
+import EmptyIcon from "vue-material-design-icons/FormatListCheckbox";
 export default {
   props: {
     scroll: { type: Boolean, default: true },
@@ -61,6 +66,7 @@ export default {
     CloseButton: Button,
     SearchIcon,
     DeleteIcon,
+    EmptyIcon,
     Item,
     Film
   },
@@ -77,12 +83,12 @@ export default {
     },
 
     deleteItem(index) {
-      this.$store.commit('unselect', index);
+      this.$store.commit("unselect", index);
     },
 
     closeSearch() {
-      this.$store.commit('resetSearch');
-      this.$emit('close');
+      this.$store.commit("resetSearch");
+      this.$emit("close");
     }
   },
 
@@ -93,12 +99,16 @@ export default {
 
     selected() {
       return this.$store.getters.selectedItems;
+    },
+
+    selectedLength() {
+      return this.$store.getters.selectedItemsLength;
     }
   },
 
   beforeDestroy() {
-    this.$store.commit('resetSearch');
-  },
+    this.$store.commit("resetSearch");
+  }
 };
 </script>
 
@@ -135,11 +145,10 @@ export default {
   flex-direction: column;
   align-items: center;
   background-color: #232935;
-  max-height: 420px;
-  max-width: 400px;
+  min-width: 400px;
   width: 100%;
   height: 100%;
-  padding-right: 15px;
+  padding-right: 7px;
   border-right: 1px solid #455168;
 }
 
@@ -229,7 +238,7 @@ export default {
   flex-direction: row;
   align-items: center;
   width: cacl(100% - 20px);
-  margin: 10px;
+  margin: 10px 5px;
 }
 
 .selected-item .delete-icon {
@@ -243,6 +252,22 @@ export default {
 .actions .close-button {
   background-color: #ff3e3e;
   border-color: transparent;
+}
+
+.selected-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  color: #505d77;
+}
+
+.selected-empty p {
+  font-size: 18px;
+  color: #505d77;
+  margin: 0;
 }
 
 @media (max-width: 500px) {

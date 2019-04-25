@@ -1,32 +1,30 @@
 <template>
   <div class="item-container">
     <div class="item">
-    <film :cover="film.cover" :name="film.name"></film>
+      <film :cover="film.cover" :name="film.name"></film>
       <arrow-down-icon class="icon" @click="showFilmItems(film.url)" :size="30"/>
-      </div>
+    </div>
     <div class="files" v-if="isShowFilmItems && searchItemsJson[index]">
       <div v-if="film.type == 'serial'">
         <div v-if="searchItemsJson[index].file[0].folder">
-          <div class="season" :class="{line: isShowFilmItems}" v-for="(season, sindx) in searchItemsJson[index].file" :key="sindx">
-            <input
-              type="checkbox"
-              @click="selectSeason(season, sindx)"
-              :checked="selectedSeasons[`${searchItemsJson[index].cuid}${sindx}`]"
-            >
-            <div class="name">{{season.comment}}</div>
-            <arrow-down-icon
-              class="icon"
-              @click="showSeason(sindx)"
-              v-if="film.type == 'serial'"
-              :size="30"
-            />
-            <div v-if="isShowSeasons[sindx]">
-              <div v-for="(series, serindx)  in season.folder" :key="serindx">
-                <div
-                :class="{line: isShowSeasons[sindx]}"
-                  class="series"
-                  @click="itemToogler(series, `${sindx}${serindx}`, season.comment)"
-                >
+          <div class="season" v-for="(season, sindx) in searchItemsJson[index].file" :key="sindx">
+            <div class="season-props" :class="{line: isShowFilmItems}">
+              <input
+                type="checkbox"
+                @click="selectSeason(season, sindx)"
+                :checked="selectedSeasons[`${searchItemsJson[index].cuid}${sindx}`]"
+              >
+              <div class="name">{{season.comment}}</div>
+              <arrow-down-icon
+                class="icon"
+                @click="showSeason(sindx)"
+                v-if="film.type == 'serial'"
+                :size="30"
+              />
+            </div>
+            <div class="series" v-if="isShowSeasons[sindx]">
+              <div class="series-props"  :class="{line: isShowSeasons[sindx]}" v-for="(series, serindx)   in season.folder" :key="serindx">
+                <div @click="itemToogler(series, `${sindx}${serindx}`, season.comment)">
                   <input
                     type="checkbox"
                     :checked="selectedItems[`${searchItemsJson[index].cuid}${sindx}${serindx}`]"
@@ -38,9 +36,16 @@
           </div>
         </div>
         <div v-else>
-          <div v-for="(series, itemsIndex) in searchItemsJson[index].file" :key="itemsIndex">
-            <div class="series" @click="itemToogler(series, itemsIndex)">
-              <input type="checkbox" :checked="selectedItems[`${searchItemsJson[index].cuid}${itemsIndex}`]">
+          <div
+            class="props"
+            v-for="(series, itemsIndex) in searchItemsJson[index].file"
+            :key="itemsIndex"
+          >
+            <div class="series-props" @click="itemToogler(series, itemsIndex)">
+              <input
+                type="checkbox"
+                :checked="selectedItems[`${searchItemsJson[index].cuid}${itemsIndex}`]"
+              >
               <div class="name" v-html="series.title"></div>
             </div>
           </div>
@@ -49,12 +54,15 @@
       <div v-else>
         <div v-if="isShowFilmItems">
           <div>
-            <div class="series" :class="{line: isShowFilmItems}" @click="itemToogler(searchItemsJson[index])">
-              <input
-                type="checkbox"
-                :checked="selectedItems[`${searchItemsJson[index].cuid}0`]"
-              >
-              <div class="name" v-html="film.name"></div>
+            <div
+              class="series-props"
+              :class="{line: isShowFilmItems}"
+              @click="itemToogler(searchItemsJson[index])"
+            >
+              <div class="props">
+                <input type="checkbox" :checked="selectedItems[`${searchItemsJson[index].cuid}0`]">
+                <div class="name" v-html="film.name"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -65,7 +73,7 @@
 
 <script>
 import ArrowDownIcon from "vue-material-design-icons/ChevronDown";
-import Film from "../Film"
+import Film from "../Film";
 
 export default {
   props: {
@@ -178,7 +186,6 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: auto;
-
 }
 
 .item {
@@ -196,7 +203,6 @@ export default {
   color: white;
   padding: 5px;
   text-align: center;
-  width: 300px;
 }
 
 .items-container .files {
@@ -209,6 +215,20 @@ export default {
 .files .season {
   padding: 10px;
   margin-left: 20px;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.season-props {
+  display: flex;
+  align-items: center;
+}
+
+.series-props {
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .files .series {
@@ -217,7 +237,7 @@ export default {
 }
 
 .line {
-    border-bottom: 1px solid  #455168;
+  border-bottom: 1px solid #455168;
 }
 </style>
 

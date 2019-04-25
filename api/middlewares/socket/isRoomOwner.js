@@ -1,4 +1,4 @@
-const RoomService = require('../services/RoomService');
+const RoomService = require('../../services/RoomService');
 
 const ownerOps = ['addToPlaylist', 'getNextFilm', 'getPlaylist', 'removeFromPlaylist', 'setFilm', 'updateFilmStatus', 'updateFilmTime'];
 const creatorOps = ['destroyRoom'];

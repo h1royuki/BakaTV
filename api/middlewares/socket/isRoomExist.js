@@ -1,4 +1,4 @@
-const RoomService = require('../services/RoomService');
+const RoomService = require('../../services/RoomService');
 
 const exclude = ['createRoom', 'getSeriesJson', 'searchFilms', 'reconnectToRoom', 'leaveFromRoom', 'getUserRooms'];
 

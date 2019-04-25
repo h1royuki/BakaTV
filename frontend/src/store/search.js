@@ -5,6 +5,7 @@ export default {
         searchItems: null,
         searchItemsJson: {},
         selectedItems: {},
+        selectedItemsLength: null,
         selectedSeasons: {}
     },
 
@@ -24,6 +25,8 @@ export default {
             else {
                 Vue.set(state.selectedSeasons, item, true);
             }
+
+            state.selectedItemsLength = Object.keys(state.selectedItems).length;
         },
 
         unselect(state, index) {
@@ -32,6 +35,8 @@ export default {
             } else {
                 Vue.set(state.selectedSeasons, index, false);
             }
+
+            state.selectedItemsLength = Object.keys(state.selectedItems).length;
         },
 
         resetSearch(state) {
@@ -54,10 +59,10 @@ export default {
             commit('setSearchResult', items);
         },
 
-        select({commit }, item) {
-          commit('select', item);
+        select({ commit }, item) {
+            commit('select', item);
         },
-        unselect({commit}, index) {
+        unselect({ commit }, index) {
             commit('unselect', index);
         }
     },
@@ -76,6 +81,10 @@ export default {
 
         selectedSeasons: state => {
             return state.selectedSeasons;
+        },
+
+        selectedItemsLength: state => {
+            return state.selectedItemsLength;
         }
     }
 }

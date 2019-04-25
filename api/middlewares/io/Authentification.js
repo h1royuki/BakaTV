@@ -1,5 +1,5 @@
-const UserModel = require('../entity/User');
-const UserService = require('../services/UserService');
+const UserModel = require('../../entity/User');
+const UserService = require('../../services/UserService');
 const crypto = require('crypto');
 
 module.exports = async (socket) => {

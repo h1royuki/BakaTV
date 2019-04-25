@@ -40,7 +40,6 @@ export default new Vuex.Store({
       state.userId = data.userId;
       state.userName = data.userName;
     },
-
     setUserRooms(state, rooms) {
       state.userRooms = rooms;
     }
@@ -49,6 +48,12 @@ export default new Vuex.Store({
   actions: {
     socket_auth({ commit }, data) {
       commit('auth', data);
+    },
+
+    socket_wipeStorage({}) {
+      localStorage.removeItem('userId');
+      localStorage.removeItem('userToken');
+      location.reload();
     },
 
     socket_updateToken({ }, data) {

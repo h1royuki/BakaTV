@@ -1,6 +1,6 @@
-const auth = require('./Authentification');
-const isRoomExist = require('./isRoomExist');
-const isRoomOwner = require('./isRoomOwner');
+const auth = require('./io/Authentification');
+const isRoomExist = require('./socket/isRoomExist');
+const isRoomOwner = require('./socket/isRoomOwner');
 
 module.exports = async (socket, next) => {
 
