@@ -1,4 +1,5 @@
 .idea
+dump.rdb
 frontend/.env
 frontend/dist/*
 frontend/node_modules
