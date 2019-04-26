@@ -1,30 +1,52 @@
 <template>
-  <video-player
-    class="vjs-player"
-    ref="videoPlayer"
-    :options="playerOptions"
-    @play="onPlayerPlay($event)"
-    @pause="onPlayerPause($event)"
-    @timeupdate="onPlayerTimeupdate($event)"
-    @ready="onPlayerReady($event)"
-    @ended="onPlayerEnded($event)"
-  ></video-player>
+  <div class="video-container">
+    <transition name="change-video">
+      <div class="change-video" :key="film.desc">
+        <p>{{film.name}}</p>
+        <p>{{film.season}}</p>
+        <p v-html="film.desc"></p>
+      </div>
+    </transition>
+    <div v-if="!isOwner && lastStatus == 'pause'" class="video-overlay">
+      <pause-icon :size="100"/>
+    </div>
+    <video-player
+      class="vjs-player"
+      ref="videoPlayer"
+      :options="playerOptions"
+      @play="onPlayerPlay($event)"
+      @pause="onPlayerPause($event)"
+      @timeupdate="onPlayerTimeupdate($event)"
+      @ready="onPlayerReady($event)"
+      @ended="onPlayerEnded($event)"
+    ></video-player>
+  </div>
 </template>
 
 
 <script>
+import PauseIcon from "vue-material-design-icons/PauseCircleOutline";
+
 export default {
+  components: {
+    PauseIcon
+  },
+
   data() {
     return {
       playerOptions: {
         overNative: true,
         autoplay: true,
         sources: []
-      }
+      },
+
+      film: false
     };
   },
   sockets: {
     updateFilm(film) {
+      this.film = film;
+
       this.playerOptions.sources = [];
 
       this.playerOptions.sources.push({
@@ -47,7 +69,7 @@ export default {
     },
 
     updateRoomOwner() {
-        this.player.controls(true);
+      this.player.controls(true);
     }
   },
 
@@ -134,6 +156,12 @@ export default {
 </script>
 
 <style>
+.video-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
 .vjs-player {
   width: 100%;
   height: 100%;
@@ -142,6 +170,45 @@ export default {
 .video-js {
   width: 100%;
   height: 100%;
+}
+
+.change-video {
+  position: absolute;
+  flex-direction: column;
+  top: 10px;
+  z-index: 10;
+  display: flex;
+  height: 100px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  padding: 15px;
+}
+
+.change-video p {
+  font-size: 20px;
+  margin: 0;
+  text-align: center;
+}
+
+.video-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.change-video-enter-active {
+  opacity: 1;
+}
+
+.change-video-enter-to {
+  transition: 7s;
+  opacity: 0;
 }
 </style>
 
