@@ -57,17 +57,60 @@ class KinogoParser {
 
         html = html.match(/Playerjs\((.*)\)\;/)[1]; // get json string
         html = html.replace(/(id|preroll|cuid)/g, '"$1"'); // fix json
+        html = JSON.parse(html);
 
-        return JSON.parse(html);
+        const json = {};
+
+        json.id = html.cuid;
+
+
+        if (html.file instanceof Array) {
+            if (html.file[0].folder) {
+
+                const itemSeasons = html.file.map(element => {
+                    const season = {};
+
+                    season.title = element.comment;
+
+                    const seasonEpisodes =  element.folder.map(element => {
+                        const episode = {};
+
+                        episode.title = element.comment;
+                        episode.url = this.getUrlFromFiles(element.file);
+
+                        return episode;
+                    })
+
+                    season.episodes = Object.assign({}, seasonEpisodes);
+
+                    return season;
+                })
+
+                json.seasons = Object.assign({}, itemSeasons);
+
+            } else {
+                const itemEpisodes = html.file.map(element => {
+                    const episode = {};
+
+                    episode.title = element.title;
+                    episode.url = this.getUrlFromFiles(element.file);
+
+                    return episode;
+                });
+
+                json.series = Object.assign({}, itemEpisodes);
+            }
+
+        } else {
+            json.url = this.getUrlFromFiles(html.file);
+        }
+
+        return json;
     }
 
 
     getUrlFromFiles(files) {
         return files.match(/\[720p\](.*?)or/)[1];
-    }
-
-    async parseJsonItem(item) {
-
     }
 
     _transform(body, isUserCheerio) {

@@ -183,7 +183,7 @@ export default {
   align-items: center;
   justify-content: center;
   opacity: 0;
-  padding: 15px;
+  background-color: #0009;
 }
 
 .change-video p {
@@ -200,6 +200,7 @@ export default {
   justify-content: center;
   align-items: center;
   z-index: 10;
+  background-color: #0009;
 }
 
 .change-video-enter-active {

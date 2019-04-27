@@ -1,5 +1,4 @@
 const FilmModel = require('../entity/Film');
-const KinogoParser = require('../parsers/KinogoParser');
 const PlaylistRepository = require('../repository/PlaylistRepository');
 
 class PlaylistService {
@@ -24,8 +23,7 @@ class PlaylistService {
             
             await Object.keys(items).map(async (key, index) => {
 
-                const url = KinogoParser.getUrlFromFiles(items[key].files);
-                const film = new FilmModel(url, items[key].name, items[key].cover, items[key].season, items[key].desc);
+                const film = new FilmModel(items[key].url, items[key].name, items[key].cover, items[key].season, items[key].desc);
                 await PlaylistRepository.addItemToPlaylist(roomId, film);
                 await PlaylistRepository.setPlaylistLastId(roomId, film.id);
             })

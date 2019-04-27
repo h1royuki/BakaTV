@@ -6,30 +6,34 @@
     </div>
     <div class="files" v-if="isShowFilmItems && searchItemsJson[index]">
       <div v-if="film.type == 'serial'">
-        <div v-if="searchItemsJson[index].file[0].folder">
-          <div class="season" v-for="(season, sindx) in searchItemsJson[index].file" :key="sindx">
+        <div v-if="searchItemsJson[index].seasons">
+          <div
+            class="season"
+            v-for="(season, sindx) in searchItemsJson[index].seasons"
+            :key="sindx"
+          >
             <div class="season-props" :class="{line: isShowFilmItems}">
               <input
                 type="checkbox"
                 @click="selectSeason(season, sindx)"
-                :checked="selectedSeasons[`${searchItemsJson[index].cuid}${sindx}`]"
+                :checked="selectedSeasons[`${searchItemsJson[index].id}${sindx}`]"
               >
-              <div class="name">{{season.comment}}</div>
-              <arrow-down-icon
-                class="icon"
-                @click="showSeason(sindx)"
-                v-if="film.type == 'serial'"
-                :size="30"
-              />
+              <div class="name">{{season.title}}</div>
+              <arrow-down-icon class="icon" @click="showSeason(sindx)" :size="30"/>
             </div>
             <div class="series" v-if="isShowSeasons[sindx]">
-              <div class="series-props"  :class="{line: isShowSeasons[sindx]}" v-for="(series, serindx)   in season.folder" :key="serindx">
-                <div @click="itemToogler(series, `${sindx}${serindx}`, season.comment)">
+              <div
+                class="series-props"
+                :class="{line: isShowSeasons[sindx]}"
+                v-for="(episode, serindx)   in season.episodes"
+                :key="serindx"
+              >
+                <div @click="itemToogler(episode, `${sindx}${serindx}`, season.title)">
                   <input
                     type="checkbox"
-                    :checked="selectedItems[`${searchItemsJson[index].cuid}${sindx}${serindx}`]"
+                    :checked="selectedItems[`${searchItemsJson[index].id}${sindx}${serindx}`]"
                   >
-                  <div class="name" v-html="series.comment"></div>
+                  <div class="name" v-html="episode.title"></div>
                 </div>
               </div>
             </div>
@@ -38,13 +42,13 @@
         <div v-else>
           <div
             class="props"
-            v-for="(series, itemsIndex) in searchItemsJson[index].file"
+            v-for="(episode, itemsIndex) in searchItemsJson[index].episodes"
             :key="itemsIndex"
           >
-            <div class="series-props" @click="itemToogler(series, itemsIndex)">
+            <div class="series-props" @click="itemToogler(episode, itemsIndex)">
               <input
                 type="checkbox"
-                :checked="selectedItems[`${searchItemsJson[index].cuid}${itemsIndex}`]"
+                :checked="selectedItems[`${searchItemsJson[index].id}${itemsIndex}`]"
               >
               <div class="name" v-html="series.title"></div>
             </div>
@@ -60,7 +64,7 @@
               @click="itemToogler(searchItemsJson[index])"
             >
               <div class="props">
-                <input type="checkbox" :checked="selectedItems[`${searchItemsJson[index].cuid}0`]">
+                <input type="checkbox" :checked="selectedItems[`${searchItemsJson[index].id}0`]">
                 <div class="name" v-html="film.name"></div>
               </div>
             </div>
@@ -95,25 +99,24 @@ export default {
 
   methods: {
     selectSeason(season, index) {
-      const id = `${this.searchItemsJson[this.index].cuid}${index}`; //filmId - seasonId
+      const id = `${this.searchItemsJson[this.index].id}${index}`; //filmId - seasonId
 
       if (this.selectedSeasons[id]) {
         this.$store.commit("unselect", id);
 
-        for (let i = 0; i < season.folder.length; i++) {
+        for (let i = 0; i < Object.keys(season.episodes).length; i++) {
           this.unselectItem(`${id}${i}`);
         }
       } else {
         this.$store.commit("select", id);
-
-        for (let i = 0; i < season.folder.length; i++) {
-          this.selectItem(season.folder[i], `${id}${i}`, season.comment);
+        for (let i = 0; i < Object.keys(season.episodes).length; i++) {
+          this.selectItem(season.episodes[i], `${id}${i}`, season.title);
         }
       }
     },
 
     itemToogler(data, index = 0, season = null) {
-      const id = `${this.searchItemsJson[this.index].cuid}${index}`; // filmId - seasonId - seriesId
+      const id = `${this.searchItemsJson[this.index].id}${index}`; // filmId - seasonId - seriesId
 
       if (this.selectedItems[id]) {
         this.unselectItem(id);
@@ -129,13 +132,9 @@ export default {
       // filling
       film.id = id;
       film.season = season;
-      film.files = data.file;
+      film.url = data.url;
 
-      if (data.comment) {
-        film.desc = data.comment;
-      } else if (data.title) {
-        film.desc = data.title;
-      }
+      film.desc = data.title;
 
       this.$store.dispatch("select", film); // this object returns to server
     },

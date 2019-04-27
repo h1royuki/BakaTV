@@ -1,7 +1,6 @@
 const Film = require('../entity/Film');
 const PlaylistRepository = require('../repository/PlaylistRepository');
 const RoomRepository = require('../repository/RoomRepository');
-const KinogoParser = require('../parsers/KinogoParser');
 const UserRepository = require('../repository/UserRepository');
 
 class RoomService {
@@ -14,12 +13,9 @@ class RoomService {
             }
             
             await Object.keys(items).map(async (key, index) => {
-
-                const url = KinogoParser.getUrlFromFiles(items[key].files);
-                const film = new Film(url, items[key].name, items[key].cover, items[key].season, items[key].desc);
+                const film = new Film(items[key].url, items[key].name, items[key].cover, items[key].season, items[key].desc);
                 await PlaylistRepository.addItemToPlaylist(roomId, film);
                 await PlaylistRepository.setPlaylistLastId(roomId, film.id);
-
 
                 if (index == 0) {
                     await PlaylistRepository.setCurrentItemId(roomId, film.id);
