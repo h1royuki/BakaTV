@@ -28,10 +28,9 @@ class KinogoParser {
 
         html('.shortstory').map(function (i, el) {
             const item = {};
-            const type = html(this).text();
             item.name = html(this).find('.zagolovki').text();
 
-            if (type.match(/(С|с)ериал/gmu)) {
+            if (item.name.match(/\(.*сезон\)/)) {
                 item.type = 'serial';
             } else {
                 item.type = 'film';
