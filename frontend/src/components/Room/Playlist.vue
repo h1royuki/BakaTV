@@ -1,4 +1,5 @@
 <template>
+ <transition name="fade">
   <div class="playlist-container">
     <search
       v-if="isSearchPopupShow"
@@ -88,6 +89,7 @@
       </div>
     </div>
   </div>
+ </transition>
 </template>
 
 <script>
@@ -320,19 +322,19 @@ export default {
 }
 
 .popover {
-  background-color: #39404d;
-  box-shadow: 0 0 5px 0 #0000001a;
+  background-color: #39404d !important;
+  box-shadow: 0 0 5px 0 #0000001a !important;
 }
 
 .popover.url {
   width: 106px !important;
   left: -38px !important;
-  top: -45px !important;
+  top: -40px !important;
 }
 
 .popover.time {
   width: 90px !important;
-  left: -25px !important;
+  left: -29px !important;
   top: -40px !important;
 }
 

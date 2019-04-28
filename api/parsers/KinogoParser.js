@@ -30,7 +30,7 @@ class KinogoParser {
             const item = {};
             item.name = html(this).find('.zagolovki').text();
 
-            if (item.name.match(/\(.*сезон\)/)) {
+            if (item.name.match(/\(.*[сезон|сериал]\)/)) {
                 item.type = 'serial';
             } else {
                 item.type = 'film';
@@ -98,7 +98,7 @@ class KinogoParser {
                     return episode;
                 });
 
-                json.series = Object.assign({}, itemEpisodes);
+                json.episodes = Object.assign({}, itemEpisodes);
             }
 
         } else {

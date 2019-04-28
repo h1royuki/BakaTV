@@ -69,7 +69,7 @@ export default {
 <style>
 .user-badge .badge {
   position: relative;
-  padding: 7px 20px;
+  padding: 0 10px;
   display: flex;
   align-items: center;
   justify-content: center;

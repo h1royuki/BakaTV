@@ -50,7 +50,7 @@
                 type="checkbox"
                 :checked="selectedItems[`${searchItemsJson[index].id}${itemsIndex}`]"
               >
-              <div class="name" v-html="series.title"></div>
+              <div class="name" v-html="episode.title"></div>
             </div>
           </div>
         </div>
