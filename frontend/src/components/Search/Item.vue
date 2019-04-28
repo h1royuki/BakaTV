@@ -5,7 +5,7 @@
       <arrow-down-icon class="icon" @click="showFilmItems(film.url)" :size="30"/>
     </div>
     <div class="files" v-if="isShowFilmItems && searchItemsJson[index]">
-      <div v-if="film.type == 'serial'">
+      <div v-if="searchItemsJson[index].type == 'serial'">
         <div v-if="searchItemsJson[index].seasons">
           <div
             class="season"

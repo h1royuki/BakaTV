@@ -30,12 +30,6 @@ class KinogoParser {
             const item = {};
             item.name = html(this).find('.zagolovki').text();
 
-            if (item.name.match(/\(.*[сезон|сериал]\)/)) {
-                item.type = 'serial';
-            } else {
-                item.type = 'film';
-            }
-
             item.url = html(this).find('.zagolovki').children().last().attr('href');
             item.cover = 'https://kinogo.by' + html(this).find('.shortimg').find('img').attr('src');
 
@@ -65,6 +59,9 @@ class KinogoParser {
 
 
         if (html.file instanceof Array) {
+
+            json.type = 'serial';
+
             if (html.file[0].folder) {
 
                 const itemSeasons = html.file.map(element => {
@@ -102,6 +99,9 @@ class KinogoParser {
             }
 
         } else {
+
+            json.type = 'film';
+
             json.url = this.getUrlFromFiles(html.file);
         }
 
