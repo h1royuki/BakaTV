@@ -25,6 +25,7 @@
 
 
 <script>
+import "videojs-hotkeys";
 import PauseIcon from "vue-material-design-icons/PauseCircleOutline";
 
 export default {
@@ -96,6 +97,11 @@ export default {
     },
 
     onPlayerReady($event) {
+      $event.hotkeys({
+        volumeStep: 0.1,
+        seekStep: 10
+      });
+
       $event.currentTime(this.lastTime);
       this.setPlayerStatus(this.lastStatus);
 

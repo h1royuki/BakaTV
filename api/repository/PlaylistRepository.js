@@ -2,12 +2,14 @@ const redis = require('../modules/redis');
 
 class PlaylistRepository {
 
-    async getCurrentItemId(playlistId) {
-        return await redis.get(`playlist:${playlistId}:current`);
+    async getCurrentItem(playlistId) {
+        const item = await redis.get(`playlist:${playlistId}:current`)
+
+        return JSON.parse(item);
     }
 
-    async setCurrentItemId(playlistId, itemId) {
-        return await redis.set(`playlist:${playlistId}:current`, itemId);
+    async setCurrentItem(playlistId, item) {
+        return await redis.set(`playlist:${playlistId}:current`, JSON.stringify(item));
     }
 
     async getPlaylist(playlistId) {
@@ -20,7 +22,9 @@ class PlaylistRepository {
     }
 
     async getPlaylistLastId(playlistId) {
-        return parseInt(await redis.get(`playlist:${playlistId}:lastid`));
+        const id = parseInt(await redis.get(`playlist:${playlistId}:lastid`));
+
+        return isNaN(id) ? 0 : id;
     }
 
     async setPlaylistLastId(playlistId, id) {

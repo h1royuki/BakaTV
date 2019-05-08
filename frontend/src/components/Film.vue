@@ -49,11 +49,6 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: black;
-  z-index: 10;
-  position: absolute;
-  width: 100%;
-  height: 100%;
   background: #000000b3;
   z-index: 1;
   opacity: 0;

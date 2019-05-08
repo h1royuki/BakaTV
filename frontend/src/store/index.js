@@ -50,13 +50,13 @@ export default new Vuex.Store({
       commit('auth', data);
     },
 
-    socket_wipeStorage({}) {
+    socket_wipeStorage() {
       localStorage.removeItem('userId');
       localStorage.removeItem('userToken');
       location.reload();
     },
 
-    socket_updateToken({ }, data) {
+    socket_updateToken(data) {
       localStorage.setItem('userId', data.userId);
       localStorage.setItem('userToken', data.userToken);
     },

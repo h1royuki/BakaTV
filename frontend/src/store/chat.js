@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import { stat } from 'fs';
 
 export default {
     state: {

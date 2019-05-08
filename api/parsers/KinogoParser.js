@@ -26,7 +26,7 @@ class KinogoParser {
 
         const items = [];
 
-        html('.shortstory').map(function (i, el) {
+        html('.shortstory').map(function () {
             const item = {};
             item.name = html(this).find('.zagolovki').text();
 
