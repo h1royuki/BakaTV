@@ -1,0 +1,26 @@
+.container.room {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.player {
+  background-color: black;
+  width: 100%;
+  max-width: calc(100% - 350px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 800px) {
+  .player {
+    min-width: 100%;
+    height: 35%;
+  }
+}

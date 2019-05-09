@@ -1,0 +1,43 @@
+.user-badge .badge {
+    position: relative;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(72, 81, 99, 0.3);
+    font-size: 18px;
+    border-radius: 50px;
+    cursor: pointer;
+  }
+  
+  .badge .user {
+    padding-top: 6px;
+    padding-right: 10px;
+  }
+  
+  .badge .arrow {
+    padding-top: 7px;
+    padding-left: 5px;
+  }
+  
+  .user-badge .dropdown {
+    position: absolute;
+    top: 65px;
+    background-color: #2e323d;
+    width: calc(100% - 45px);
+    border-radius: 15px;
+    padding: 0 20px;
+    z-index: 2;
+  }
+  
+  .dropdown .category {
+    font-size: 15px;
+    text-transform: uppercase;
+    color: #666e83;
+  }
+  
+  .room-link {
+    cursor: pointer;
+    font-weight: 500;
+    color: #cecece;
+  }

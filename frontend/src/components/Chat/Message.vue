@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import "./Message.css";
+
 export default {
   props: {
     message: { type: Object, required: true }
@@ -24,28 +26,4 @@ export default {
   }
 };
 </script>
-
-<style>
-.message {
-  padding: 5px 0px 5px 10px;
-  margin: 5px;
-  color: white;
-  word-break: break-all;
-  font-size: 17px;
-}
-
-.message.service {
-  color: #e1e1e1;
-  text-align: center;
-  background-color: #303848;
-  margin: 0;
-  border-left: 2px solid #6d85b4;
-}
-
-.name {
-  font-weight: 500;
-  display: inline;
-}
-</style>
-
 

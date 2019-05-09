@@ -10,6 +10,9 @@
 </template>
 
 <script>
+
+import "./Textarea.css";
+
 export default {
   props: {
     value: { type: String },
@@ -25,33 +28,3 @@ export default {
   }
 };
 </script>
-
-<style>
-textarea {
-  background-color: #232933 !important;
-  color: white !important;
-  margin: 1px;
-  resize: none;
-  border-radius: 5px;
-  box-shadow: none;
-  outline: none;
-  border: 1px solid #32354a;
-  overflow: auto;
-  padding: 10px;
-  font-family: "Roboto", sans-serif;
-  transition: 0.2s;
-}
-
-textarea.error {
-  border-color: #ff3e3e !important;
-}
-
-textarea:focus {
-  background-color: #222730 !important;
-  border-color: #969595;
-  border: 1px solid;
-  transition: 0.2s;
-}
-</style>
-
-

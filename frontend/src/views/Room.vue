@@ -14,6 +14,8 @@ import Playlist from "../components/Room/Playlist";
 import Player from "../components/Player";
 import Chat from "../components/Chat";
 
+import "./Room.css";
+
 export default {
   components: {
     Player,
@@ -45,34 +47,4 @@ export default {
   }
 };
 </script>
-
-<style>
-.container.room {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap;
-  align-items: stretch;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-}
-
-.player {
-  background-color: black;
-  width: 100%;
-  max-width: calc(100% - 350px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-@media (max-width: 800px) {
-  .player {
-    min-width: 100%;
-    height: 35%;
-  }
-}
-</style>
-
 

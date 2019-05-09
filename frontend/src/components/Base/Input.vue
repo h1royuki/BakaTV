@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import "./Input.css";
+
 export default {
   props: {
     value: { type: String },
@@ -25,30 +27,3 @@ export default {
   }
 };
 </script>
-
-<style>
-input {
-  padding: 12px 0;
-  background-color: #4851634d;
-  border: 1px solid #6c7a9680;
-  color: #fff;
-  border-radius: 50px;
-  transition: 0.3s;
-  outline: none;
-  font-family: "Roboto Light", sans-serif;
-}
-
-input.error {
-  border-color: #ff3e3e !important;
-}
-
-input::placeholder {
-  color: #fff;
-}
-
-input:focus {
-  border-color: #cdf;
-  transition: 0.3s;
-}
-</style>
-

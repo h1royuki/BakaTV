@@ -16,6 +16,8 @@ import OnlineUsers from "./Chat/OnlineUsers";
 import Message from "./Chat/Message";
 import SendForm from "./Chat/SendForm";
 
+import "./Chat.css";
+
 export default {
   components: {
     OnlineUsers,
@@ -33,26 +35,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.chat {
-  height: 100%;
-  width: 350px;
-  position: relative;
-}
-
-.messages {
-  height: calc(100% - 212px);
-  background: #232935;
-  overflow-y: auto;
-  border-left: 1px solid #1a1f27;
-}
-
-@media (max-width: 800px) {
-  .chat {
-    width: 100%;
-    height: 65%;
-  }
-}
-</style>
-

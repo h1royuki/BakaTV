@@ -79,6 +79,8 @@
 import ArrowDownIcon from "vue-material-design-icons/ChevronDown";
 import Film from "../Film";
 
+import "./Item.css";
+
 export default {
   props: {
     film: Object,
@@ -178,64 +180,3 @@ export default {
   }
 };
 </script>
-
-
-<style>
-.item-container {
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-}
-
-.item {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  position: relative;
-  overflow: hidden;
-  margin-top: 10px;
-}
-
-.props .name {
-  font-size: 18px;
-  color: white;
-  padding: 5px;
-  text-align: center;
-}
-
-.items-container .files {
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: column;
-}
-
-.files .season {
-  padding: 10px;
-  margin-left: 20px;
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: column;
-}
-
-.season-props {
-  display: flex;
-  align-items: center;
-}
-
-.series-props {
-  padding-left: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-
-.files .series {
-  padding: 10px;
-  margin-left: 20px;
-}
-
-.line {
-  border-bottom: 1px solid #455168;
-}
-</style>

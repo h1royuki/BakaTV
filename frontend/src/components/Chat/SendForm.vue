@@ -15,12 +15,22 @@
 
     <div class="control-buttons">
       <send-button class="chat-button" :title="`Send message`" @click="sendMessage">Send message</send-button>
-          <playlist-button v-if="isOwner || isRoomCreator" @click="showPlaylist" class="control-button" :title="`Playlist`">
-            <playlist-icon title/>
-          </playlist-button>
-          <destroy-button v-if="isRoomCreator" @click="destroyRoom" class="control-button" :title="`Destroy room`">
-            <destroy-icon title/>
-          </destroy-button>
+      <playlist-button
+        v-if="isOwner || isRoomCreator"
+        @click="showPlaylist"
+        class="control-button"
+        :title="`Playlist`"
+      >
+        <playlist-icon title/>
+      </playlist-button>
+      <destroy-button
+        v-if="isRoomCreator"
+        @click="destroyRoom"
+        class="control-button"
+        :title="`Destroy room`"
+      >
+        <destroy-icon title/>
+      </destroy-button>
     </div>
   </div>
 </template>
@@ -32,6 +42,8 @@ import PlaylistIcon from "vue-material-design-icons/PlaylistPlay";
 import DestroyIcon from "vue-material-design-icons/Delete";
 import EmojiIcon from "vue-material-design-icons/EmoticonExcitedOutline";
 import EmojiPopup from "./SendForm/EmojiPopup";
+
+import "./SendForm.css";
 
 export default {
   components: {
@@ -91,79 +103,4 @@ export default {
   }
 };
 </script>
-
-<style>
-.send-form {
-  padding: 10px 10px 0 10px;
-  height: 150px;
-  display: flex;
-  flex-direction: column;
-}
-
-.message-input {
-  max-height: 60px;
-  font-size: 16px;
-}
-
-.emoji-button {
-  position: absolute;
-  right: 11px;
-  padding: 0;
-  background-color: transparent;
-  border: none;
-  color: #969595;
-}
-
-.emoji-button:hover {
-  color: #fff;
-  background-color: transparent;
-}
-
-.control-buttons {
-  display: flex;
-}
-
-.control-button {
-  padding: 4px 6px 0px 7px;
-  background-color: #384359;
-  border: none;
-  color: #e1e1e1;
-}
-
-.control-button:hover {
-  background-color: #e1e1e1;
-  color: #384359;
-}
-
-.chat-button {
-  padding: 7px 12px;
-  font-size: 15px;
-  padding: 7px 12px;
-  font-size: 15px;
-  width: 100%;
-  background-color: #2e5e89;
-  border: 1px solid #2e5e89;
-}
-
-div[data-popover="control"] {
-  width: 56px !important;
-  background-color: #1c2027;
-  right: 7px;
-  bottom: 64px;
-  left: initial !important;
-  top: initial !important;
-}
-
-div[data-popover="control"]::before {
-  border-top-color: #1c2027 !important;
-}
-
-@media (max-width: 800px) {
-  .chat-button {
-    margin-left: 0;
-  }
-}
-</style>
-
-
 

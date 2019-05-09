@@ -1,0 +1,40 @@
+.film {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    align-items: center;
+    overflow: hidden;
+  }
+  
+  .film img {
+    border-radius: 8px;
+  }
+  
+  .film-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #000000b3;
+    z-index: 1;
+    opacity: 0;
+    color: white;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .film-props {
+    width: 100%;
+    bottom: 0;
+    margin-left: 20px;
+  }
+  
+  .film-name {
+    font-size: 15px;
+    color: white;
+  }
+  
+  
+  .film-season, .film-desc {
+    font-size: 15px;
+  }
