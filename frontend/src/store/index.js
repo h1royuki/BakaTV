@@ -56,7 +56,7 @@ export default new Vuex.Store({
       location.reload();
     },
 
-    socket_updateToken(data) {
+    socket_updateToken({}, data) {
       localStorage.setItem('userId', data.userId);
       localStorage.setItem('userToken', data.userToken);
     },
